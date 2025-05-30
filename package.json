@@ -19,7 +19,8 @@
   },
   "packageManager": "yarn@4.9.1",
   "workspaces": [
-    "domain/*",
+    "domain/account/*",
+    "domain/game/*",
     "lib/*"
   ],
   "dependencies": {
