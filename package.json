@@ -3,12 +3,13 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "check-types": "turbo run check-types",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@types/aws-lambda": "8.10.149",
     "prettier": "^3.5.3",
     "turbo": "^2.5.3",
     "typescript": "5.8.2"
@@ -16,9 +17,12 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "yarn@4.9.1",
   "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+    "domain/*",
+    "lib/*"
+  ],
+  "dependencies": {
+    "sst": "3.17.0"
+  }
 }
