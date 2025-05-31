@@ -1,11 +1,15 @@
-import Image from "next/image";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Sign Up |Join the Foreververse",
+};
 
 export default function Home() {
   return (
     <>
     <main>
-      <h1>This is an account web app!</h1>
+      <h1>Foreververse</h1>
+      <h2>Welcome!</h2>
     </main>
     <footer>
       This is the footer
