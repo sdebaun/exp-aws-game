@@ -39,3 +39,5 @@ yarn-error.log*
 
 # sst
 .sst
+
+.open-next

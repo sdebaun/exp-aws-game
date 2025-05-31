@@ -13,6 +13,10 @@ declare module "sst" {
       "type": "sst.aws.Nextjs"
       "url": string
     }
+    "auth": {
+      "type": "sst.aws.Auth"
+      "url": string
+    }
     "bus": {
       "arn": string
       "name": string
@@ -24,6 +28,10 @@ declare module "sst" {
     }
     "gameWebUser": {
       "type": "sst.aws.Nextjs"
+      "url": string
+    }
+    "router": {
+      "type": "sst.aws.Router"
       "url": string
     }
   }

@@ -548,6 +548,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openauthjs/openauth@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "@openauthjs/openauth@npm:0.4.3"
+  dependencies:
+    "@standard-schema/spec": "npm:1.0.0-beta.3"
+    aws4fetch: "npm:1.0.20"
+    jose: "npm:5.9.6"
+  peerDependencies:
+    arctic: ^2.2.2
+    hono: ^4.0.0
+  checksum: 10c0/64f6352ffc25f179c57fcb25191f8b65a57ecf3e84bce24e7df3a41228c96689da0068b3177cab57b7f316b16404455e10392b3e8b8079ceb38886950960ea91
+  languageName: node
+  linkType: hard
+
 "@rtsao/scc@npm:^1.1.0":
   version: 1.1.0
   resolution: "@rtsao/scc@npm:1.1.0"
@@ -559,6 +573,13 @@ __metadata:
   version: 1.11.0
   resolution: "@rushstack/eslint-patch@npm:1.11.0"
   checksum: 10c0/abea8d8cf2f4f50343f74abd6a8173c521ddd09b102021f5aa379ef373c40af5948b23db0e87eca1682e559e09d97d3f0c48ea71edad682c6bf72b840c8675b3
+  languageName: node
+  linkType: hard
+
+"@standard-schema/spec@npm:1.0.0-beta.3":
+  version: 1.0.0-beta.3
+  resolution: "@standard-schema/spec@npm:1.0.0-beta.3"
+  checksum: 10c0/ae0a4e2a733d1267998f621b4d769b55350ea1c9da8353997b49bceff383015ce6f86adfc32be6dd522e1bbb3e06c8266b8cb334db4aaffd97f7ee92261deca4
   languageName: node
   linkType: hard
 
@@ -1322,6 +1343,13 @@ __metadata:
   version: 1.0.18
   resolution: "aws4fetch@npm:1.0.18"
   checksum: 10c0/4381256692eaf7e34878b6fe6c01b6d3a0cfe4f012ba09f8c33af9dc84a34c6396da9a478a0518873c74ed13b8b608f8d3c5d8e19c16dabe06f3aba83e5ac5bb
+  languageName: node
+  linkType: hard
+
+"aws4fetch@npm:1.0.20":
+  version: 1.0.20
+  resolution: "aws4fetch@npm:1.0.20"
+  checksum: 10c0/a4eac7bd0d1c3e611c17ed1ef41ac0b48c0a8e74a985ad968c071e74d94586d3572edc943b43fa5ca756c686ea73baa2f48e264d657bb8c2e95c8e0037d48a87
   languageName: node
   linkType: hard
 
@@ -2421,6 +2449,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"front-gate@workspace:domain/front-gate":
+  version: 0.0.0-use.local
+  resolution: "front-gate@workspace:domain/front-gate"
+  dependencies:
+    "@eslint/eslintrc": "npm:^3"
+    "@openauthjs/openauth": "npm:^0.4.3"
+    "@tailwindcss/postcss": "npm:^4"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^19"
+    "@types/react-dom": "npm:^19"
+    eslint: "npm:^9"
+    eslint-config-next: "npm:15.3.3"
+    hono: "npm:^4.7.10"
+    tailwindcss: "npm:^4"
+    typescript: "npm:^5"
+    zod: "npm:^3.25.42"
+  languageName: unknown
+  linkType: soft
+
 "function-bind@npm:^1.1.2":
   version: 1.1.2
   resolution: "function-bind@npm:1.1.2"
@@ -2652,6 +2699,13 @@ __metadata:
   version: 4.7.4
   resolution: "hono@npm:4.7.4"
   checksum: 10c0/b189c5b75527a0b2c6669a8b2d46a2c522c9f429c08da801373b13d25b476f20e639f667a9dac2fe42074e9b6f851d542d28026f158c5728b20034b9b0e3e738
+  languageName: node
+  linkType: hard
+
+"hono@npm:^4.7.10":
+  version: 4.7.10
+  resolution: "hono@npm:4.7.10"
+  checksum: 10c0/985aadcccb323fee7012f7c38e58b85332b1370a5ae69649ed29ae538a57cd4233f6198c54cc1fe3716b6b9ab20f8c7518d71027d7c46003c2d2ce982ce37c48
   languageName: node
   linkType: hard
 
@@ -3067,6 +3121,13 @@ __metadata:
   version: 5.2.3
   resolution: "jose@npm:5.2.3"
   checksum: 10c0/7cf02e1d1d6226b6ee136fb6c53fd4dde9cfdaf1613ceaab3a5629803eaa80cbfd77cddc38a54c55c82b8f63428677660c93fc87493818a07adc9c0c77ef16ff
+  languageName: node
+  linkType: hard
+
+"jose@npm:5.9.6":
+  version: 5.9.6
+  resolution: "jose@npm:5.9.6"
+  checksum: 10c0/d6bcd8c7d655b5cda8e182952a76f0c093347f5476d74795405bb91563f7ab676f61540310dd4b1531c60d685335ceb600571a409551d2cbd2ab3e9f9fbf1e4d
   languageName: node
   linkType: hard
 
@@ -5204,5 +5265,12 @@ __metadata:
   version: 3.25.39
   resolution: "zod@npm:3.25.39"
   checksum: 10c0/0630e2e933b1d6fa32a63209ec3b43ee50746cdb8a4f9c3af76b046c0a2ac2edd7de00d2da1c8d8adddafd837d2c12ccab931b3edd7bea7609bd359600b43212
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.25.42":
+  version: 3.25.42
+  resolution: "zod@npm:3.25.42"
+  checksum: 10c0/daa04d3bd5d87318790def440c074a154e29a5c900aefc6605c078df5878cdc9b465091c1ad117478e1f907242b8983d69bf2c11fcf354772b18d7103b94383a
   languageName: node
   linkType: hard

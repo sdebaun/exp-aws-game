@@ -1,4 +1,10 @@
-export default function stack({ bus }: { bus: sst.aws.Bus }) {
+export default function stack(
+  { bus, router, auth }: {
+    bus: sst.aws.Bus;
+    router: sst.aws.Router;
+    auth: sst.aws.Auth;
+  },
+) {
   const accountWebUser = new sst.aws.Nextjs("accountWebUser", {
     link: [bus],
     path: "domain/account/account-web-user",
@@ -8,4 +14,6 @@ export default function stack({ bus }: { bus: sst.aws.Bus }) {
     link: [bus],
     path: "domain/account/account-web-admin",
   });
+
+  return { accountWebUser, accountWebAdmin };
 }

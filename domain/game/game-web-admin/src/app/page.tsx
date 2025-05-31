@@ -1,4 +1,5 @@
 import Image from "next/image";
+import globeImg from '../../public/globe.svg'
 
 export default function Home() {
   return (
@@ -45,7 +46,8 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/globe.svg"
+            // src="./globe.svg"
+            src={globeImg}
             alt="Globe icon"
             width={16}
             height={16}
