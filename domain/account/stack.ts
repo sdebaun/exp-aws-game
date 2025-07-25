@@ -6,7 +6,7 @@ export default function stack(
   },
 ) {
   const accountWebUser = new sst.aws.Nextjs("accountWebUser", {
-    link: [bus],
+    link: [bus, auth],
     path: "domain/account/account-web-user",
   });
 

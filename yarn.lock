@@ -1125,6 +1125,7 @@ __metadata:
   resolution: "account-web-user@workspace:domain/account/account-web-user"
   dependencies:
     "@eslint/eslintrc": "npm:^3"
+    "@openauthjs/openauth": "npm:^0.4.3"
     "@tailwindcss/postcss": "npm:^4"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
@@ -2449,25 +2450,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"front-gate@workspace:domain/front-gate":
-  version: 0.0.0-use.local
-  resolution: "front-gate@workspace:domain/front-gate"
-  dependencies:
-    "@eslint/eslintrc": "npm:^3"
-    "@openauthjs/openauth": "npm:^0.4.3"
-    "@tailwindcss/postcss": "npm:^4"
-    "@types/node": "npm:^20"
-    "@types/react": "npm:^19"
-    "@types/react-dom": "npm:^19"
-    eslint: "npm:^9"
-    eslint-config-next: "npm:15.3.3"
-    hono: "npm:^4.7.10"
-    tailwindcss: "npm:^4"
-    typescript: "npm:^5"
-    zod: "npm:^3.25.42"
-  languageName: unknown
-  linkType: soft
-
 "function-bind@npm:^1.1.2":
   version: 1.1.2
   resolution: "function-bind@npm:1.1.2"
@@ -2699,13 +2681,6 @@ __metadata:
   version: 4.7.4
   resolution: "hono@npm:4.7.4"
   checksum: 10c0/b189c5b75527a0b2c6669a8b2d46a2c522c9f429c08da801373b13d25b476f20e639f667a9dac2fe42074e9b6f851d542d28026f158c5728b20034b9b0e3e738
-  languageName: node
-  linkType: hard
-
-"hono@npm:^4.7.10":
-  version: 4.7.10
-  resolution: "hono@npm:4.7.10"
-  checksum: 10c0/985aadcccb323fee7012f7c38e58b85332b1370a5ae69649ed29ae538a57cd4233f6198c54cc1fe3716b6b9ab20f8c7518d71027d7c46003c2d2ce982ce37c48
   languageName: node
   linkType: hard
 
@@ -5265,12 +5240,5 @@ __metadata:
   version: 3.25.39
   resolution: "zod@npm:3.25.39"
   checksum: 10c0/0630e2e933b1d6fa32a63209ec3b43ee50746cdb8a4f9c3af76b046c0a2ac2edd7de00d2da1c8d8adddafd837d2c12ccab931b3edd7bea7609bd359600b43212
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.25.42":
-  version: 3.25.42
-  resolution: "zod@npm:3.25.42"
-  checksum: 10c0/daa04d3bd5d87318790def440c074a154e29a5c900aefc6605c078df5878cdc9b465091c1ad117478e1f907242b8983d69bf2c11fcf354772b18d7103b94383a
   languageName: node
   linkType: hard

@@ -14,7 +14,7 @@
 // into a single public-facing endpoint
 export default function stack() {
   const auth = new sst.aws.Auth("auth", {
-    issuer: "auth/src/issuer.handler",
+    issuer: "domain/front-gate/auth/src/issuer.handler",
   });
 
   const router = new sst.aws.Router("router", {
