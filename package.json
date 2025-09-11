@@ -24,5 +24,8 @@
     "domain/game/*",
     "domain/front-gate",
     "lib/*"
-  ]
+  ],
+  "dependencies": {
+    "openai": "^5.19.1"
+  }
 }

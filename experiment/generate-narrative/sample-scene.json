@@ -1,0 +1,156 @@
+{
+  "currentScene": 1,
+  "totalScenes": 5,
+  "expeditionName": "Crisis at Firaxis III",
+  "shipName": "A Significant Lack of Gravitas",
+  "threats": [
+    {
+      "title": "Engine Malfunction",
+      "challengeRating": 3,
+      "expeditionProgress": 2,
+      "personalScores": {
+        "Alice": 2,
+        "Carol": 2,
+        "Bob": 0
+      },
+      "progressedBy": [
+        { "player": "Alice",
+          "action": {
+            "title": "Spare Parts",
+            "themes": ["Engineering"],
+            "power": 2
+          }
+        },
+        { "player": "Carol",
+          "action": {
+            "title": "Tweak the Flux Capacitor",
+            "themes": ["Engineering"],
+            "power": 2
+          }
+        }
+      ],
+      "hinderedBy": [
+        { "player": "Bob",
+          "action": {
+            "title": "Sneak Around a Bit",
+            "themes": ["Subterfuge"],
+            "power": 2
+          }
+        }
+      ]
+    },
+    {
+      "title": "An Opportunity for Sleight of Hand",
+      "solvedBy": ["Subterfuge"],
+      "worsenedBy": ["Security"],
+      "challengeRating": 2,
+      "expeditionProgress": 0,
+      "personalScores": {
+        "Alice": -1,
+        "Carol": -1,
+        "Bob": 5
+      },
+      "progressedBy": [
+        { "player": "Bob",
+          "action": {
+            "title": "Sneak Around a Bit",
+            "themes": ["Subterfuge"],
+            "power": 2
+          }
+        }
+      ],
+      "hinderedBy": []
+    },
+    {
+      "title": "The Trouble with Troblings",
+      "solvedBy": ["Security"],
+      "worsenedBy": ["Engineering"],
+      "challengeRating": 3,
+      "expeditionProgress": 0,
+      "personalScores": {
+        "Alice": -1,
+        "Carol": -1,
+        "Bob": -1
+      },
+      "progressedBy": [],
+      "hinderedBy": [
+        { "player": "Alice",
+          "action": {
+            "title": "Spare Parts",
+            "themes": ["Engineering"],
+            "power": 2
+          }
+        },
+        { "player": "Carol",
+          "action": {
+            "title": "Tweak the Flux Capacitor",
+            "themes": ["Engineering"],
+            "power": 2
+          }
+        }
+      ]
+    }
+  ],
+  "actors": [
+    {
+      "player": "Alice",
+      "character": "Thom Fizthrain",
+      "career": "Veteran of the Reef Wars"
+    },
+    {
+      "player": "Bob",
+      "character":"Bayaka of Thrace",
+      "career": "Independent Merchant"
+    },
+    {
+      "player": "Carol",
+      "character":"Twelve Dancing Stars",
+      "career": "Former Mercenary Escort Pilot"
+    }
+  ],
+  "chat": [
+    { "player": "Alice", "timestamp": "14:23", "message": "ok yall what we gonna do, anyone got any tips for this" },
+    { "player": "Bob", "timestamp": "14:25", "message": "i have no idea how to play" },
+    { "player": "Carol", "timestamp": "14:27", "message": "f u all, imma just play a random card" },
+    { "player": "Bob", "timestamp": "14:28", "message": "well thats some cooperation" },
+    { "player": "Bob", "timestamp": "14:29", "message": "cmon cant we do something" },
+    { "player": "Alice", "timestamp": "14:31", "message": "fine. i know one of our first threats is going to need eng or sci" },
+    { "player": "Bob", "timestamp": "14:33", "message": "same" },
+    { "player": "Carol", "timestamp": "14:2734", "message": "oooh i get it." },
+    { "player": "Carol", "timestamp": "14:2734", "message": "k this one says it gets hurt by engineering, needs security" },
+    { "player": "Alice", "timestamp": "14:31", "message": "bah i got no security" }
+  ],
+  "actions": [
+    { "player": "Alice",
+      "action": {
+        "title": "Spare Parts",
+        "themes": ["Engineering"],
+        "power": 2
+      }
+    },
+    { "player": "Bob",
+      "action": {
+        "title": "Sneak Around a Bit",
+        "themes": ["Subterfuge"],
+        "power": 2
+      }
+    },
+    { "player": "Carol",
+      "action": {
+        "title": "Tweak the Flux Capacitor",
+        "themes": ["Engineering"],
+        "power": 2
+      }
+    }
+  ],
+  "results": {
+    "success": true,
+    "individualContributions": {
+      "Alice": 25,
+      "Bob": 15,
+      "Carol": 30
+    },
+    "expeditionProgress": 45,
+    "consequences": ["Trap avoided", "Hidden passage discovered"]
+  }
+}
