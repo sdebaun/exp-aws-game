@@ -11,13 +11,13 @@ export default $config({
   },
   async run() {
     // the all-powerful event bus comes first
-    const { bus } = (await import("./domain/integration/stack"))
-      .default();
-    const { router, auth } = (await import("./domain/front-gate/stack"))
-      .default();
+    // const { bus } = (await import("./domain/integration/stack"))
+    //   .default();
+    // const { router, auth } = (await import("./domain/front-gate/stack"))
+    //   .default();
 
-    (await import("./domain/account/stack")).default({ bus, router, auth });
-    (await import("./domain/game/stack")).default({ bus, router });
+    // (await import("./domain/account/stack")).default({ bus, router, auth });
+    // (await import("./domain/game/stack")).default({ bus, router });
     // const { accountWebAdmin, accountWebUser } =
     //   (await import("./domain/account/stack")).default({ bus, router, auth });
     // const { gameWebAdmin, gameWebUser } = (await import("./domain/game/stack"))
