@@ -20,9 +20,7 @@
   },
   "packageManager": "yarn@4.9.1",
   "workspaces": [
-    "domain/account/*",
-    "domain/game/*",
-    "domain/front-gate",
+    "domain/game-web",
     "lib/*"
   ],
   "dependencies": {

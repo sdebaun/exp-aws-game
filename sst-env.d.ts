@@ -5,33 +5,8 @@
 
 declare module "sst" {
   export interface Resource {
-    "accountWebAdmin": {
+    "GameWeb": {
       "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "accountWebUser": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "auth": {
-      "type": "sst.aws.Auth"
-      "url": string
-    }
-    "bus": {
-      "arn": string
-      "name": string
-      "type": "sst.aws.Bus"
-    }
-    "gameWebAdmin": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "gameWebUser": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "router": {
-      "type": "sst.aws.Router"
       "url": string
     }
   }
