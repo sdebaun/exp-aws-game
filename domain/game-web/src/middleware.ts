@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { auth0 } from "../../../integrations/auth0";
 
-console.log("middleware", process.env.AUTH0_DOMAIN);
 export async function middleware(request: NextRequest) {
   return await auth0.middleware(request);
 }
