@@ -43,3 +43,4 @@ yarn-error.log*
 .open-next
 
 .yarn
+.yarn/install-state.gz
