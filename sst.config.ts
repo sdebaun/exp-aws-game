@@ -23,8 +23,10 @@ export default $config({
     // const { gameWebAdmin, gameWebUser } = (await import("./domain/game/stack"))
     //   .default({ bus, router });
 
-    const { url } = (await import("./domain/game-web/stack"))
+    const secrets = (await import("./domain/secrets/stack"))
       .default();
+    const { url } = (await import("./domain/game-web/stack"))
+      .default({ secrets });
 
     return { url };
   },

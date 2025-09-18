@@ -9,6 +9,26 @@ declare module "sst" {
       "type": "sst.aws.Nextjs"
       "url": string
     }
+    "auth0_APP_BASE_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "auth0_AUTH0_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "auth0_AUTH0_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "auth0_AUTH0_DOMAIN": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "auth0_AUTH0_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
