@@ -7,6 +7,3 @@ export const auth0 = new Auth0Client({
   appBaseUrl: process.env.APP_BASE_URL,
   secret: process.env.AUTH0_SECRET,
 });
-
-console.log(auth0);
-console.log(process.env.AUTH0_DOMAIN);
