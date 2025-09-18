@@ -14,6 +14,22 @@ const nextConfig: NextConfig = {
     AUTH0_SECRET: process.env.AUTH0_SECRET || "",
     APP_BASE_URL: process.env.APP_BASE_URL || "",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.gravatar.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.auth0.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
