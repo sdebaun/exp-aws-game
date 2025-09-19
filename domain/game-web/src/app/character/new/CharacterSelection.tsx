@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { generateCharacters, selectCharacter } from './actions';
 
 type Character = {
   name: string;
   class: string;
   background: string;
   trait: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
 }
 
 function CharacterCard({ character, onSelect }: { character: Character, onSelect: () => void }) {
@@ -44,15 +46,33 @@ function CharacterCard({ character, onSelect }: { character: Character, onSelect
 
 export function CharacterSelection({ characters }: { characters: Character[] }) {
   const [currentCharacters, setCurrentCharacters] = useState(characters);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   
-  const handleReroll = () => {
-    // TODO: Fetch new characters from API
-    console.log('Rerolling characters...');
+  const handleReroll = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const newCharacters = await generateCharacters();
+      setCurrentCharacters(newCharacters);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate characters');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
-  const handleSelect = (character: Character) => {
-    // TODO: Handle character selection
-    console.log('Selected:', character.name);
+  const handleSelect = async (character: Character) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await selectCharacter(character);
+      router.push('/');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to select character');
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -67,11 +87,22 @@ export function CharacterSelection({ characters }: { characters: Character[] }) 
         ))}
       </div>
       
+      {error && (
+        <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-300">
+          {error}
+        </div>
+      )}
+      
       <div className="flex gap-4 justify-center">
         <button 
           onClick={handleReroll}
-          className="bg-slate-700 hover:bg-slate-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg">
-          🎲 Roll New Characters
+          disabled={isLoading}
+          className={`font-semibold py-3 px-6 rounded-lg transition-all duration-200 ${
+            isLoading 
+              ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+              : 'bg-slate-700 hover:bg-slate-600 text-white hover:shadow-lg'
+          }`}>
+          {isLoading ? '⏳ Generating...' : '🎲 Roll New Characters (10 Ink)'}
         </button>
         
         <Link href="/" className="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">

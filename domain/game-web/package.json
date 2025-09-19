@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.891.0",
     "electrodb": "^3.4.5",
+    "nanoid": "^5.1.5",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"

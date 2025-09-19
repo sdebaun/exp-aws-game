@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../.sst/platform/config.d.ts" />
 
-export type SecretsGroupName = "auth0";
+export type SecretsGroupName = "auth0" | "openai";
 export type SecretsGroup = Record<string, sst.Secret>;
 export type Secrets = Record<SecretsGroupName, SecretsGroup>;
 
@@ -29,6 +29,12 @@ export default function (): Secrets {
       AUTH0_CLIENT_SECRET: new sst.Secret(
         "auth0_AUTH0_CLIENT_SECRET",
         "M2uFbVmkTveG3fwD5XvkQSpcGblfCamQYetCr56FyTqrblb2dWm3RcA5IPo2Ieus",
+      ),
+    },
+    openai: {
+      OPENAI_API_KEY: new sst.Secret(
+        "openai_OPENAI_API_KEY",
+        "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",
       ),
     },
   };
