@@ -1,30 +1,35 @@
-import { auth0 } from "../../../../../../integrations/auth0";
 import { redirect } from "next/navigation";
 import { DemenseSelection } from './DemenseSelection';
 import { generateDemenses } from './actions';
+import { getUserInfo } from "../../getUserInfo";
+import { TopBar } from "../../TopBar";
 
 export default async function NewDemensePage() {
-  const session = await auth0.getSession();
+  const { user, account, demense } = await getUserInfo();
   
-  if (!session) {
+  if (!user) {
     redirect('/auth/login');
   }
   
   try {
-    // Generate initial demenses (free - no Ink cost)
+    // Generate demenses
     const demenses = await generateDemenses();
     
     return (
-      <div className="min-h-screen bg-slate-950 text-white">
-        <div className="max-w-6xl mx-auto p-8">
-          <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
-          <p className="text-slate-400 mb-8">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
-          
-          <DemenseSelection demenses={demenses} />
+      <div className="min-h-screen bg-slate-950">
+        <TopBar {...{user, account, demense}}/>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-white p-8">
+            <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
+            <p className="text-slate-400 mb-8">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
+            
+            <DemenseSelection demenses={demenses} />
+          </div>
         </div>
       </div>
     );
   } catch (error) {
+    console.error("Failed to generate demenses:", error);
     // Fallback to mock demenses if generation fails
     const mockDemenses = [
       {
@@ -54,13 +59,16 @@ export default async function NewDemensePage() {
     ];
     
     return (
-      <div className="min-h-screen bg-slate-950 text-white">
-        <div className="max-w-6xl mx-auto p-8">
-          <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
-          <p className="text-slate-400 mb-4">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
-          <p className="text-red-400 text-sm mb-8">⚠️ Demense generation unavailable - showing demo options</p>
-          
-          <DemenseSelection demenses={mockDemenses} />
+      <div className="min-h-screen bg-slate-950">
+        <TopBar {...{user, account, demense}}/>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-white p-8">
+            <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
+            <p className="text-slate-400 mb-4">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
+            <p className="text-red-400 text-sm mb-8">⚠️ Demense generation unavailable - showing demo options</p>
+            
+            <DemenseSelection demenses={mockDemenses} />
+          </div>
         </div>
       </div>
     );

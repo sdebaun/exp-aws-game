@@ -19,7 +19,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar user={user}/>
+      <TopBar {...{user, account, demense}}/>
       <div className="max-w-7xl mx-auto">
         {user ? <HomeUser {...{user, account, demense}}/> : <HomeAnon/> }
       </div>
