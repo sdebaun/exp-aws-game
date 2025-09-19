@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { User } from "@auth0/nextjs-auth0/types";
-import { AccountEntity } from "../db/entities";
+import { AccountEntity, DemenseEntity } from "../db/entities";
 import { EntityItem } from "electrodb";
 
-export async function HomeUser({user, account}: {user: User, account: EntityItem<typeof AccountEntity>}) {
+export async function HomeUser({user, account, demense}: {user: User, account: EntityItem<typeof AccountEntity>, demense: EntityItem<typeof DemenseEntity>}) {
   // TODO: Fetch user's characters and stories from database
   const userCharacters = []; // Mock empty for now
   const userStories = [];
@@ -11,6 +11,7 @@ export async function HomeUser({user, account}: {user: User, account: EntityItem
   return (<div className="p-8 max-w-7xl mx-auto">
     <pre>{JSON.stringify(user, null, 2)}</pre>
     <pre>{JSON.stringify(account, null, 2)}</pre>
+    <pre>{JSON.stringify(demense, null, 2)}</pre>
     {/* Characters Section */}
     <section className="mb-12">
       <div className="flex justify-between items-center mb-6">

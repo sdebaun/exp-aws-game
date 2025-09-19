@@ -34,7 +34,7 @@ export default function (): Secrets {
     openai: {
       OPENAI_API_KEY: new sst.Secret(
         "openai_OPENAI_API_KEY",
-        "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",
+        "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",
       ),
     },
   };

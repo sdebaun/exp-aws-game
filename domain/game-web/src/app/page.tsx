@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { TopBar } from "./TopBar";
 import { getUserInfo } from "./getUserInfo";
 import { HomeUser } from "./HomeUser";
@@ -9,13 +10,18 @@ export async function HomeAnon() {
 }
 
 export default async function Home() {
-  const { user, account } = await getUserInfo();
+  const { user, account, demense } = await getUserInfo();
+
+  // If user is logged in but has no demense, redirect to demense creation
+  if (user && !demense) {
+    redirect('/demense/new');
+  }
 
   return (
     <div className="min-h-screen bg-slate-950">
       <TopBar user={user}/>
       <div className="max-w-7xl mx-auto">
-        {user ? <HomeUser {...{user, account}}/> : <HomeAnon/> }
+        {user ? <HomeUser {...{user, account, demense}}/> : <HomeAnon/> }
       </div>
     </div>
   )

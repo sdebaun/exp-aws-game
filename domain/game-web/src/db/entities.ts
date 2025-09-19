@@ -86,8 +86,44 @@ export const CharacterEntity = new Entity({
   table: Resource.GameTable.name 
 });
 
+// Demense entity - player's stronghold/home base
+export const DemenseEntity = new Entity({
+  model: {
+    entity: "demense",
+    version: "1",
+    service: "game",
+  },
+  attributes: {
+    accountId: { type: "string", required: true },
+    demenseId: { type: "string", required: true },
+    name: { type: "string", required: true },
+    description: { type: "string", required: true },
+    imageUrl: { type: "string" }, // DALL-E generated image
+    // Game attributes stored as key-value pairs for flexibility
+    // e.g. { "defensePower": "8", "productionRate": "5", "specialBonus": "magic_resistance" }
+    defensePower: { type: "number" },
+    productionRate: { type: "number" },
+    specialBonus: { type: "string" },
+    createdAt: {
+      type: "string",
+      default: () => new Date().toISOString(),
+      readOnly: true
+    }
+  },
+  indexes: {
+    primary: {
+      pk: { field: "pk", composite: ["accountId"] },
+      sk: { field: "sk", composite: ["demenseId"] },
+    }
+  },
+}, {
+  client: dynamoClient,
+  table: Resource.GameTable.name
+});
+
 // Service combines all entities for cross-entity operations
 export const GameService = new Service({
   account: AccountEntity,
   character: CharacterEntity,
+  demense: DemenseEntity,
 }, { client: dynamoClient, table: Resource.GameTable.name });
