@@ -33,8 +33,8 @@ export default function (): Secrets {
     },
     openai: {
       OPENAI_API_KEY: new sst.Secret(
-        "openai_OPENAI_API_KEY",
-        "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",
+        "OpenaiApiKey",
+        "sk-placeholder-get-real-key-from-openai",
       ),
     },
   };

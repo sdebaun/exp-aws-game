@@ -5,13 +5,28 @@ A multiplayer, social, long-term, web-based game.
 - @./design/README.md
 - @./experiment/README.md
 
+## ⚠️ PACKAGE MANAGER: YARN ONLY ⚠️
+
+**THIS PROJECT USES YARN. NOT NPM. NEVER NPM.**
+
+- ✅ Use `yarn` for installing packages
+- ✅ Use `yarn add` for adding dependencies
+- ✅ Use `yarn dev` for running development servers
+- ✅ Use `npx` when needed for running binaries
+- ❌ DO NOT use `npm install`
+- ❌ DO NOT use `npm add`
+- ❌ DO NOT use `npm run`
+- ❌ NO NPM COMMANDS WHATSOEVER
+
+If you see any `package-lock.json` files, DELETE THEM. We use `yarn.lock`.
+
 ## Development Instructions
 
 ### SST Dev vs Deploy
 
 **For Frontend Development:**
 1. Run `sst dev` in one terminal (creates real AWS resources)
-2. Run `npm run dev` in `domain/game-web` directory (starts Next.js on localhost:3000)
+2. Run `yarn dev` in `domain/game-web` directory (starts Next.js on localhost:3000)
 3. Access the site at `http://localhost:3000`
 
 **Important Notes:**

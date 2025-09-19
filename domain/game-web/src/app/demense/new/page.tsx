@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { DemenseSelection } from './DemenseSelection';
-import { generateDemenses } from './actions';
 import { getUserInfo } from "../../getUserInfo";
 import { TopBar } from "../../TopBar";
+import { DebugUserInfo } from "../../DebugUserInfo";
 
 export default async function NewDemensePage() {
   const { user, account, demense } = await getUserInfo();
@@ -11,66 +12,121 @@ export default async function NewDemensePage() {
     redirect('/auth/login');
   }
   
-  try {
-    // Generate demenses
-    const demenses = await generateDemenses();
-    
-    return (
-      <div className="min-h-screen bg-slate-950">
-        <TopBar {...{user, account, demense}}/>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-white p-8">
-            <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
-            <p className="text-slate-400 mb-8">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
-            
-            <DemenseSelection demenses={demenses} />
+  // Placeholder demenses (empty slots)
+  const placeholderDemenses = [
+    {
+      name: "Unknown Stronghold",
+      description: "A mysterious location waiting to be discovered...",
+      defensePower: 0,
+      productionRate: 0,
+      specialBonus: "???",
+      imageUrl: null,
+    },
+    {
+      name: "Unknown Stronghold",
+      description: "A mysterious location waiting to be discovered...",
+      defensePower: 0,
+      productionRate: 0,
+      specialBonus: "???",
+      imageUrl: null,
+    },
+    {
+      name: "Unknown Stronghold",
+      description: "A mysterious location waiting to be discovered...",
+      defensePower: 0,
+      productionRate: 0,
+      specialBonus: "???",
+      imageUrl: null,
+    }
+  ];
+  
+  return (
+    <div className="min-h-screen bg-slate-950">
+      <TopBar {...{user, account, demense}}/>
+      <div className="max-w-7xl mx-auto p-8">
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-2">
+            <Link 
+              href="/"
+              className="text-3xl text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              ‹
+            </Link>
+            <h1 className="text-4xl font-bold text-white">Choose Your Demense</h1>
+          </div>
+          <p className="text-slate-400 ml-12">Your demense is your stronghold - a base of operations in the game world.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Current Demense */}
+          <div className="lg:col-span-1">
+            <h2 className="text-xl font-semibold mb-4 text-slate-300">Current Demense</h2>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+              {demense ? (
+                <>
+                  {demense.imageUrl ? (
+                    <img 
+                      src={demense.imageUrl} 
+                      alt={demense.name} 
+                      className="w-full aspect-video object-cover rounded-lg mb-4"
+                    />
+                  ) : (
+                    <div className="w-full aspect-video bg-slate-900 rounded-lg flex items-center justify-center text-4xl text-slate-600 mb-4">
+                      🏰
+                    </div>
+                  )}
+                  <h3 className="text-lg font-bold text-cyan-400 mb-2">{demense.name}</h3>
+                  <p className="text-sm text-slate-300 mb-3">{demense.description}</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Defense:</span>
+                      <span className="text-white font-semibold">{demense.defensePower}/10</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Production:</span>
+                      <span className="text-white font-semibold">{demense.productionRate}/10</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Bonus:</span>
+                      <p className="text-cyan-400 font-semibold mt-1">{demense.specialBonus}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-full aspect-video bg-slate-900 rounded-lg flex items-center justify-center text-4xl text-slate-600 mb-4">
+                    🏕️
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-400 mb-2">The Wanderer's Camp</h3>
+                  <p className="text-sm text-slate-500 mb-3">A humble temporary shelter, offering no protection or resources. Time to establish a proper stronghold!</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Defense:</span>
+                      <span className="text-slate-500 font-semibold">0/10</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Production:</span>
+                      <span className="text-slate-500 font-semibold">0/10</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Bonus:</span>
+                      <p className="text-slate-500 font-semibold mt-1">None</p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          
+          {/* Available Demenses */}
+          <div className="lg:col-span-3">
+            <h2 className="text-xl font-semibold mb-4 text-slate-300">Available Demenses</h2>
+            <DemenseSelection demenses={placeholderDemenses} isPlaceholder={true} />
           </div>
         </div>
+        
+        <DebugUserInfo {...{user, account, demense}} />
       </div>
-    );
-  } catch (error) {
-    console.error("Failed to generate demenses:", error);
-    // Fallback to mock demenses if generation fails
-    const mockDemenses = [
-      {
-        name: "Shadowfell Keep",
-        description: "An ancient fortress carved from obsidian, perpetually shrouded in mist",
-        defensePower: 8,
-        productionRate: 3,
-        specialBonus: "Shadow resistance",
-        imageUrl: null,
-      },
-      {
-        name: "Crystalhaven Spire", 
-        description: "A towering crystalline citadel that channels raw magical energy",
-        defensePower: 5,
-        productionRate: 7,
-        specialBonus: "Mana generation",
-        imageUrl: null,
-      },
-      {
-        name: "Ironforge Bastion",
-        description: "A mighty dwarven stronghold built into the heart of a mountain",
-        defensePower: 10,
-        productionRate: 5,
-        specialBonus: "Siege weaponry",
-        imageUrl: null,
-      }
-    ];
-    
-    return (
-      <div className="min-h-screen bg-slate-950">
-        <TopBar {...{user, account, demense}}/>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-white p-8">
-            <h1 className="text-4xl font-bold mb-2">Choose Your Demense</h1>
-            <p className="text-slate-400 mb-4">Your demense is your stronghold - a base of operations in the game world. Choose wisely!</p>
-            <p className="text-red-400 text-sm mb-8">⚠️ Demense generation unavailable - showing demo options</p>
-            
-            <DemenseSelection demenses={mockDemenses} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 }

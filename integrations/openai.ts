@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { Resource } from "sst";
 
 // Initialize OpenAI client with SST secret
-const apiKey = Resource.openai_OPENAI_API_KEY.value;
+const apiKey = Resource.OpenaiApiKey.value;
 console.log("OpenAI API Key length:", apiKey?.length, "First 10 chars:", apiKey?.substring(0, 10));
 
 export const openai = new OpenAI({

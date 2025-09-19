@@ -13,6 +13,10 @@ declare module "sst" {
       "type": "sst.aws.Nextjs"
       "url": string
     }
+    "OpenaiApiKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "auth0_APP_BASE_URL": {
       "type": "sst.sst.Secret"
       "value": string
@@ -30,10 +34,6 @@ declare module "sst" {
       "value": string
     }
     "auth0_AUTH0_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "openai_OPENAI_API_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }

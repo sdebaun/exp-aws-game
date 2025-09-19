@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { TopBar } from "./TopBar";
 import { getUserInfo } from "./getUserInfo";
 import { HomeUser } from "./HomeUser";
@@ -12,10 +11,7 @@ export async function HomeAnon() {
 export default async function Home() {
   const { user, account, demense } = await getUserInfo();
 
-  // If user is logged in but has no demense, redirect to demense creation
-  if (user && !demense) {
-    redirect('/demense/new');
-  }
+  // No longer auto-redirect - let user choose when to claim a demense
 
   return (
     <div className="min-h-screen bg-slate-950">

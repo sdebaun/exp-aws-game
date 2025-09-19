@@ -17,10 +17,7 @@ export async function TopBar({ user, account, demense }: {
         </h1>
         <div className='flex items-center gap-4'>
           {user && account ? (
-            <>
-              <CurrentUser {...{user, account, demense}} />
-              <a href="/auth/logout" className='inline-block px-4 py-2 text-sm font-medium bg-slate-700 hover:bg-slate-600 rounded-lg transition-all duration-200 hover:shadow-lg'>Logout</a>
-            </>
+            <CurrentUser {...{user, account, demense}} />
           ) : !user ? (
             <a href="/auth/login" className='inline-block px-4 py-2 text-sm font-medium bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-all duration-200 hover:shadow-lg'>Login</a>
           ) : null}

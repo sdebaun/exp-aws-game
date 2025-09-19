@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
-import { DemenseEntity } from "../db/entities";
+import { DemenseEntity, AccountEntity } from "../db/entities";
 
 export async function destroyDemense() {
   const { user, demense } = await getUserInfo();
@@ -19,4 +19,23 @@ export async function destroyDemense() {
   
   // Redirect to demense selection
   redirect('/demense/new');
+}
+
+export async function addInk() {
+  const { user, account } = await getUserInfo();
+  
+  if (!user || !account) {
+    throw new Error("Not authenticated");
+  }
+  
+  // Update the ink amount
+  const currentInk = account.ink || 0;
+  await AccountEntity.update({
+    accountId: user.sub,
+  })
+  .set({ ink: currentInk + 1000 })
+  .go();
+  
+  // Refresh the page to show updated ink
+  redirect('/');
 }

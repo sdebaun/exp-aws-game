@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { selectDemense, rerollDemenses } from './actions';
+import { selectDemense, exploreDemenses } from './actions';
 
 type Demense = {
   name: string;
@@ -13,12 +13,27 @@ type Demense = {
   imageUrl?: string | null;
 }
 
-function DemenseCard({ demense, onSelect }: { demense: Demense, onSelect: () => void }) {
+function DemenseCard({ demense, onSelect, isPlaceholder, isSelected }: { 
+  demense: Demense, 
+  onSelect: () => void, 
+  isPlaceholder: boolean,
+  isSelected: boolean 
+}) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-cyan-600 transition-all duration-200 cursor-pointer group"
-         onClick={onSelect}>
-      <div className="aspect-video w-full bg-slate-900 rounded-lg mb-4 overflow-hidden">
-        {demense.imageUrl ? (
+    <div className={`border rounded-xl p-6 transition-all duration-200 ${
+      isPlaceholder 
+        ? 'bg-slate-900 border-slate-800' 
+        : isSelected
+        ? 'bg-slate-800 border-cyan-600 ring-2 ring-cyan-600 cursor-pointer'
+        : 'bg-slate-800 border-slate-700 hover:border-cyan-600 cursor-pointer group'
+    }`}
+         onClick={!isPlaceholder ? onSelect : undefined}>
+      <div className="aspect-video w-full bg-slate-950 rounded-lg mb-4 overflow-hidden">
+        {isPlaceholder ? (
+          <div className="w-full h-full flex items-center justify-center text-slate-700 text-6xl">
+            ❓
+          </div>
+        ) : demense.imageUrl ? (
           <img src={demense.imageUrl} alt={demense.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-600 text-6xl">
@@ -27,44 +42,68 @@ function DemenseCard({ demense, onSelect }: { demense: Demense, onSelect: () => 
         )}
       </div>
       
-      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+      <h3 className={`text-xl font-bold mb-2 ${
+        isPlaceholder ? 'text-slate-700' : 'text-white group-hover:text-cyan-400 transition-colors'
+      }`}>
         {demense.name}
       </h3>
       
-      <p className="text-slate-300 text-sm mb-4">
+      <p className={`text-sm mb-4 ${
+        isPlaceholder ? 'text-slate-700' : 'text-slate-300'
+      }`}>
         {demense.description}
       </p>
       
       <div className="grid grid-cols-3 gap-2 text-sm">
-        <div className="bg-slate-900 rounded px-3 py-2">
-          <p className="text-slate-500 text-xs">Defense</p>
-          <p className="text-white font-bold">{demense.defensePower}</p>
+        <div className={`rounded px-3 py-2 ${
+          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
+        }`}>
+          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Defense</p>
+          <p className={`font-bold ${isPlaceholder ? 'text-slate-700' : 'text-white'}`}>
+            {isPlaceholder ? '?' : demense.defensePower}
+          </p>
         </div>
-        <div className="bg-slate-900 rounded px-3 py-2">
-          <p className="text-slate-500 text-xs">Production</p>
-          <p className="text-white font-bold">{demense.productionRate}</p>
+        <div className={`rounded px-3 py-2 ${
+          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
+        }`}>
+          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Production</p>
+          <p className={`font-bold ${isPlaceholder ? 'text-slate-700' : 'text-white'}`}>
+            {isPlaceholder ? '?' : demense.productionRate}
+          </p>
         </div>
-        <div className="bg-slate-900 rounded px-3 py-2">
-          <p className="text-slate-500 text-xs">Bonus</p>
-          <p className="text-cyan-400 font-semibold text-xs">{demense.specialBonus}</p>
+        <div className={`rounded px-3 py-2 ${
+          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
+        }`}>
+          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Bonus</p>
+          <p className={`font-semibold text-xs ${isPlaceholder ? 'text-slate-700' : 'text-cyan-400'}`}>
+            {demense.specialBonus}
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-export function DemenseSelection({ demenses }: { demenses: Demense[] }) {
+export function DemenseSelection({ demenses, isPlaceholder }: { demenses: Demense[], isPlaceholder?: boolean }) {
   const [currentDemenses, setCurrentDemenses] = useState(demenses);
+  const [hasExplored, setHasExplored] = useState(!isPlaceholder);
+  const [selectedDemense, setSelectedDemense] = useState<Demense | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
-  const [isRerolling, setIsRerolling] = useState(false);
+  const [isExploring, setIsExploring] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   
-  const handleSelect = async (demense: Demense) => {
+  const handleCardClick = (demense: Demense) => {
+    setSelectedDemense(demense);
+  };
+  
+  const handleInhabit = async () => {
+    if (!selectedDemense) return;
+    
     setIsSelecting(true);
     setError(null);
     try {
-      await selectDemense(demense);
+      await selectDemense(selectedDemense);
       router.push('/');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to select demense');
@@ -72,16 +111,18 @@ export function DemenseSelection({ demenses }: { demenses: Demense[] }) {
     }
   };
   
-  const handleReroll = async () => {
-    setIsRerolling(true);
+  const handleExplore = async () => {
+    setIsExploring(true);
     setError(null);
     try {
-      const newDemenses = await rerollDemenses();
+      const newDemenses = await exploreDemenses();
       setCurrentDemenses(newDemenses);
+      setHasExplored(true);
+      setSelectedDemense(null); // Clear selection when rerolling
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to generate demenses');
+      setError(e instanceof Error ? e.message : 'Failed to explore demenses');
     } finally {
-      setIsRerolling(false);
+      setIsExploring(false);
     }
   };
   
@@ -92,7 +133,9 @@ export function DemenseSelection({ demenses }: { demenses: Demense[] }) {
           <DemenseCard 
             key={index} 
             demense={demense} 
-            onSelect={() => handleSelect(demense)}
+            onSelect={() => handleCardClick(demense)}
+            isPlaceholder={!hasExplored}
+            isSelected={selectedDemense?.name === demense.name}
           />
         ))}
       </div>
@@ -111,26 +154,52 @@ export function DemenseSelection({ demenses }: { demenses: Demense[] }) {
         </div>
       )}
       
-      {isRerolling && (
+      {isExploring && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-slate-800 p-8 rounded-lg">
-            <p className="text-white text-lg">🎲 Generating new strongholds...</p>
+            <p className="text-white text-lg">🔍 Exploring potential strongholds...</p>
           </div>
         </div>
       )}
       
-      <div className="flex gap-4 justify-center">
-        <button 
-          onClick={handleReroll}
-          disabled={isRerolling || isSelecting}
-          className={`font-semibold py-3 px-6 rounded-lg transition-all duration-200 ${
-            isRerolling || isSelecting
-              ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
-              : 'bg-slate-700 hover:bg-slate-600 text-white hover:shadow-lg'
-          }`}>
-          {isRerolling ? '⏳ Generating...' : '🎲 Roll New Options (20 Ink)'}
-        </button>
-      </div>
+      {!hasExplored ? (
+        <div className="flex gap-4 justify-center">
+          <button 
+            onClick={handleExplore}
+            disabled={isExploring || isSelecting}
+            className={`font-semibold py-3 px-6 rounded-lg transition-all duration-200 ${
+              isExploring || isSelecting
+                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                : 'bg-cyan-600 hover:bg-cyan-500 text-white hover:shadow-lg'
+            }`}>
+            {isExploring ? '🔍 Exploring...' : '🔍 Explore Three Opportunities (10 Ink)'}
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-4 justify-center">
+          <button 
+            onClick={handleExplore}
+            disabled={isExploring || isSelecting}
+            className={`font-semibold py-3 px-6 rounded-lg transition-all duration-200 ${
+              isExploring || isSelecting
+                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                : 'bg-slate-700 hover:bg-slate-600 text-white hover:shadow-lg'
+            }`}>
+            {isExploring ? '🎲 Rerolling...' : '🎲 Reroll Options (10 Ink)'}
+          </button>
+          
+          <button 
+            onClick={handleInhabit}
+            disabled={!selectedDemense || isExploring || isSelecting}
+            className={`font-semibold py-3 px-6 rounded-lg transition-all duration-200 ${
+              !selectedDemense || isExploring || isSelecting
+                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                : 'bg-cyan-600 hover:bg-cyan-500 text-white hover:shadow-lg'
+            }`}>
+            {isSelecting ? '⏳ Establishing...' : '🏰 Inhabit Demense'}
+          </button>
+        </div>
+      )}
     </>
   );
 }
