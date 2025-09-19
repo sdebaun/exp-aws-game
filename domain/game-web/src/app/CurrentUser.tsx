@@ -5,7 +5,7 @@ import { AccountEntity, DemenseEntity } from "../db/entities";
 import { EntityItem } from "electrodb";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { addInk } from "./actions";
+import { addInk, destroyAccount } from "./actions";
 
 export function CurrentUser({ user, account, demense }: { 
   user: User;
@@ -86,6 +86,22 @@ export function CurrentUser({ user, account, demense }: {
           >
             🚪 Logout
           </a>
+          
+          <div className="border-t border-slate-700 mt-1 pt-1">
+            <form action={destroyAccount}>
+              <button
+                type="submit"
+                className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/30 hover:text-red-300 transition-colors"
+                onClick={(e) => {
+                  if (!confirm('Are you sure you want to destroy your account? This cannot be undone.')) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                ⚠️ Destroy Account
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </div>

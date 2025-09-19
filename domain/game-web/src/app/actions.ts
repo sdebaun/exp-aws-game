@@ -39,3 +39,29 @@ export async function addInk() {
   // Refresh the page to show updated ink
   redirect('/');
 }
+
+export async function destroyAccount() {
+  const { user, demense } = await getUserInfo();
+  
+  if (!user) {
+    throw new Error("Not authenticated");
+  }
+  
+  const accountId = user.sub;
+  
+  // Delete demense if exists
+  if (demense) {
+    await DemenseEntity.delete({
+      accountId,
+      demenseId: demense.demenseId,
+    }).go();
+  }
+  
+  // Delete account
+  await AccountEntity.delete({
+    accountId,
+  }).go();
+  
+  // Log out
+  redirect('/auth/logout');
+}

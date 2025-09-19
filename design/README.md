@@ -1,5 +1,7 @@
 # design
 
+- @./USERS.md
+
 # Design Pillars
 - unique and engaging (not generic) game world
 - players build a roster of characters generated with AI including character portraits

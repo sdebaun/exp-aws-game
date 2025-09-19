@@ -76,7 +76,7 @@ export async function HomeUser({user, account, demense}: {user: User, account: E
         <div className="bg-slate-800 border-2 border-dashed border-slate-700 rounded-xl p-12 text-center">
           <div className="text-6xl mb-4">🏰</div>
           <h3 className="text-xl font-bold text-slate-400 mb-2">No Demense Established</h3>
-          <p className="text-slate-500 mb-6">You haven't claimed a stronghold yet. Establish your demense to begin your journey!</p>
+          <p className="text-slate-500 mb-6">You haven&apos;t claimed a stronghold yet. Establish your demense to begin your journey!</p>
           <Link 
             href="/demense/new" 
             className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg"
