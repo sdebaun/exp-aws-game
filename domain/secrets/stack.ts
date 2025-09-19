@@ -6,6 +6,8 @@ export type SecretsGroup = Record<string, sst.Secret>;
 export type Secrets = Record<SecretsGroupName, SecretsGroup>;
 
 export default function (): Secrets {
+  // these secret values are the *fallback* values if none is set
+  // they are *not* production values, they are for sandboxes or dev environments.
   return {
     auth0: {
       AUTH0_SECRET: new sst.Secret(
