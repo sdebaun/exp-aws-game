@@ -4,9 +4,23 @@
 import { Secrets } from "../secrets/stack";
 
 export default function ({ secrets }: { secrets: Secrets }) {
+  // Main game table - single table design
+  const gameTable = new sst.aws.Dynamo("GameTable", {
+    fields: {
+      pk: "string",  // partition key
+      sk: "string",  // sort key
+      gsi1pk: "string", // GSI partition key
+      gsi1sk: "string", // GSI sort key
+    },
+    primaryIndex: { hashKey: "pk", rangeKey: "sk" },
+    globalIndexes: {
+      gsi1: { hashKey: "gsi1pk", rangeKey: "gsi1sk" },
+    },
+  });
+
   const web = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
-    link: [...Object.values(secrets.auth0)],
+    link: [...Object.values(secrets.auth0), gameTable],
     environment: {
       AUTH0_DOMAIN: secrets.auth0.AUTH0_DOMAIN.value,
       AUTH0_CLIENT_ID: secrets.auth0.AUTH0_CLIENT_ID.value,
@@ -18,6 +32,7 @@ export default function ({ secrets }: { secrets: Secrets }) {
 
   return {
     gameWeb: web,
+    gameTable,
     url: web.url,
   };
 }

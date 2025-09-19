@@ -5,6 +5,10 @@
 
 declare module "sst" {
   export interface Resource {
+    "GameTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "GameWeb": {
       "type": "sst.aws.Nextjs"
       "url": string

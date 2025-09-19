@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth0 } from "../../../../integrations/auth0";
 import { User } from "@auth0/nextjs-auth0/types";
+import { AccountEntity } from "../db/entities";
+import { EntityItem } from "electrodb";
 
 export async function TopBar({user}: {user: User | null}) {
   return (
@@ -34,12 +36,14 @@ export async function TopBar({user}: {user: User | null}) {
   )
 }
 
-export async function HomeUser({user}: {user: User}) {
+export async function HomeUser({user, account}: {user: User, account: EntityItem<typeof AccountEntity>}) {
   // TODO: Fetch user's characters and stories from database
   const userCharacters = []; // Mock empty for now
   const userStories = [];
   
   return (<div className="p-8 max-w-7xl mx-auto">
+    <pre>{JSON.stringify(user, null, 2)}</pre>
+    <pre>{JSON.stringify(account, null, 2)}</pre>
     {/* Characters Section */}
     <section className="mb-12">
       <div className="flex justify-between items-center mb-6">
@@ -122,15 +126,36 @@ export async function HomeAnon() {
   </div>)
 }
 
-export default async function Home() {
+export async function accountFromUser(user: User) {
+  // Try to get existing account
+  const existing = await AccountEntity.get({ accountId: user.sub }).go();
+  if (existing.data) {
+    return existing.data;
+  }
+  
+  // Create new account with starter ink
+  const created = await AccountEntity.create({ accountId: user.sub }).go();
+  return created.data;
+}
+
+export async function getUserInfo() {
+  // this should get the auth0 session & user
   const session = await auth0.getSession();
-  const user = session ? session.user : null
+  if (!session) return { user: null, account: null }
+
+  const user = session.user
+  const account = await accountFromUser(user)
+  return { user, account }
+}
+
+export default async function Home() {
+  const { user, account } = await getUserInfo();
 
   return (
     <div className="min-h-screen bg-slate-950">
       <TopBar user={user}/>
       <div className="max-w-7xl mx-auto">
-        {user ? <HomeUser {...{user}}/> : <HomeAnon/> }
+        {user ? <HomeUser {...{user, account}}/> : <HomeAnon/> }
       </div>
     </div>
   )
