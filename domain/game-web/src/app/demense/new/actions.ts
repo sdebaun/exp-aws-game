@@ -3,14 +3,8 @@
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
   createStructuredResponse,
-  generateImage,
-  generateObject,
 } from "../../../../../../integrations/openai/openai";
-import type {
-  Response,
-  ResponseOutputItem,
-  ResponseOutputMessage,
-} from "openai/resources/responses/responses";
+import type { Response } from "openai/resources/responses/responses";
 import { DemenseEntity } from "../../../db/entities";
 import { db } from "../../../db";
 import { nanoid } from "nanoid";
