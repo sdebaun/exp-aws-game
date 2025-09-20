@@ -1,5 +1,6 @@
 # design
 
+- @./MANIFESTO_OF_DIGITAL_DREAMS.md
 - @./USERS.md
 
 # Design Pillars
