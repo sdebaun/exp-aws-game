@@ -3,7 +3,7 @@
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
   generateImage,
-  generateWithFunction,
+  generateObject,
 } from "../../../../../../integrations/openai/openai";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
@@ -39,11 +39,8 @@ export async function generateCharacters(freeReroll: boolean = false) {
   }
 
   // Generate 3 characters in one go
-  const result = await generateWithFunction<CharacterSet>({
-    messages: [
-      {
-        role: "system",
-        content: `You are a character generator for a dark fantasy game. 
+  const response = await generateObject({
+    instructions: `You are a character generator for a dark fantasy game. 
         
         Generate exactly 3 unique characters with these constraints:
         - Classes: Fighter, Rogue, Wizard, Cleric, Ranger, Warlock
@@ -52,47 +49,48 @@ export async function generateCharacters(freeReroll: boolean = false) {
         - Each character has a distinctive flaw or quirk
         - Create vivid, cinematic image prompts focusing on weathered, battle-scarred appearances
         - Image prompts should be in a painted fantasy art style, dramatic lighting`,
-      },
-      {
-        role: "user",
-        content: "Generate 3 unique characters for a player to choose from",
-      },
-    ],
-    functionDef: {
-      name: "create_characters",
-      description: "Create multiple characters with details and image prompts",
-      parameters: {
-        type: "object",
-        properties: {
-          characters: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                class: {
-                  type: "string",
-                  enum: [
-                    "Fighter",
-                    "Rogue",
-                    "Wizard",
-                    "Cleric",
-                    "Ranger",
-                    "Warlock",
-                  ],
+    input: "Generate 3 unique characters for a player to choose from",
+    format: {
+      type: "json_schema",
+      json_schema: {
+        name: "character_set",
+        description: "A set of generated characters",
+        schema: {
+          type: "object",
+          properties: {
+            characters: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  class: {
+                    type: "string",
+                    enum: [
+                      "Fighter",
+                      "Rogue",
+                      "Wizard",
+                      "Cleric",
+                      "Ranger",
+                      "Warlock",
+                    ],
+                  },
+                  background: { type: "string" },
+                  trait: { type: "string" },
+                  imagePrompt: { type: "string" },
                 },
-                background: { type: "string" },
-                trait: { type: "string" },
-                imagePrompt: { type: "string" },
+                required: ["name", "class", "background", "trait", "imagePrompt"],
               },
-              required: ["name", "class", "background", "trait", "imagePrompt"],
             },
           },
+          required: ["characters"],
         },
-        required: ["characters"],
       },
     },
   });
+
+  // Parse the result from the response
+  const result = JSON.parse(response.choices[0].message.content) as CharacterSet;
 
   // Generate images for all 3 characters in parallel
   const charactersWithImages = await Promise.all(

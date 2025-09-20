@@ -1,13 +1,12 @@
 import OpenAI from "openai";
+import {
+  ResponseFormatTextJSONSchemaConfig,
+  ResponseTextConfig,
+} from "openai/resources/responses/responses";
 import { Resource } from "sst";
 
 // Initialize OpenAI client with SST secret
-const apiKey = Resource.OpenaiApiKey.value;
-console.log("OpenAI API Key length:", apiKey?.length, "First 10 chars:", apiKey?.substring(0, 10));
-
-export const openai = new OpenAI({
-  apiKey: apiKey,
-});
+export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
 // Type for the structured function response
 export type FunctionCall<T> = {
@@ -15,6 +14,24 @@ export type FunctionCall<T> = {
   arguments: T;
 };
 
+export async function generateObject({
+  instructions,
+  input,
+  text,
+}: {
+  instructions?: string;
+  input?: string;
+  text: ResponseTextConfig;
+}) {
+  const response = await client.responses.parse({
+    model: "gpt-4o-2024-08-06",
+    instructions,
+    input,
+    text,
+  });
+  console.log("generateObject()", response);
+  return response;
+}
 // Wrapper for OpenAI function calls with proper typing
 export async function generateWithFunction<T>({
   messages,
@@ -29,7 +46,7 @@ export async function generateWithFunction<T>({
   };
   model?: string;
 }): Promise<T> {
-  const response = await openai.chat.completions.create({
+  const response = await client.chat.completions.create({
     model,
     messages,
     tools: [{
@@ -57,7 +74,7 @@ export async function generateImage({
   model?: "dall-e-2" | "dall-e-3";
   size?: "1024x1024" | "1792x1024" | "1024x1792";
 }): Promise<string> {
-  const response = await openai.images.generate({
+  const response = await client.images.generate({
     model,
     prompt,
     n: 1,
