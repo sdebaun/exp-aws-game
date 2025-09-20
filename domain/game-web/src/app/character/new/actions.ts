@@ -1,10 +1,7 @@
 "use server";
 
-import { auth0 } from "../../../../../../integrations/auth0";
-import {
-  generateImage,
-  generateStructuredResponse,
-} from "../../../../../../integrations/openai/openai";
+import { auth0 } from "@integrations/auth0";
+import { generateStructuredResponse, generateImage } from "@integrations/openai";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
 import z from "zod";

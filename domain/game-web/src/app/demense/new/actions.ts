@@ -1,10 +1,10 @@
 "use server";
 
-import { auth0 } from "../../../../../../integrations/auth0";
+import { auth0 } from "@integrations/auth0";
 import {
   generateImage,
   generateStructuredResponse,
-} from "../../../../../../integrations/openai/openai";
+} from "@integrations/openai";
 import { DemenseEntity } from "../../../db/entities";
 import { db } from "../../../db";
 import { nanoid } from "nanoid";
@@ -18,7 +18,7 @@ const DemenseParser = z.object({
 });
 
 const ExploreDemenseResultParser = z.object({
-  demenses: z.array(DemenseParser).length(3),
+  demenses: z.array(DemenseParser).length(1),
 }).strict();
 
 export async function exploreDemenses() {

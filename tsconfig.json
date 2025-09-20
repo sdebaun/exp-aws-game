@@ -1,7 +1,10 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "next-components": ["./lib/nextcomponents"]
+      "next-components": ["./lib/nextcomponents"],
+      "@integrations/*": ["./integrations/*"],
+      "@domain/*": ["./domain/*"]
     }
   }
 }
