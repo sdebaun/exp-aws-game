@@ -5,13 +5,10 @@ import {
   createStructuredResponse,
   generateImage,
 } from "../../../../../../integrations/openai/openai";
-import type {
-  Response,
-  ResponseFormatTextConfig,
-} from "openai/resources/responses/responses";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
 import z from "zod";
+import { zodTextFormat } from "openai/helpers/zod.mjs";
 
 const CharacterParser = z.object({
   name: z.string(),
@@ -23,9 +20,7 @@ const CharacterParser = z.object({
 
 const GenerateCharactersResultParser = z.object({
   characters: z.array(CharacterParser).length(3),
-});
-
-type GenerateCharactersResult = z.infer<typeof GenerateCharactersResultParser>;
+}).strict();
 
 export async function generateCharacters(freeReroll: boolean = false) {
   const session = await auth0.getSession();
@@ -56,38 +51,10 @@ Generate exactly 3 unique characters with these constraints:
 
   const input = "Generate 3 unique characters for a player to choose from";
 
-  const format: ResponseFormatTextConfig = {
-    type: "json_schema",
-    name: "generate_characters_result_parser",
-    strict: true,
-    schema: {
-      type: "object",
-      properties: {
-        characters: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              class: { 
-                type: "string",
-                enum: ["Fighter", "Rogue", "Wizard", "Cleric", "Ranger", "Warlock"],
-              },
-              background: { type: "string" },
-              trait: { type: "string" },
-              appearance: { type: "string" },
-            },
-            required: ["name", "class", "background", "trait", "appearance"],
-            additionalProperties: false,
-          },
-          minItems: 3,
-          maxItems: 3,
-        },
-      },
-      required: ["characters"],
-      additionalProperties: false,
-    },
-  };
+  const format = zodTextFormat(
+    GenerateCharactersResultParser,
+    "generate_characters_result_parser",
+  );
 
   const response = await createStructuredResponse({
     format,
@@ -95,8 +62,12 @@ Generate exactly 3 unique characters with these constraints:
     input,
   });
 
-  // Extract and validate the parsed characters
-  const parsedResult = extractParsedCharacters(response);
+  // The parse method should give us the parsed data directly
+  if (!response.output_parsed) {
+    throw new Error("Failed to generate characters");
+  }
+  
+  const parsedResult = response.output_parsed;
 
   // Generate portraits for each character in parallel
   const charactersWithImages = await Promise.all(

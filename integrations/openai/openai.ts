@@ -4,21 +4,22 @@ import {
   ResponseTextConfig,
 } from "openai/resources/responses/responses";
 import { ImageGenerateParamsNonStreaming } from "openai/resources/images";
+import { AutoParseableTextFormat } from "openai/lib/parser";
 import { Resource } from "sst";
 
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-export async function createStructuredResponse({
+export async function createStructuredResponse<T>({
   format,
   instructions,
   input,
 }: {
-  format: ResponseFormatTextConfig;
+  format: AutoParseableTextFormat<T>;
   instructions: string;
   input: string;
 }) {
-  const response = await client.responses.parse({
+  const response = await client.responses.parse<any, T>({
     model: "gpt-4o",
     instructions,
     input,
