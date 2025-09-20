@@ -11,53 +11,54 @@ import z from "zod";
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-const DemenseParser = z.object({
-  name: z.string(),
-  description: z.string(),
-  aspects: z.array(z.string()),
-});
+// const DemenseParser = z.object({
+//   name: z.string(),
+//   description: z.string(),
+//   aspects: z.array(z.string()),
+// });
 
-const ExploreDemenseResultParser = z.object({
-  demenses: z.array(DemenseParser).length(3),
-});
+// const ExploreDemenseResultParser = z.object({
+//   demenses: z.array(DemenseParser).length(3),
+// });
 
 export async function createStructuredResponse() {
   // Create the schema manually to match what OpenAI expects
   // TODO: Fix zodTextFormat - it's producing type: 'string' instead of type: 'object'
   const manualFormat = {
-    type: 'json_schema' as const,
-    name: 'explore_demense_result_parser',
+    type: "json_schema" as const,
+    name: "explore_demense_result_parser",
     strict: true,
     schema: {
-      type: 'object',
+      type: "object",
       properties: {
         demenses: {
-          type: 'array',
+          type: "array",
           items: {
-            type: 'object',
+            type: "object",
             properties: {
-              name: { type: 'string' },
-              description: { type: 'string' },
+              name: { type: "string" },
+              description: { type: "string" },
               aspects: {
-                type: 'array',
-                items: { type: 'string' }
-              }
+                type: "array",
+                items: { type: "string" },
+              },
             },
-            required: ['name', 'description', 'aspects'],
-            additionalProperties: false
+            required: ["name", "description", "aspects"],
+            additionalProperties: false,
           },
           minItems: 3,
-          maxItems: 3
-        }
+          maxItems: 3,
+        },
       },
-      required: ['demenses'],
-      additionalProperties: false
-    }
+      required: ["demenses"],
+      additionalProperties: false,
+    },
   };
-  
+
   const response = await client.responses.create({
     model: "gpt-4o",
-    instructions: `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
+    instructions:
+      `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
 - Dark, gritty tone - these are fortresses in a harsh world
 - Each has unique strategic advantages and aspects
 - Each demense should have 2-3 aspects that describe its characteristics`,
@@ -67,7 +68,13 @@ export async function createStructuredResponse() {
     },
   });
 
-  console.log("Parsed response:", response.output_parsed);
+  console.log("response.output:", response.output);
+  // console.log("response.output_parsed:", response.output_parsed);
+  console.log("response keys:", Object.keys(response));
+
+  // Log the full response structure to understand it better
+  console.log("Full response structure:", JSON.stringify(response, null, 2));
+
   return response;
 }
 
@@ -78,7 +85,7 @@ export async function generateObject({
 }: {
   instructions?: string;
   input?: string;
-  text;
+  text: ResponseTextConfig;
 }) {
   const response = await client.responses.parse({
     model: "gpt-4o-2024-08-06",
@@ -138,7 +145,7 @@ export async function generateImage({
     size,
   });
 
-  const imageUrl = response.data[0]?.url;
+  const imageUrl = response.data?.[0]?.url;
   if (!imageUrl) {
     throw new Error("No image URL in response");
   }

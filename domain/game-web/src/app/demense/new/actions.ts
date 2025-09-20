@@ -23,8 +23,74 @@ const ExploreDemenseResultParser = z.object({
 });
 
 export async function exploreDemenses() {
+  const session = await auth0.getSession();
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
+  const accountId = session.user.sub;
+
+  // Exploration always costs 10 ink
+  try {
+    await db.account.spendInk(accountId, 10);
+  } catch (e) {
+    throw new Error("Insufficient Ink to explore demenses");
+  }
+
   const response = await createStructuredResponse();
-  console.log(response);
+  console.log("Full response:", response);
+  
+  // The Responses API returns data in the output array
+  if (!response.output || response.output.length === 0) {
+    throw new Error("No output from API");
+  }
+  
+  const outputItem = response.output[0];
+  console.log("Output item:", outputItem);
+  
+  let parsed: any;
+  
+  // Check if it's a message type and has content
+  if (outputItem.type === 'message' && 'content' in outputItem) {
+    const message = outputItem;
+    if (message.content && message.content.length > 0) {
+      const contentItem = message.content[0];
+      
+      // Check if it's a text content with parsed data
+      if ('parsed' in contentItem) {
+        parsed = contentItem.parsed;
+      } else if ('text' in contentItem) {
+        // Otherwise try to parse the text
+        try {
+          parsed = JSON.parse(contentItem.text);
+        } catch (e) {
+          console.error("Failed to parse output text:", e);
+          console.error("Text was:", contentItem.text);
+          throw new Error("Failed to parse demenses response");
+        }
+      }
+    }
+  }
+  
+  // If we still don't have parsed data, try output_parsed
+  if (!parsed && 'output_parsed' in response && response.output_parsed) {
+    parsed = response.output_parsed;
+  }
+  
+  if (!parsed || !parsed.demenses) {
+    console.error("Parsed data:", parsed);
+    throw new Error("Failed to generate demenses - no demenses array found");
+  }
+
+  // Map the generated demenses to match the expected structure
+  return parsed.demenses.map((dem: any) => ({
+    name: dem.name,
+    description: dem.description,
+    defensePower: 5, // Default values for now
+    productionRate: 5,
+    specialBonus: dem.aspects?.[0] || "Unknown bonus",
+    imageUrl: null,
+  }));
 }
 // export async function exploreDemenses() {
 //   const session = await auth0.getSession();
