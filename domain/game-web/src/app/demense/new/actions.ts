@@ -3,6 +3,7 @@
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
   createStructuredResponse,
+  generateImage,
 } from "../../../../../../integrations/openai/openai";
 import type { Response } from "openai/resources/responses/responses";
 import { DemenseEntity } from "../../../db/entities";
@@ -115,15 +116,50 @@ export async function exploreDemenses() {
   // Extract and validate the parsed demenses
   const parsedResult = extractParsedDemenses(response);
 
-  // Map the generated demenses to match the expected structure
-  return parsedResult.demenses.map((dem) => ({
-    name: dem.name,
-    description: dem.description,
-    defensePower: 5, // Default values for now
-    productionRate: 5,
-    specialBonus: dem.aspects?.[0] || "Unknown bonus",
-    imageUrl: null,
-  }));
+  // Generate portraits for each demense in parallel
+  const demensesWithPortraits = await Promise.all(
+    parsedResult.demenses.map(async (dem) => {
+      try {
+        // Create a detailed prompt for portrait generation
+        const portraitPrompt =
+          `Dark fantasy stronghold portrait: ${dem.name}. ${dem.description}. Key features: ${
+            dem.aspects.join(", ")
+          }. Style: gothic, foreboding, medieval fortress, atmospheric lighting, dramatic perspective.`;
+
+        // Generate the portrait
+        const imageResult = await generateImage({
+          prompt: portraitPrompt,
+          // textContent: dem.description,
+          model: "dall-e-3",
+          size: "1024x1024",
+          quality: "standard",
+          style: "vivid",
+        });
+
+        return {
+          name: dem.name,
+          description: dem.description,
+          defensePower: 5, // Default values for now
+          productionRate: 5,
+          specialBonus: dem.aspects?.[0] || "Unknown bonus",
+          imageUrl: imageResult.url || null,
+        };
+      } catch (error) {
+        console.error(`Failed to generate portrait for ${dem.name}:`, error);
+        // Return demense without portrait if generation fails
+        return {
+          name: dem.name,
+          description: dem.description,
+          defensePower: 5,
+          productionRate: 5,
+          specialBonus: dem.aspects?.[0] || "Unknown bonus",
+          imageUrl: null,
+        };
+      }
+    }),
+  );
+
+  return demensesWithPortraits;
 }
 
 export async function selectDemense(demense: {
