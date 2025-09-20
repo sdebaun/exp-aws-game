@@ -1,54 +1,67 @@
 import OpenAI from "openai";
-import { ResponseTextConfig } from "openai/resources/responses/responses";
+import {
+  ResponseFormatTextConfig,
+  ResponseTextConfig,
+} from "openai/resources/responses/responses";
 import { ImageGenerateParamsNonStreaming } from "openai/resources/images";
 import { Resource } from "sst";
 
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-export async function createStructuredResponse() {
+export async function createStructuredResponse({
+  format,
+  instructions,
+  input,
+}: {
+  format: ResponseFormatTextConfig;
+  instructions: string;
+  input: string;
+}) {
   // Create the schema manually to match what OpenAI expects
-  const manualFormat = {
-    type: "json_schema" as const,
-    name: "explore_demense_result_parser",
-    strict: true,
-    schema: {
-      type: "object",
-      properties: {
-        demenses: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              description: { type: "string" },
-              aspects: {
-                type: "array",
-                items: { type: "string" },
-              },
-            },
-            required: ["name", "description", "aspects"],
-            additionalProperties: false,
-          },
-          minItems: 3,
-          maxItems: 3,
-        },
-      },
-      required: ["demenses"],
-      additionalProperties: false,
-    },
-  };
+  // const manualFormat: ResponseFormatTextConfig = {
+  //   type: "json_schema" as const,
+  //   name: "explore_demense_result_parser",
+  //   strict: true,
+  //   schema: {
+  //     type: "object",
+  //     properties: {
+  //       demenses: {
+  //         type: "array",
+  //         items: {
+  //           type: "object",
+  //           properties: {
+  //             name: { type: "string" },
+  //             description: { type: "string" },
+  //             aspects: {
+  //               type: "array",
+  //               items: { type: "string" },
+  //             },
+  //           },
+  //           required: ["name", "description", "aspects"],
+  //           additionalProperties: false,
+  //         },
+  //         minItems: 3,
+  //         maxItems: 3,
+  //       },
+  //     },
+  //     required: ["demenses"],
+  //     additionalProperties: false,
+  //   },
+  // };
 
   const response = await client.responses.create({
     model: "gpt-4o",
-    instructions:
-      `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
-- Dark, gritty tone - these are fortresses in a harsh world
-- Each has unique strategic advantages and aspects
-- Each demense should have 2-3 aspects that describe its characteristics`,
-    input: "Generate 3 unique demenses for a player to choose from",
+    //     instructions:
+    //       `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
+    // - Dark, gritty tone - these are fortresses in a harsh world
+    // - Each has unique strategic advantages and aspects
+    // - Each demense should have 2-3 aspects that describe its characteristics`,
+    instructions,
+    input,
     text: {
-      format: manualFormat,
+      // format: manualFormat,
+      format,
     },
   });
 
@@ -120,7 +133,15 @@ export async function generateImage({
   prompt: string;
   textContent?: string;
   model?: "dall-e-2" | "dall-e-3" | "gpt-image-1";
-  size?: "auto" | "1024x1024" | "1536x1024" | "1024x1536" | "256x256" | "512x512" | "1792x1024" | "1024x1792";
+  size?:
+    | "auto"
+    | "1024x1024"
+    | "1536x1024"
+    | "1024x1536"
+    | "256x256"
+    | "512x512"
+    | "1792x1024"
+    | "1024x1792";
   quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto";
   style?: "vivid" | "natural";
   responseFormat?: "url" | "b64_json";
@@ -129,7 +150,7 @@ export async function generateImage({
   moderation?: "low" | "auto";
 }): Promise<{ url?: string; b64_json?: string; revisedPrompt?: string }> {
   // If text content is provided, incorporate it into the prompt
-  const finalPrompt = textContent 
+  const finalPrompt = textContent
     ? `${prompt}\n\nBased on the following content:\n${textContent}`
     : prompt;
 
