@@ -22,6 +22,60 @@ const ExploreDemenseResultParser = z.object({
   demenses: z.array(DemenseParser).length(3),
 });
 
+// Types for the expected response structure
+type GeneratedDemense = z.infer<typeof DemenseParser>;
+type ExploreDemenseResult = z.infer<typeof ExploreDemenseResultParser>;
+
+// Type guard to check if content item has parsed data
+function hasParsedContent(item: any): item is { parsed: ExploreDemenseResult } {
+  return 'parsed' in item && item.parsed?.demenses?.length === 3;
+}
+
+// Type guard to check if content item has text
+function hasTextContent(item: any): item is { text: string } {
+  return 'text' in item && typeof item.text === 'string';
+}
+
+// Extract parsed data from the OpenAI response with proper typing
+function extractParsedDemenses(response: any): ExploreDemenseResult {
+  // First, check the output array
+  if (!response.output || !Array.isArray(response.output) || response.output.length === 0) {
+    throw new Error("No output from API");
+  }
+  
+  const outputItem = response.output[0];
+  
+  // Navigate through the response structure
+  if (outputItem.type === 'message' && 'content' in outputItem && Array.isArray(outputItem.content)) {
+    const contentItem = outputItem.content[0];
+    
+    // Check for parsed data first (preferred)
+    if (hasParsedContent(contentItem)) {
+      return contentItem.parsed;
+    }
+    
+    // Fall back to parsing text if available
+    if (hasTextContent(contentItem)) {
+      try {
+        const parsed = JSON.parse(contentItem.text);
+        // Validate the parsed data matches our schema
+        return ExploreDemenseResultParser.parse(parsed);
+      } catch (e) {
+        console.error("Failed to parse output text:", e);
+        console.error("Text was:", contentItem.text);
+        throw new Error("Failed to parse demenses response");
+      }
+    }
+  }
+  
+  // Last resort: check for output_parsed at the top level
+  if ('output_parsed' in response && response.output_parsed) {
+    return ExploreDemenseResultParser.parse(response.output_parsed);
+  }
+  
+  throw new Error("Failed to extract demenses from API response");
+}
+
 export async function exploreDemenses() {
   const session = await auth0.getSession();
   if (!session) {
@@ -40,50 +94,11 @@ export async function exploreDemenses() {
   const response = await createStructuredResponse();
   console.log("Full response:", response);
   
-  // The Responses API returns data in the output array
-  if (!response.output || response.output.length === 0) {
-    throw new Error("No output from API");
-  }
-  
-  const outputItem = response.output[0];
-  console.log("Output item:", outputItem);
-  
-  let parsed: any;
-  
-  // Check if it's a message type and has content
-  if (outputItem.type === 'message' && 'content' in outputItem) {
-    const message = outputItem;
-    if (message.content && message.content.length > 0) {
-      const contentItem = message.content[0];
-      
-      // Check if it's a text content with parsed data
-      if ('parsed' in contentItem) {
-        parsed = contentItem.parsed;
-      } else if ('text' in contentItem) {
-        // Otherwise try to parse the text
-        try {
-          parsed = JSON.parse(contentItem.text);
-        } catch (e) {
-          console.error("Failed to parse output text:", e);
-          console.error("Text was:", contentItem.text);
-          throw new Error("Failed to parse demenses response");
-        }
-      }
-    }
-  }
-  
-  // If we still don't have parsed data, try output_parsed
-  if (!parsed && 'output_parsed' in response && response.output_parsed) {
-    parsed = response.output_parsed;
-  }
-  
-  if (!parsed || !parsed.demenses) {
-    console.error("Parsed data:", parsed);
-    throw new Error("Failed to generate demenses - no demenses array found");
-  }
+  // Extract and validate the parsed demenses
+  const parsedResult = extractParsedDemenses(response);
 
   // Map the generated demenses to match the expected structure
-  return parsed.demenses.map((dem: any) => ({
+  return parsedResult.demenses.map((dem) => ({
     name: dem.name,
     description: dem.description,
     defensePower: 5, // Default values for now
