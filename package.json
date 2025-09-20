@@ -6,7 +6,8 @@
     "check-types": "turbo run check-types",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "lore:publish": "cd domain/lore && yarn publish"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.149",
@@ -21,6 +22,7 @@
   "packageManager": "yarn@4.9.1",
   "workspaces": [
     "domain/game-web",
+    "domain/lore",
     "lib/*"
   ],
   "dependencies": {
