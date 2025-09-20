@@ -2,23 +2,30 @@
 
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
+  createStructuredResponse,
   generateImage,
-  generateObject,
 } from "../../../../../../integrations/openai/openai";
+import type {
+  Response,
+  ResponseFormatTextConfig,
+} from "openai/resources/responses/responses";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
+import z from "zod";
 
-type GeneratedCharacter = {
-  name: string;
-  class: string;
-  background: string;
-  trait: string;
-  imagePrompt: string;
-};
+const CharacterParser = z.object({
+  name: z.string(),
+  class: z.enum(["Fighter", "Rogue", "Wizard", "Cleric", "Ranger", "Warlock"]),
+  background: z.string(),
+  trait: z.string(),
+  appearance: z.string(),
+});
 
-type CharacterSet = {
-  characters: GeneratedCharacter[];
-};
+const GenerateCharactersResultParser = z.object({
+  characters: z.array(CharacterParser).length(3),
+});
+
+type GenerateCharactersResult = z.infer<typeof GenerateCharactersResultParser>;
 
 export async function generateCharacters(freeReroll: boolean = false) {
   const session = await auth0.getSession();
@@ -30,7 +37,7 @@ export async function generateCharacters(freeReroll: boolean = false) {
 
   // Check/spend Ink if not a free reroll
   if (!freeReroll) {
-    const REROLL_COST = 10; // Or whatever you decide
+    const REROLL_COST = 10;
     try {
       await db.account.spendInk(accountId, REROLL_COST);
     } catch (e) {
@@ -38,69 +45,85 @@ export async function generateCharacters(freeReroll: boolean = false) {
     }
   }
 
-  // Generate 3 characters in one go
-  const response = await generateObject({
-    instructions: `You are a character generator for a dark fantasy game. 
+  const instructions = `You are a character generator for a dark fantasy game. 
         
-        Generate exactly 3 unique characters with these constraints:
-        - Classes: Fighter, Rogue, Wizard, Cleric, Ranger, Warlock
-        - Dark, gritty tone with morally gray characters
-        - Each character has a tragic or compromising background
-        - Each character has a distinctive flaw or quirk
-        - Create vivid, cinematic image prompts focusing on weathered, battle-scarred appearances
-        - Image prompts should be in a painted fantasy art style, dramatic lighting`,
-    input: "Generate 3 unique characters for a player to choose from",
-    format: {
-      type: "json_schema",
-      json_schema: {
-        name: "character_set",
-        description: "A set of generated characters",
-        schema: {
-          type: "object",
-          properties: {
-            characters: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  class: {
-                    type: "string",
-                    enum: [
-                      "Fighter",
-                      "Rogue",
-                      "Wizard",
-                      "Cleric",
-                      "Ranger",
-                      "Warlock",
-                    ],
-                  },
-                  background: { type: "string" },
-                  trait: { type: "string" },
-                  imagePrompt: { type: "string" },
-                },
-                required: ["name", "class", "background", "trait", "imagePrompt"],
+Generate exactly 3 unique characters with these constraints:
+- Classes must be one of: Fighter, Rogue, Wizard, Cleric, Ranger, Warlock
+- Dark, gritty tone with morally gray characters
+- Each character has a tragic or compromising background
+- Each character has a distinctive flaw or quirk
+- Appearance should describe weathered, battle-scarred looks suitable for character portraits`;
+
+  const input = "Generate 3 unique characters for a player to choose from";
+
+  const format: ResponseFormatTextConfig = {
+    type: "json_schema",
+    name: "generate_characters_result_parser",
+    strict: true,
+    schema: {
+      type: "object",
+      properties: {
+        characters: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              class: { 
+                type: "string",
+                enum: ["Fighter", "Rogue", "Wizard", "Cleric", "Ranger", "Warlock"],
               },
+              background: { type: "string" },
+              trait: { type: "string" },
+              appearance: { type: "string" },
             },
+            required: ["name", "class", "background", "trait", "appearance"],
+            additionalProperties: false,
           },
-          required: ["characters"],
+          minItems: 3,
+          maxItems: 3,
         },
       },
+      required: ["characters"],
+      additionalProperties: false,
     },
+  };
+
+  const response = await createStructuredResponse({
+    format,
+    instructions,
+    input,
   });
 
-  // Parse the result from the response
-  const result = JSON.parse(response.choices[0].message.content) as CharacterSet;
+  // Extract and validate the parsed characters
+  const parsedResult = extractParsedCharacters(response);
 
-  // Generate images for all 3 characters in parallel
+  // Generate portraits for each character in parallel
   const charactersWithImages = await Promise.all(
-    result.characters.map(async (char) => {
+    parsedResult.characters.map(async (char) => {
       try {
-        const imageUrl = await generateImage({ prompt: char.imagePrompt });
-        return { ...char, imageUrl };
+        // Create a detailed prompt for portrait generation
+        const portraitPrompt = `Dark fantasy character portrait: ${char.name}, ${char.class}. ${char.appearance}. Background: ${char.background}. Style: painted fantasy art, dramatic lighting, weathered and battle-scarred.`;
+        
+        // Generate the portrait
+        const imageResult = await generateImage({
+          prompt: portraitPrompt,
+          model: "dall-e-3",
+          size: "1024x1024",
+          quality: "standard",
+          style: "vivid",
+        });
+
+        return {
+          ...char,
+          imageUrl: imageResult.url || null,
+        };
       } catch (e) {
-        console.error(`Failed to generate image for ${char.name}:`, e);
-        return { ...char, imageUrl: null };
+        console.error(`Failed to generate portrait for ${char.name}:`, e);
+        return {
+          ...char,
+          imageUrl: null,
+        };
       }
     }),
   );

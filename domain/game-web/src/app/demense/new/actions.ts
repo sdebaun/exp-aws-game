@@ -159,6 +159,8 @@ export async function exploreDemenses() {
     input,
   });
 
+  console.log("demense response", response);
+
   // Extract and validate the parsed demenses
   const parsedResult = extractParsedDemenses(response);
 
