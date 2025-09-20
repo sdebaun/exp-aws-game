@@ -32,6 +32,12 @@ export async function generateStructuredResponse<T>({
     text: {
       format,
     },
+    tools: [
+      {
+        type: "file_search",
+        vector_store_ids: ["vs_68cf2e6262548191a0ac8991b3868688"],
+      },
+    ],
   });
 
   // Log costs

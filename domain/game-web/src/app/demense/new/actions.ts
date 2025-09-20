@@ -36,13 +36,12 @@ export async function exploreDemenses() {
     throw new Error("Insufficient Ink to explore demenses");
   }
 
-  const instructions =
-    `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
-- Dark, gritty tone - these are fortresses in a harsh world
-- Each has unique strategic advantages and aspects
-- Each demense should have 2-3 aspects that describe its characteristics`;
+  const instructions = `Generate a single unique Valley for the River of Souls.
+    Pay close attention and follow the River of Souls style guidelines and world overview.
+    MOST IMPORTANT: You will ALWAYS write in the style of Terry Pratchett, Iain M. Banks, and Douglas Adams.
+  `;
 
-  const input = "Generate 3 unique demenses for a player to choose from";
+  const input = "Generate a single unique Valley for the River of Souls.";
 
   const format = zodTextFormat(
     ExploreDemenseResultParser,
