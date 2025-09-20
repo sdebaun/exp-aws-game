@@ -11,19 +11,8 @@ import z from "zod";
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-// const DemenseParser = z.object({
-//   name: z.string(),
-//   description: z.string(),
-//   aspects: z.array(z.string()),
-// });
-
-// const ExploreDemenseResultParser = z.object({
-//   demenses: z.array(DemenseParser).length(3),
-// });
-
 export async function createStructuredResponse() {
   // Create the schema manually to match what OpenAI expects
-  // TODO: Fix zodTextFormat - it's producing type: 'string' instead of type: 'object'
   const manualFormat = {
     type: "json_schema" as const,
     name: "explore_demense_result_parser",
