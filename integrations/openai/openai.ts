@@ -1,12 +1,6 @@
 import OpenAI from "openai";
-import { zodTextFormat } from "openai/helpers/zod";
-import {
-  ResponseFormatTextConfig,
-  ResponseFormatTextJSONSchemaConfig,
-  ResponseTextConfig,
-} from "openai/resources/responses/responses";
+import { ResponseTextConfig } from "openai/resources/responses/responses";
 import { Resource } from "sst";
-import z from "zod";
 
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
@@ -56,7 +50,6 @@ export async function createStructuredResponse() {
       format: manualFormat,
     },
   });
-
 
   return response;
 }
