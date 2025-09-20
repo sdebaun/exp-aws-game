@@ -80,9 +80,9 @@ Generate exactly 3 unique characters with these constraints:
         // Generate the portrait
         const imageResult = await generateImage({
           prompt: portraitPrompt,
-          model: "dall-e-3",
+          // model: "dall-e-3",
           size: "1024x1024",
-          quality: "standard",
+          // quality: "standard",
           style: "vivid",
         });
 

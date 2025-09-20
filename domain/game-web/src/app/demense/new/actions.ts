@@ -78,9 +78,9 @@ export async function exploreDemenses() {
         const imageResult = await generateImage({
           prompt: portraitPrompt,
           // textContent: dem.description,
-          model: "dall-e-3",
+          // model: "dall-e-3",
           size: "1024x1024",
-          quality: "standard",
+          // quality: "standard",
           style: "vivid",
         });
 
