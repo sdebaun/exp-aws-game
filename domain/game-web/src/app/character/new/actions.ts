@@ -2,8 +2,8 @@
 
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
-  createStructuredResponse,
   generateImage,
+  generateStructuredResponse,
 } from "../../../../../../integrations/openai/openai";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
@@ -56,7 +56,7 @@ Generate exactly 3 unique characters with these constraints:
     "generate_characters_result_parser",
   );
 
-  const response = await createStructuredResponse({
+  const response = await generateStructuredResponse({
     format,
     instructions,
     input,
@@ -66,7 +66,7 @@ Generate exactly 3 unique characters with these constraints:
   if (!response.output_parsed) {
     throw new Error("Failed to generate characters");
   }
-  
+
   const parsedResult = response.output_parsed;
 
   // Generate portraits for each character in parallel
@@ -74,8 +74,9 @@ Generate exactly 3 unique characters with these constraints:
     parsedResult.characters.map(async (char) => {
       try {
         // Create a detailed prompt for portrait generation
-        const portraitPrompt = `Dark fantasy character portrait: ${char.name}, ${char.class}. ${char.appearance}. Background: ${char.background}. Style: painted fantasy art, dramatic lighting, weathered and battle-scarred.`;
-        
+        const portraitPrompt =
+          `Dark fantasy character portrait: ${char.name}, ${char.class}. ${char.appearance}. Background: ${char.background}. Style: painted fantasy art, dramatic lighting, weathered and battle-scarred.`;
+
         // Generate the portrait
         const imageResult = await generateImage({
           prompt: portraitPrompt,

@@ -1,16 +1,11 @@
 import OpenAI from "openai";
-import {
-  ResponseFormatTextConfig,
-  ResponseTextConfig,
-} from "openai/resources/responses/responses";
 import { ImageGenerateParamsNonStreaming } from "openai/resources/images";
 import { AutoParseableTextFormat } from "openai/lib/parser";
 import { Resource } from "sst";
 
-// Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-export async function createStructuredResponse<T>({
+export async function generateStructuredResponse<T>({
   format,
   instructions,
   input,
@@ -27,61 +22,9 @@ export async function createStructuredResponse<T>({
       format,
     },
   });
-  console.log("openai call", response);
-
   return response;
 }
 
-export async function generateObject({
-  instructions,
-  input,
-  text,
-}: {
-  instructions?: string;
-  input?: string;
-  text: ResponseTextConfig;
-}) {
-  const response = await client.responses.parse({
-    model: "gpt-4o-2024-08-06",
-    // instructions,
-    input,
-    text,
-  });
-  return response;
-}
-// Wrapper for OpenAI function calls with proper typing
-export async function generateWithFunction<T>({
-  messages,
-  functionDef,
-  model = "gpt-4-turbo",
-}: {
-  messages: OpenAI.Chat.ChatCompletionMessageParam[];
-  functionDef: {
-    name: string;
-    description?: string;
-    parameters: Record<string, unknown>;
-  };
-  model?: string;
-}): Promise<T> {
-  const response = await client.chat.completions.create({
-    model,
-    messages,
-    tools: [{
-      type: "function",
-      function: functionDef,
-    }],
-    tool_choice: "required",
-  });
-
-  const toolCall = response.choices[0]?.message?.tool_calls?.[0];
-  if (!toolCall || toolCall.type !== "function") {
-    throw new Error("No function call in response");
-  }
-
-  return JSON.parse(toolCall.function.arguments) as T;
-}
-
-// Helper for image generation with support for latest API features
 export async function generateImage({
   prompt,
   textContent,

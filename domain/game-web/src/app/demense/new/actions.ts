@@ -2,8 +2,8 @@
 
 import { auth0 } from "../../../../../../integrations/auth0";
 import {
-  createStructuredResponse,
   generateImage,
+  generateStructuredResponse,
 } from "../../../../../../integrations/openai/openai";
 import { DemenseEntity } from "../../../db/entities";
 import { db } from "../../../db";
@@ -14,7 +14,7 @@ import { zodTextFormat } from "openai/helpers/zod.mjs";
 const DemenseParser = z.object({
   name: z.string(),
   description: z.string(),
-  aspects: z.array(z.string()),
+  aspects: z.array(z.string()).length(3),
 });
 
 const ExploreDemenseResultParser = z.object({
@@ -44,43 +44,12 @@ export async function exploreDemenses() {
 
   const input = "Generate 3 unique demenses for a player to choose from";
 
-  // const format: ResponseFormatTextConfig = {
-  //   type: "json_schema" as const,
-  //   name: "explore_demense_result_parser",
-  //   strict: true,
-  //   schema: {
-  //     type: "object",
-  //     properties: {
-  //       demenses: {
-  //         type: "array",
-  //         items: {
-  //           type: "object",
-  //           properties: {
-  //             name: { type: "string" },
-  //             description: { type: "string" },
-  //             aspects: {
-  //               type: "array",
-  //               items: { type: "string" },
-  //             },
-  //           },
-  //           required: ["name", "description", "aspects"],
-  //           additionalProperties: false,
-  //         },
-  //         minItems: 3,
-  //         maxItems: 3,
-  //       },
-  //     },
-  //     required: ["demenses"],
-  //     additionalProperties: false,
-  //   },
-  // };
-
   const format = zodTextFormat(
     ExploreDemenseResultParser,
     "explore_demense_result_parser",
   );
 
-  const response = await createStructuredResponse({
+  const response = await generateStructuredResponse({
     format,
     instructions,
     input,
@@ -92,7 +61,7 @@ export async function exploreDemenses() {
   if (!response.output_parsed) {
     throw new Error("Failed to generate demenses");
   }
-  
+
   const parsedResult = response.output_parsed;
 
   // Generate portraits for each demense in parallel
