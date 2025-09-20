@@ -25,6 +25,11 @@ Understand the documentation around our use of the OpenAI API calls:
 * Using the Vector Store File API... @https://platform.openai.com/docs/api-reference/vector-stores-files/listFiles
 * And the Vector Store Batch File API: @https://platform.openai.com/docs/api-reference/vector-stores-file-batches/createBatch
 
+
+## CRITICAL
+
+The automatic parsing of structured responses with zod is BROKEN in version 4 (at this date, sept 20 2025).  Do not upgrade to zod 4 until that bug is fixed.
+
 ## Main Features
 
 ### Cost tracking

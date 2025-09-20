@@ -13,6 +13,7 @@ import { DemenseEntity } from "../../../db/entities";
 import { db } from "../../../db";
 import { nanoid } from "nanoid";
 import z from "zod";
+import { zodTextFormat } from "openai/helpers/zod.mjs";
 
 const DemenseParser = z.object({
   name: z.string(),
@@ -22,7 +23,7 @@ const DemenseParser = z.object({
 
 const ExploreDemenseResultParser = z.object({
   demenses: z.array(DemenseParser).length(3),
-});
+}).strict();
 
 // Types for the expected response structure
 type ExploreDemenseResult = z.infer<typeof ExploreDemenseResultParser>;
@@ -122,36 +123,41 @@ export async function exploreDemenses() {
 
   const input = "Generate 3 unique demenses for a player to choose from";
 
-  const format: ResponseFormatTextConfig = {
-    type: "json_schema" as const,
-    name: "explore_demense_result_parser",
-    strict: true,
-    schema: {
-      type: "object",
-      properties: {
-        demenses: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              description: { type: "string" },
-              aspects: {
-                type: "array",
-                items: { type: "string" },
-              },
-            },
-            required: ["name", "description", "aspects"],
-            additionalProperties: false,
-          },
-          minItems: 3,
-          maxItems: 3,
-        },
-      },
-      required: ["demenses"],
-      additionalProperties: false,
-    },
-  };
+  // const format: ResponseFormatTextConfig = {
+  //   type: "json_schema" as const,
+  //   name: "explore_demense_result_parser",
+  //   strict: true,
+  //   schema: {
+  //     type: "object",
+  //     properties: {
+  //       demenses: {
+  //         type: "array",
+  //         items: {
+  //           type: "object",
+  //           properties: {
+  //             name: { type: "string" },
+  //             description: { type: "string" },
+  //             aspects: {
+  //               type: "array",
+  //               items: { type: "string" },
+  //             },
+  //           },
+  //           required: ["name", "description", "aspects"],
+  //           additionalProperties: false,
+  //         },
+  //         minItems: 3,
+  //         maxItems: 3,
+  //       },
+  //     },
+  //     required: ["demenses"],
+  //     additionalProperties: false,
+  //   },
+  // };
+
+  const format = zodTextFormat(
+    ExploreDemenseResultParser,
+    "explore_demense_result_parser",
+  );
 
   const response = await createStructuredResponse({
     format,
