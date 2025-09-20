@@ -4,7 +4,7 @@ import { auth0 } from "../../../../../../integrations/auth0";
 import {
   generateImage,
   generateWithFunction,
-} from "../../../../../../integrations/openai";
+} from "../../../../../../integrations/openai/openai";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
 

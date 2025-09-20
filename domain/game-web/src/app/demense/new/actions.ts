@@ -4,7 +4,7 @@ import { auth0 } from "../../../../../../integrations/auth0";
 import {
   generateImage,
   generateWithFunction,
-} from "../../../../../../integrations/openai";
+} from "../../../../../../integrations/openai/openai";
 import { DemenseEntity } from "../../../db/entities";
 import { db } from "../../../db";
 import { nanoid } from "nanoid";
@@ -30,7 +30,7 @@ export async function exploreDemenses() {
   }
 
   const accountId = session.user.sub;
-  
+
   // Exploration always costs 10 ink
   try {
     await db.account.spendInk(accountId, 10);
@@ -77,7 +77,14 @@ export async function exploreDemenses() {
                 specialBonus: { type: "string" },
                 imagePrompt: { type: "string" },
               },
-              required: ["name", "description", "defensePower", "productionRate", "specialBonus", "imagePrompt"],
+              required: [
+                "name",
+                "description",
+                "defensePower",
+                "productionRate",
+                "specialBonus",
+                "imagePrompt",
+              ],
             },
           },
         },
@@ -90,9 +97,9 @@ export async function exploreDemenses() {
   const demensesWithImages = await Promise.all(
     result.demenses.map(async (dem) => {
       try {
-        const imageUrl = await generateImage({ 
+        const imageUrl = await generateImage({
           prompt: dem.imagePrompt,
-          size: "1792x1024" // Wide aspect ratio for strongholds
+          size: "1792x1024", // Wide aspect ratio for strongholds
         });
         return { ...dem, imageUrl };
       } catch (e) {
@@ -125,7 +132,7 @@ export async function selectDemense(demense: {
   const existing = await DemenseEntity.query
     .primary({ accountId })
     .go();
-  
+
   for (const oldDemense of existing.data) {
     await DemenseEntity.delete({
       accountId,
@@ -149,4 +156,3 @@ export async function selectDemense(demense: {
 
   return { demenseId };
 }
-
