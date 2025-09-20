@@ -62,7 +62,7 @@ export async function exploreDemenses() {
     format: zodTextFormat(
       ExploreDemenseResultParser,
       "explore_demense_result_parser",
-    ),
+    ) as any,
   });
 
   // Parse the result from the response
