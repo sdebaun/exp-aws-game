@@ -87,9 +87,7 @@ export async function exploreDemenses() {
         return {
           name: dem.name,
           description: dem.description,
-          defensePower: 5, // Default values for now
-          productionRate: 5,
-          specialBonus: dem.aspects?.[0] || "Unknown bonus",
+          aspects: dem.aspects,
           imageUrl: imageResult.url || null,
         };
       } catch (error) {
@@ -98,9 +96,7 @@ export async function exploreDemenses() {
         return {
           name: dem.name,
           description: dem.description,
-          defensePower: 5,
-          productionRate: 5,
-          specialBonus: dem.aspects?.[0] || "Unknown bonus",
+          aspects: dem.aspects,
           imageUrl: null,
         };
       }
@@ -113,9 +109,7 @@ export async function exploreDemenses() {
 export async function selectDemense(demense: {
   name: string;
   description: string;
-  defensePower: number;
-  productionRate: number;
-  specialBonus: string;
+  aspects: string[];
   imageUrl?: string | null;
 }) {
   const session = await auth0.getSession();
@@ -146,9 +140,8 @@ export async function selectDemense(demense: {
     demenseId,
     name: demense.name,
     description: demense.description,
-    defensePower: demense.defensePower,
-    productionRate: demense.productionRate,
-    specialBonus: demense.specialBonus,
+    // Store aspects as a JSON string in specialBonus for now
+    specialBonus: demense.aspects.join(", "),
     imageUrl: demense.imageUrl || undefined,
   }).go();
 

@@ -17,25 +17,19 @@ export default async function NewDemensePage() {
     {
       name: "Unknown Stronghold",
       description: "A mysterious location waiting to be discovered...",
-      defensePower: 0,
-      productionRate: 0,
-      specialBonus: "???",
+      aspects: [],
       imageUrl: null,
     },
     {
       name: "Unknown Stronghold",
       description: "A mysterious location waiting to be discovered...",
-      defensePower: 0,
-      productionRate: 0,
-      specialBonus: "???",
+      aspects: [],
       imageUrl: null,
     },
     {
       name: "Unknown Stronghold",
       description: "A mysterious location waiting to be discovered...",
-      defensePower: 0,
-      productionRate: 0,
-      specialBonus: "???",
+      aspects: [],
       imageUrl: null,
     }
   ];
@@ -77,19 +71,9 @@ export default async function NewDemensePage() {
                   )}
                   <h3 className="text-lg font-bold text-cyan-400 mb-2">{demense.name}</h3>
                   <p className="text-sm text-slate-300 mb-3">{demense.description}</p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Defense:</span>
-                      <span className="text-white font-semibold">{demense.defensePower}/10</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Production:</span>
-                      <span className="text-white font-semibold">{demense.productionRate}/10</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500">Bonus:</span>
-                      <p className="text-cyan-400 font-semibold mt-1">{demense.specialBonus}</p>
-                    </div>
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-slate-400">ASPECTS</p>
+                    <p className="text-cyan-400 text-sm">{demense.specialBonus}</p>
                   </div>
                 </>
               ) : (
@@ -98,20 +82,10 @@ export default async function NewDemensePage() {
                     🏕️
                   </div>
                   <h3 className="text-lg font-bold text-slate-400 mb-2">The Wanderer's Camp</h3>
-                  <p className="text-sm text-slate-500 mb-3">A humble temporary shelter, offering no protection or resources. Time to establish a proper stronghold!</p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Defense:</span>
-                      <span className="text-slate-500 font-semibold">0/10</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Production:</span>
-                      <span className="text-slate-500 font-semibold">0/10</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600">Bonus:</span>
-                      <p className="text-slate-500 font-semibold mt-1">None</p>
-                    </div>
+                  <p className="text-sm text-slate-500 mb-3">A humble temporary shelter. Time to establish a proper stronghold!</p>
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-slate-600">ASPECTS</p>
+                    <p className="text-slate-500 text-sm">None - just empty wilderness</p>
                   </div>
                 </>
               )}

@@ -7,9 +7,7 @@ import { selectDemense, exploreDemenses } from './actions';
 type Demense = {
   name: string;
   description: string;
-  defensePower: number;
-  productionRate: number;
-  specialBonus: string;
+  aspects: string[];
   imageUrl?: string | null;
 }
 
@@ -54,30 +52,24 @@ function DemenseCard({ demense, onSelect, isPlaceholder, isSelected }: {
         {demense.description}
       </p>
       
-      <div className="grid grid-cols-3 gap-2 text-sm">
-        <div className={`rounded px-3 py-2 ${
-          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
-        }`}>
-          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Defense</p>
-          <p className={`font-bold ${isPlaceholder ? 'text-slate-700' : 'text-white'}`}>
-            {isPlaceholder ? '?' : demense.defensePower}
-          </p>
-        </div>
-        <div className={`rounded px-3 py-2 ${
-          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
-        }`}>
-          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Production</p>
-          <p className={`font-bold ${isPlaceholder ? 'text-slate-700' : 'text-white'}`}>
-            {isPlaceholder ? '?' : demense.productionRate}
-          </p>
-        </div>
-        <div className={`rounded px-3 py-2 ${
-          isPlaceholder ? 'bg-slate-950' : 'bg-slate-900'
-        }`}>
-          <p className={`text-xs ${isPlaceholder ? 'text-slate-800' : 'text-slate-500'}`}>Bonus</p>
-          <p className={`font-semibold text-xs ${isPlaceholder ? 'text-slate-700' : 'text-cyan-400'}`}>
-            {demense.specialBonus}
-          </p>
+      <div className="space-y-2">
+        <p className={`text-xs font-semibold ${isPlaceholder ? 'text-slate-700' : 'text-slate-400'}`}>
+          {isPlaceholder ? 'ASPECTS' : 'ASPECTS'}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {isPlaceholder ? (
+            <>  
+              <span className="px-3 py-1 bg-slate-950 rounded-full text-xs text-slate-700">???</span>
+              <span className="px-3 py-1 bg-slate-950 rounded-full text-xs text-slate-700">???</span>
+              <span className="px-3 py-1 bg-slate-950 rounded-full text-xs text-slate-700">???</span>
+            </>
+          ) : (
+            demense.aspects.map((aspect, idx) => (
+              <span key={idx} className="px-3 py-1 bg-slate-900 rounded-full text-xs text-cyan-400 border border-slate-700">
+                {aspect}
+              </span>
+            ))
+          )}
         </div>
       </div>
     </div>
