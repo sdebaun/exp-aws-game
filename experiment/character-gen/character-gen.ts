@@ -102,7 +102,6 @@ async function main() {
   const result = await Promise.all(
     Array.from({ length: 5 }, () => generateCharacter()),
   );
-  console.log(result.map((i) => JSON.parse(i)));
 }
 
 // Run the script if called directly

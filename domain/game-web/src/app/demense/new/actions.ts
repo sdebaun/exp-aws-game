@@ -117,7 +117,6 @@ export async function exploreDemenses() {
   }
 
   const response = await createStructuredResponse();
-  console.log("Full response:", response);
 
   // Extract and validate the parsed demenses
   const parsedResult = extractParsedDemenses(response);

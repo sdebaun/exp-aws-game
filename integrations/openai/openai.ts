@@ -57,12 +57,6 @@ export async function createStructuredResponse() {
     },
   });
 
-  console.log("response.output:", response.output);
-  // console.log("response.output_parsed:", response.output_parsed);
-  console.log("response keys:", Object.keys(response));
-
-  // Log the full response structure to understand it better
-  console.log("Full response structure:", JSON.stringify(response, null, 2));
 
   return response;
 }
@@ -82,7 +76,6 @@ export async function generateObject({
     input,
     text,
   });
-  console.log("generateObject()", response);
   return response;
 }
 // Wrapper for OpenAI function calls with proper typing

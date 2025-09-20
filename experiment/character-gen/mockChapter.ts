@@ -71,7 +71,6 @@ const MOCK_PLAYER_CHAT = [
 async function main() {
   let story = "";
 
-  console.log("*** GENERATING CHARACTERS");
   const characters = await Promise.all(
     Array.from(
       { length: 3 },
@@ -81,12 +80,10 @@ async function main() {
   const charactersPrompt = `# The Characters In The Scene\n\n${
     JSON.stringify(characters, null, 2)
   }`;
-  console.log("*** GENERATING INTRO");
   const introPrompt =
     `${WORLD}\n\n${INTRO_INSTRUCTIONS}\n\n${charactersPrompt}`;
   // console.log(prompt);
   const intro = await generateSingle(introPrompt);
-  console.log(intro);
   // console.log(intro);
   story += intro;
 
@@ -101,9 +98,7 @@ async function main() {
       `${WORLD}\n\n${DIALOGUE_INSTRUCTIONS}\n\n${charactersPrompt}\n\n#The Story So Far\n\n${story}\n# The Next Player Chat\n\n${
         JSON.stringify(playerChat, null, 2)
       }`;
-    console.log("*** GENERATING DIALOGUE", playerChat);
     const dialogueResult = await generateSingle(dialoguePrompt);
-    console.log(dialogueResult);
     story += `\n\n${dialogueResult}`;
   }
 
@@ -111,7 +106,6 @@ async function main() {
   const outputPath = resolve(__dirname, "output.txt");
 
   writeFileSync(outputPath, story, "utf-8");
-  console.log(`\nNarrative written to: ${outputPath}`);
   // console.log(story);
 }
 
