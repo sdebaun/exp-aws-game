@@ -1,18 +1,75 @@
 import OpenAI from "openai";
+import { zodTextFormat } from "openai/helpers/zod";
 import {
+  ResponseFormatTextConfig,
   ResponseFormatTextJSONSchemaConfig,
   ResponseTextConfig,
 } from "openai/resources/responses/responses";
 import { Resource } from "sst";
+import z from "zod";
 
 // Initialize OpenAI client with SST secret
 export const client = new OpenAI({ apiKey: Resource.OpenaiApiKey.value });
 
-// Type for the structured function response
-export type FunctionCall<T> = {
-  name: string;
-  arguments: T;
-};
+const DemenseParser = z.object({
+  name: z.string(),
+  description: z.string(),
+  aspects: z.array(z.string()),
+});
+
+const ExploreDemenseResultParser = z.object({
+  demenses: z.array(DemenseParser).length(3),
+});
+
+export async function createStructuredResponse() {
+  // Create the schema manually to match what OpenAI expects
+  // TODO: Fix zodTextFormat - it's producing type: 'string' instead of type: 'object'
+  const manualFormat = {
+    type: 'json_schema' as const,
+    name: 'explore_demense_result_parser',
+    strict: true,
+    schema: {
+      type: 'object',
+      properties: {
+        demenses: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              description: { type: 'string' },
+              aspects: {
+                type: 'array',
+                items: { type: 'string' }
+              }
+            },
+            required: ['name', 'description', 'aspects'],
+            additionalProperties: false
+          },
+          minItems: 3,
+          maxItems: 3
+        }
+      },
+      required: ['demenses'],
+      additionalProperties: false
+    }
+  };
+  
+  const response = await client.responses.create({
+    model: "gpt-4o",
+    instructions: `You are a stronghold generator for a dark fantasy game. Generate exactly 3 unique demenses (strongholds/bases) with these constraints:
+- Dark, gritty tone - these are fortresses in a harsh world
+- Each has unique strategic advantages and aspects
+- Each demense should have 2-3 aspects that describe its characteristics`,
+    input: "Generate 3 unique demenses for a player to choose from",
+    text: {
+      format: manualFormat,
+    },
+  });
+
+  console.log("Parsed response:", response.output_parsed);
+  return response;
+}
 
 export async function generateObject({
   instructions,
@@ -21,11 +78,11 @@ export async function generateObject({
 }: {
   instructions?: string;
   input?: string;
-  text: ResponseTextConfig;
+  text;
 }) {
   const response = await client.responses.parse({
     model: "gpt-4o-2024-08-06",
-    instructions,
+    // instructions,
     input,
     text,
   });
