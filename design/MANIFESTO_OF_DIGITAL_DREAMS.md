@@ -12,17 +12,11 @@ This isn't about high scores or leaderboards. This is about that moment at 3 AM 
 
 ## The Sacred Tenets (Written in Code and Blood)
 
-### 1. Every Story Matters
-Your demense isn't just a base. It's your last stand against entropy. It's the place you carved from nothing with your bare hands and stubborn refusal to die quietly. When players choose their stronghold, they're not picking stats - they're choosing HOW they'll make their stand against the dying of the light.
-
-### 2. AI Is Our Dark Muse
+### AI Is Our Dark Muse
 We're not using AI to replace creativity. We're using it to amplify the whispers of a thousand untold stories. Every generated narrative is a collaboration between silicon dreams and human nightmares. The machine gives us raw possibility; we forge it into meaning.
 
-### 3. Failure Is The Only Truth
-In our world, you WILL fail. Your characters WILL suffer. Your demense WILL burn. But from those ashes? That's where the real stories begin. We're building a world that understands that scars are just stories written on skin.
-
-### 4. Community Through Shared Madness
-When players chat OOC (Out of Character), they're not breaking immersion - they're acknowledging the sacred bond of shared insanity. "Yes, we're all pretending to be fantasy characters in a digital hellscape. And it's BEAUTIFUL."
+### Community Through Shared Madness
+When players chat OOC (Out of Character), they're not breaking immersion - they're acknowledging the sacred bond of shared insanity. "Yes, we're all pretending to be characters in a strange and wonderous world. And it's BEAUTIFUL."
 
 ## The Promise We Make
 
