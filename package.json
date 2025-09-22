@@ -22,8 +22,7 @@
   "packageManager": "yarn@4.9.1",
   "workspaces": [
     "domain/game-web",
-    "domain/lore",
-    "lib/*"
+    "domain/lore"
   ],
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.10.0",
