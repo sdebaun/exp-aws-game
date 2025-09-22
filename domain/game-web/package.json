@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^4.10.0",
     "@aws-sdk/client-dynamodb": "^3.891.0",
     "electrodb": "^3.4.5",
     "nanoid": "^5.1.5",

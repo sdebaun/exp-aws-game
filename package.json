@@ -25,7 +25,6 @@
     "domain/lore"
   ],
   "dependencies": {
-    "@auth0/nextjs-auth0": "^4.10.0",
     "openai": "^5.21.0",
     "zod": "3.25.76"
   }
