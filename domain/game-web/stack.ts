@@ -3,7 +3,7 @@
 
 import { Secrets } from "../secrets/stack";
 
-export default function ({ secrets }: { secrets: Secrets }) {
+export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   // Main game table - single table design
   const gameTable = new sst.aws.Dynamo("GameTable", {
     fields: {
@@ -11,10 +11,13 @@ export default function ({ secrets }: { secrets: Secrets }) {
       sk: "string",  // sort key
       gsi1pk: "string", // GSI partition key
       gsi1sk: "string", // GSI sort key
+      gsi2pk: "string", // GSI2 partition key for character recruitment
+      gsi2sk: "string", // GSI2 sort key for character recruitment
     },
     primaryIndex: { hashKey: "pk", rangeKey: "sk" },
     globalIndexes: {
       gsi1: { hashKey: "gsi1pk", rangeKey: "gsi1sk" },
+      gsi2: { hashKey: "gsi2pk", rangeKey: "gsi2sk" },
     },
   });
 

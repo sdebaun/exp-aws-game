@@ -3,6 +3,7 @@
 - @./MANIFESTO_OF_DIGITAL_DREAMS.md
 - @./USERS.md
 - @./USER_JOURNEYS.md
+- @./CHARACTER_RECRUITMENT.md
 
 # Design Pillars
 - unique and engaging (not generic) game world
