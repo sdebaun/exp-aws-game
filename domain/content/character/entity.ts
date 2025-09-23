@@ -18,6 +18,7 @@ export const CharacterEntity = new Entity({
   attributes: {
     characterId: { type: "string", required: true },
     name: { type: "string", required: true },
+    origin: { type: "string", required: true },
     description: { type: "string", required: true },
     aspects: { type: "list", items: { type: "string" }, required: true },
     portraitUrl: { type: "string" },
@@ -69,7 +70,7 @@ export const CharacterEntity = new Entity({
       index: "gsi2",
       pk: { field: "gsi2pk", composite: ["playerId"] },
       sk: { field: "gsi2sk", composite: ["recruitmentState", "createdAt"] },
-      condition: (attr) => attr.playerId !== undefined,
+      condition: (attr) => attr.playerId !== undefined && attr.playerId !== "",
     },
   },
 }, {

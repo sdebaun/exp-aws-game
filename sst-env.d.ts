@@ -13,6 +13,14 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
+    "DeleteCharacter": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
+    "GameAdmin": {
+      "type": "sst.aws.Nextjs"
+      "url": string
+    }
     "GameTable": {
       "name": string
       "type": "sst.aws.Dynamo"
@@ -21,9 +29,17 @@ declare module "sst" {
       "type": "sst.aws.Nextjs"
       "url": string
     }
+    "ListCharacters": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "OpenaiApiKey": {
       "type": "sst.sst.Secret"
       "value": string
+    }
+    "PurgeAllCharacters": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "auth0_APP_BASE_URL": {
       "type": "sst.sst.Secret"

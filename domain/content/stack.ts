@@ -35,6 +35,36 @@ export default function ContentStack({ secrets }: { secrets: Secrets }) {
     },
   );
 
+  // List characters Lambda - returns all characters for admin viewing
+  const listCharacters = new sst.aws.Function(
+    "ListCharacters",
+    {
+      handler: "domain/content/character/list-characters.handler",
+      link: [contentTable],
+      timeout: "30 seconds",
+    },
+  );
+
+  // Delete character Lambda - deletes a single character
+  const deleteCharacter = new sst.aws.Function(
+    "DeleteCharacter",
+    {
+      handler: "domain/content/character/delete-character.handler",
+      link: [contentTable],
+      timeout: "30 seconds",
+    },
+  );
+
+  // Purge all characters Lambda - THE NUCLEAR OPTION
+  const purgeAllCharacters = new sst.aws.Function(
+    "PurgeAllCharacters",
+    {
+      handler: "domain/content/character/purge-all.handler",
+      link: [contentTable],
+      timeout: "2 minutes", // Might take a while to nuke everything
+    },
+  );
+
   // EventBridge rule to run batch generator every minute
   // const characterGeneratorSchedule = new sst.aws.Cron("CharacterGeneratorSchedule", {
   //   schedule: "rate(1 minute)",
@@ -45,6 +75,9 @@ export default function ContentStack({ secrets }: { secrets: Secrets }) {
   return {
     contentTable,
     characterBatchGenerator,
+    listCharacters,
+    deleteCharacter,
+    purgeAllCharacters,
     // characterGeneratorSchedule,
   };
 }

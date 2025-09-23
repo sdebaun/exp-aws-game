@@ -14,13 +14,20 @@ export default $config({
       .default();
     
     // Content domain owns the content table
-    const { contentTable } = (await import("./domain/content/stack"))
+    const { contentTable, characterBatchGenerator, listCharacters, deleteCharacter, purgeAllCharacters } = (await import("./domain/content/stack"))
       .default({ secrets });
     
     // Game-web depends on content domain
     const { url } = (await import("./domain/game-web/stack"))
       .default({ secrets });
+    
+    // Game-admin for managing content
+    const gameAdmin = (await import("./domain/game-admin/stack"))
+      .default({ secrets, contentTable, characterBatchGenerator, listCharacters, deleteCharacter, purgeAllCharacters });
 
-    return { url };
+    return { 
+      url,
+      adminUrl: gameAdmin.url 
+    };
   },
 });

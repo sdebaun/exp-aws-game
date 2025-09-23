@@ -1,13 +1,14 @@
-import { generateStructuredResponse, generateImage } from "@/integrations/openai";
+import { generateStructuredResponse, generateImage } from "../../../integrations/openai";
 import { v4 as uuidv4 } from "uuid";
 import z from "zod";
 import { zodTextFormat } from "openai/helpers/zod.mjs";
 
 const CharacterParser = z.object({
   name: z.string(),
-  description: z.string().describe("A vivid description of the character's personality and background"),
-  aspects: z.array(z.string()).min(1).max(3).describe("Key character traits or abilities"),
-  appearance: z.string().describe("Physical appearance for portrait generation"),
+  origin: z.string().describe("Cultural or ethnic background - can be real (Yoruba, Bengali, Sámi, etc.) or fictional but specific"),
+  description: z.string().describe("A vivid description in MARKDOWN format with paragraphs, **bold** for emphasis, and *italics* for flavor. Use line breaks between paragraphs."),
+  aspects: z.array(z.string()).min(1).max(3).describe("1-3 short phrases describing key traits, skills, or defining characteristics"),
+  appearance: z.string().describe("Physical appearance including skin tone, features, and style influenced by their origin"),
 });
 
 /**
@@ -17,15 +18,27 @@ const CharacterParser = z.object({
 export async function generateCharacter() {
   const characterId = uuidv4();
   
-  const instructions = `You are a character generator for a dark fantasy game.
+  const instructions = `You are a character generator in the style of Terry Pratchett meets China Miéville. 
         
-Generate a unique character with these constraints:
-- Dark, gritty tone with morally complex characters
-- Each character has a rich background and distinct personality
-- Include 1-3 defining aspects (traits, abilities, or characteristics)
-- Appearance should be detailed enough for portrait generation`;
+Generate a unique character following these STRICT rules:
+- DIVERSITY IS MANDATORY: Generate characters from varied ethnic and cultural backgrounds from across human history and imagination
+- Origin can be real (Igbo, Tamil, Mongolian, Ainu, Quechua, etc.) or fictional but must be specific
+- Write with dry wit, subtle absurdity, and keen observation of human nature
+- Create characters who are fundamentally human despite any fantastical elements
+- Their flaws should be amusing, relatable, or poignant - not just "dark and brooding"
+- Include 1-3 defining aspects that are specific and memorable (not generic fantasy tropes)
+- Appearance must reflect their origin authentically - skin tone, features, traditional elements
+- NEVER mention the setting name or world name in the description
+- Make them feel like real people with real problems, just in extraordinary circumstances
 
-  const input = "Generate a compelling character for the recruitment pool";
+IMPORTANT FORMATTING:
+- The description MUST use Markdown formatting
+- Use multiple paragraphs with blank lines between them
+- Use **bold** for important character traits or key moments
+- Use *italics* for internal thoughts or subtle observations
+- Make it visually easy to scan and read`;
+
+  const input = "Generate a character who could have walked out of a Terry Pratchett novel into a weirder universe";
 
   const format = zodTextFormat(CharacterParser, "character_parser");
 
@@ -44,7 +57,7 @@ Generate a unique character with these constraints:
   // Generate portrait
   let portraitUrl: string | undefined;
   try {
-    const portraitPrompt = `Dark fantasy character portrait: ${character.name}. ${character.appearance}. ${character.description}. Style: painted fantasy art, dramatic lighting, weathered and battle-scarred.`;
+    const portraitPrompt = `Realistic portrait photograph of ${character.name}, a person of ${character.origin} origin: ${character.appearance}. Style: candid documentary photography, natural lighting, unposed. This is a REAL PERSON of ${character.origin} heritage - show authentic ethnic features and skin tone. Could be ugly, beautiful, plain, or interesting-looking. Show genuine human diversity, real faces with imperfections and character. Natural skin texture, real body types. IMPORTANT: Absolutely NO text, NO writing, NO letters, NO words anywhere in the image. Pure photographic portrait only.`;
 
     const imageResult = await generateImage({
       prompt: portraitPrompt,
@@ -60,6 +73,7 @@ Generate a unique character with these constraints:
   return {
     characterId,
     name: character.name,
+    origin: character.origin,
     description: character.description,
     aspects: character.aspects,
     portraitUrl,
