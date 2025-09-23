@@ -12,6 +12,12 @@ export default $config({
   async run() {
     const secrets = (await import("./domain/secrets/stack"))
       .default();
+    
+    // Content domain owns the content table
+    const { contentTable } = (await import("./domain/content/stack"))
+      .default({ secrets });
+    
+    // Game-web depends on content domain
     const { url } = (await import("./domain/game-web/stack"))
       .default({ secrets });
 

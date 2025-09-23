@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../sst-env.d.ts" />
+
 import { Entity } from "electrodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { Resource } from "sst";
@@ -71,7 +74,7 @@ export const CharacterEntity = new Entity({
   },
 }, {
   client: dynamoClient,
-  table: Resource.GameTable.name,
+  table: Resource.ContentTable.name,
 });
 
 // State transition validation

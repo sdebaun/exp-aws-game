@@ -5,6 +5,14 @@
 
 declare module "sst" {
   export interface Resource {
+    "CharacterBatchGenerator": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
+    "ContentTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "GameTable": {
       "name": string
       "type": "sst.aws.Dynamo"
