@@ -6,7 +6,7 @@ import { TopBar } from "../../TopBar";
 import { DebugUserInfo } from "../../DebugUserInfo";
 
 export default async function NewDemensePage() {
-  const { user, account, demense } = await getUserInfo();
+  const { user, account } = await getUserInfo();
   
   if (!user) {
     redirect('/auth/login');
@@ -36,7 +36,7 @@ export default async function NewDemensePage() {
   
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar {...{user, account, demense}}/>
+      <TopBar {...{user, account}}/>
       <div className="max-w-7xl mx-auto p-8">
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-2">
@@ -56,7 +56,7 @@ export default async function NewDemensePage() {
           <div className="lg:col-span-1">
             <h2 className="text-xl font-semibold mb-4 text-slate-300">Current Demense</h2>
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-              {demense ? (
+              {false ? ( // TODO: restore when demense functionality is back
                 <>
                   {demense.imageUrl ? (
                     <img 
@@ -99,7 +99,7 @@ export default async function NewDemensePage() {
           </div>
         </div>
         
-        <DebugUserInfo {...{user, account, demense}} />
+        <DebugUserInfo {...{user, account}} />
       </div>
     </div>
   );

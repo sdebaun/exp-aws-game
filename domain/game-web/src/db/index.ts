@@ -1,4 +1,4 @@
-import { AccountEntity, CharacterEntity, DemenseEntity } from "./entities";
+import { AccountEntity, CharacterEntity } from "./entities";
 
 export const db = {
   account: {

@@ -322,7 +322,7 @@ function ReadableStoryDetail({ story }: { story: Story }) {
 }
 
 export default async function StoryPage({ params }: { params: { id: string } }) {
-  const { user, account, demense } = await getUserInfo();
+  const { user, account } = await getUserInfo();
   const story = await getStory(params.id);
 
   if (!story) {
@@ -331,7 +331,7 @@ export default async function StoryPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar {...{user, account, demense}}/>
+      <TopBar {...{user, account}}/>
       <div className="max-w-5xl mx-auto p-8">
         <div className="mb-8">
           <div className="flex items-start justify-between mb-2">

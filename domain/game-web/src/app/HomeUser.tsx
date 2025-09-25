@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { User } from "@auth0/nextjs-auth0/types";
-import { AccountEntity, DemenseEntity } from "../db/entities";
+import { AccountEntity } from "../db/entities";
 import { EntityItem } from "electrodb";
-import { destroyDemense } from "./actions";
+// import { destroyDemense } from "./actions"; // TODO: restore when demense is back
 
-export async function HomeUser({user, account, demense}: {user: User, account: EntityItem<typeof AccountEntity>, demense: EntityItem<typeof DemenseEntity> | null}) {
+export async function HomeUser({user, account}: {user: User, account: EntityItem<typeof AccountEntity>}) {
   // TODO: Fetch user's characters and stories from database
   const userCharacters = []; // Mock empty for now
   const userStories = [];
   const hasInk = (account.ink ?? 0) > 0;
-  const isNewUser = !demense && userCharacters.length === 0;
+  const isNewUser = userCharacters.length === 0; // TODO: also check demense when restored
   
   return (<div className="p-8 max-w-7xl mx-auto">
     {/* Welcome Banner for New Users */}
@@ -128,7 +128,7 @@ export async function HomeUser({user, account, demense}: {user: User, account: E
     <section className="mb-12">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">My Demense</h2>
-        {demense && (
+        {false && ( // TODO: restore demense check when available
           <div className="flex gap-2">
             <Link 
               href="/demense/new" 
@@ -136,6 +136,7 @@ export async function HomeUser({user, account, demense}: {user: User, account: E
             >
               ⚔️ Replace Demense
             </Link>
+            {/* TODO: Restore when demense functionality is back
             <form action={destroyDemense}>
               <button 
                 type="submit"
@@ -143,12 +144,12 @@ export async function HomeUser({user, account, demense}: {user: User, account: E
               >
                 💀 Destroy Demense
               </button>
-            </form>
+            </form> */}
           </div>
         )}
       </div>
       
-      {demense ? (
+      {false ? ( // TODO: restore demense check
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">

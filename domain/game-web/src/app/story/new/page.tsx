@@ -3,7 +3,7 @@ import { TopBar } from '@/app/TopBar';
 import { getUserInfo } from '@/app/getUserInfo';
 
 export default async function NewStoryPage() {
-  const { user, account, demense } = await getUserInfo();
+  const { user, account } = await getUserInfo();
 
   if (!user) {
     redirect('/auth/login?returnTo=/story/new');
@@ -11,7 +11,7 @@ export default async function NewStoryPage() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar {...{user, account, demense}}/>
+      <TopBar {...{user, account}}/>
       <div className="max-w-4xl mx-auto p-8">
         <h1 className="text-4xl font-bold text-white mb-2">Start a New Story</h1>
         <p className="text-lg text-slate-400 mb-8">Create your own adventure and gather heroes for an epic journey</p>

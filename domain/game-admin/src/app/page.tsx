@@ -153,6 +153,10 @@ export default async function AdminHome() {
 
       {/* Character Panel */}
       <CharacterPanel characters={characters} deleteCharacter={deleteCharacter} />
+
+      <pre>
+        {JSON.stringify(session.user, null, 2)}
+      </pre>
     </div>
   );
 }

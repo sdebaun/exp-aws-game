@@ -355,15 +355,15 @@ export async function HomeAnon() {
 }
 
 export default async function Home() {
-  const { user, account, demense } = await getUserInfo();
+  const { user, account } = await getUserInfo();
 
   // No longer auto-redirect - let user choose when to claim a demense
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar {...{user, account, demense}}/>
+      <TopBar {...{user, account}}/>
       <div className="max-w-7xl mx-auto">
-        {user ? <HomeUser {...{user, account, demense}}/> : <HomeAnon/> }
+        {user ? <HomeUser {...{user, account}}/> : <HomeAnon/> }
       </div>
     </div>
   )

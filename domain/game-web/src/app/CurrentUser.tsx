@@ -1,21 +1,20 @@
 'use client';
 
 import { User } from "@auth0/nextjs-auth0/types";
-import { AccountEntity, DemenseEntity } from "../db/entities";
+import { AccountEntity } from "../db/entities";
 import { EntityItem } from "electrodb";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { addInk, destroyAccount } from "./actions";
 
-export function CurrentUser({ user, account, demense }: { 
+export function CurrentUser({ user, account }: { 
   user: User;
   account: EntityItem<typeof AccountEntity>;
-  demense: EntityItem<typeof DemenseEntity> | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const displayName = demense ? demense.name : user.name;
-  const hasCustomAvatar = demense?.imageUrl;
+  const displayName = user.name;
+  const hasCustomAvatar = false; // TODO: restore when demense is back
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -43,13 +42,7 @@ export function CurrentUser({ user, account, demense }: {
           </div>
         </div>
         <div className="relative w-10 h-10 flex-shrink-0">
-          {hasCustomAvatar ? (
-            <img
-              src={demense.imageUrl}
-              alt={demense.name}
-              className="w-full h-full rounded-full ring-2 ring-cyan-600 object-cover"
-            />
-          ) : (
+          {(
             <Image
               src={user.picture || '/default-avatar.png'}
               alt={user.name || 'User'}

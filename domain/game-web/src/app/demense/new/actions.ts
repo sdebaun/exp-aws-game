@@ -5,9 +5,9 @@ import {
   generateImage,
   generateStructuredResponse,
 } from "@integrations/openai";
-import { DemenseEntity } from "../../../db/entities";
+// import { DemenseEntity } from "../../../db/entities"; // TODO: restore when DemenseEntity is back
 import { db } from "../../../db";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid"; // TODO: restore when needed
 import z from "zod";
 import { zodTextFormat } from "openai/helpers/zod.mjs";
 
@@ -105,6 +105,7 @@ export async function exploreDemenses() {
   return demensesWithPortraits;
 }
 
+// TODO: Restore this function when DemenseEntity is back
 export async function selectDemense(demense: {
   name: string;
   description: string;
@@ -116,33 +117,36 @@ export async function selectDemense(demense: {
     throw new Error("Not authenticated");
   }
 
-  const accountId = session.user.sub;
-  const demenseId = nanoid();
+  // const accountId = session.user.sub;
+  // const demenseId = nanoid();
 
   // Delete any existing demense for this account
-  const existing = await DemenseEntity.query
-    .primary({ accountId })
-    .go();
+  // const existing = await DemenseEntity.query
+  //   .primary({ accountId })
+  //   .go();
 
-  for (const oldDemense of existing.data) {
-    await DemenseEntity.delete({
-      accountId,
-      demenseId: oldDemense.demenseId,
-    }).go();
-  }
+  // for (const oldDemense of existing.data) {
+  //   await DemenseEntity.delete({
+  //     accountId,
+  //     demenseId: oldDemense.demenseId,
+  //   }).go();
+  // }
 
   // TODO: Save the image URL somewhere permanent (S3/R2) before it expires
 
   // Create the new demense
-  await DemenseEntity.create({
-    accountId,
-    demenseId,
-    name: demense.name,
-    description: demense.description,
-    // Store aspects as a JSON string in specialBonus for now
-    specialBonus: demense.aspects.join(", "),
-    imageUrl: demense.imageUrl || undefined,
-  }).go();
+  // await DemenseEntity.create({
+  //   accountId,
+  //   demenseId,
+  //   name: demense.name,
+  //   description: demense.description,
+  //   // Store aspects as a JSON string in specialBonus for now
+  //   specialBonus: demense.aspects.join(", "),
+  //   imageUrl: demense.imageUrl || undefined,
+  // }).go();
 
-  return { demenseId };
+  // return { demenseId };
+  
+  // For now, just return a placeholder
+  return { demenseId: 'placeholder-id' };
 }
