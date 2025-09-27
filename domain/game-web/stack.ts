@@ -4,6 +4,11 @@
 import { Secrets } from "../secrets/stack";
 
 export default function GameWebStack({ secrets }: { secrets: Secrets }) {
+  // Realtime component for chat
+  const realtime = new sst.aws.Realtime("ChatRealtime", {
+    authorizer: "domain/game-web/src/realtime/authorizer.handler",
+  });
+
   // Main game table - single table design
   const gameTable = new sst.aws.Dynamo("GameTable", {
     fields: {
@@ -23,7 +28,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
 
   const web = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
-    link: [...Object.values(secrets.auth0), ...Object.values(secrets.openai), gameTable],
+    link: [...Object.values(secrets.auth0), ...Object.values(secrets.openai), gameTable, realtime],
     environment: {
       AUTH0_DOMAIN: secrets.auth0.AUTH0_DOMAIN.value,
       AUTH0_CLIENT_ID: secrets.auth0.AUTH0_CLIENT_ID.value,
@@ -37,6 +42,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   return {
     gameWeb: web,
     gameTable,
+    realtime,
     url: web.url,
   };
 }

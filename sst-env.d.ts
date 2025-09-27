@@ -9,6 +9,11 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Function"
     }
+    "ChatRealtime": {
+      "authorizer": string
+      "endpoint": string
+      "type": "sst.aws.Realtime"
+    }
     "ContentTable": {
       "name": string
       "type": "sst.aws.Dynamo"
