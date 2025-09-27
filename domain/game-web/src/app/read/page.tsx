@@ -41,7 +41,7 @@ export default async function ReadPage() {
         showHeroContent={true}
         heroTagline="Browse completed epics. Start reading free. Unlock chapters."
         heroDescription="Explore finished stories created by real players. Every legend began with heroes like you. Read first chapters free, then use Ink to unlock the full adventure."
-        heroImage="/landing-read-the-legends.png"
+        heroImage="/landing-read-the-legends.webp"
       />
       
       <div className="max-w-7xl mx-auto p-8">

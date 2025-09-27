@@ -49,7 +49,7 @@ export default async function PlayPage() {
         showHeroContent={true}
         heroTagline="Choose your quest. Join heroes. Begin your legend."
         heroDescription="Pick from active stories seeking heroes or forge your own epic. Each quest runs 5-7 days with other players. Your decisions shape the narrative in real-time."
-        heroImage="/landing-play-a-hero.png"
+        heroImage="/landing-play-a-hero.webp"
       />
       
       <div className="max-w-7xl mx-auto p-8">

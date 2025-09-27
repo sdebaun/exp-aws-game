@@ -37,7 +37,7 @@ export function RoleNav({
   showHeroContent = true,
   heroTagline = 'Watch chaos become legend',
   heroDescription = 'Real gameplay transforms into epic narrative. Choose your role in the story.',
-  heroImage = '/landing-root.png'
+  heroImage = '/landing-root.webp'
 }: RoleNavProps) {
   
   return (

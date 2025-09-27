@@ -56,7 +56,7 @@ export default async function GuidePage() {
         showHeroContent={true}
         heroTagline="Watch live quests. Vote on choices. Shape destinies."
         heroDescription="Join active stories as a Fate. Influence critical decisions, unlock plot twists, and guide heroes through challenges. Your wisdom shapes their journey."
-        heroImage="/landing-guide-the-fates.png"
+        heroImage="/landing-guide-the-fates.webp"
       />
       
       <div className="max-w-7xl mx-auto p-8">
