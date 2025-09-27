@@ -10,7 +10,7 @@ export function DeleteButton({
 }: { 
   characterId: string;
   characterName: string;
-  deleteCharacter: (characterId: string) => Promise<any>;
+  deleteCharacter: (characterId: string) => Promise<void>;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();

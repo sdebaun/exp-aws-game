@@ -1,9 +1,10 @@
-import { auth0 } from "../../../../../../integrations/auth0";
+import { getAuth0Client } from "../../../../../../integrations/auth0";
 import { redirect } from "next/navigation";
 import { CharacterSelection } from './CharacterSelection';
 import { generateCharacters } from './actions';
 
 export default async function NewCharacterPage() {
+  const auth0 = await getAuth0Client();
   const session = await auth0.getSession();
   
   if (!session) {

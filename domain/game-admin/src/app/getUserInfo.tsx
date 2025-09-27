@@ -12,8 +12,6 @@ export async function getUserInfo() {
   const user = session.user;
   const account = await accountFromUser(user);
   
-  // TODO: Add demense check when functionality is restored
-  
   return { user, account };
 }
 

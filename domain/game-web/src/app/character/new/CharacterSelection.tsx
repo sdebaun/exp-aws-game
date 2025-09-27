@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { generateCharacters, selectCharacter } from './actions';
 
@@ -19,7 +20,7 @@ function CharacterCard({ character, onSelect }: { character: Character, onSelect
          onClick={onSelect}>
       <div className="aspect-square w-full bg-slate-900 rounded-lg mb-4 overflow-hidden">
         {character.imageUrl ? (
-          <img src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
+          <Image src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-600 text-6xl">
             ⚔️

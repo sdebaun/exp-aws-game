@@ -2,6 +2,7 @@ import { User } from "@auth0/nextjs-auth0/types";
 import { AccountEntity } from "../db/entities";
 import { EntityItem } from "electrodb";
 import { CurrentUser } from "./CurrentUser";
+import Link from "next/link";
 
 
 export async function TopBar({ user, account }: { 
@@ -11,9 +12,9 @@ export async function TopBar({ user, account }: {
   return (
     <nav className='bg-slate-900 text-white px-6 py-4 shadow-xl border-b border-slate-800'>
       <div className='max-w-7xl mx-auto flex justify-between items-center'>
-        <h1 className='text-xl font-bold tracking-wide'>
-          Experimental AWS Game
-        </h1>
+        <Link href="/" className='text-xl font-bold tracking-wide hover:text-cyan-400 transition-colors'>
+          River of Souls
+        </Link>
         <div className='flex items-center gap-4'>
           {user && account ? (
             <CurrentUser {...{user, account}} />

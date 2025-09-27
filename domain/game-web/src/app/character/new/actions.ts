@@ -1,6 +1,6 @@
 "use server";
 
-import { auth0 } from "@integrations/auth0";
+import { getAuth0Client } from "@integrations/auth0";
 import { generateStructuredResponse, generateImage } from "@integrations/openai";
 import { db } from "../../../db/index";
 import { nanoid } from "nanoid";
@@ -20,6 +20,7 @@ const GenerateCharactersResultParser = z.object({
 }).strict();
 
 export async function generateCharacters(freeReroll: boolean = false) {
+  const auth0 = await getAuth0Client();
   const session = await auth0.getSession();
   if (!session) {
     throw new Error("Not authenticated");
@@ -107,6 +108,7 @@ export async function selectCharacter(character: {
   trait: string;
   imageUrl?: string | null;
 }) {
+  const auth0 = await getAuth0Client();
   const session = await auth0.getSession();
   if (!session) {
     throw new Error("Not authenticated");
@@ -120,10 +122,10 @@ export async function selectCharacter(character: {
   await db.character.create(accountId, {
     characterId,
     name: character.name,
-    class: character.class,
-    background: character.background,
-    trait: character.trait,
-    portrait: character.imageUrl || undefined,
+    description: `A ${character.class} with a ${character.background} background. ${character.trait}`,
+    aspects: [character.class, character.background, character.trait],
+    portraitUrl: character.imageUrl || undefined,
+    recruitmentState: "rostered" as const,
   });
 
   return { characterId };

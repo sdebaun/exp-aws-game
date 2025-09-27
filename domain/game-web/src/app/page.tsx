@@ -2,354 +2,177 @@ import { TopBar } from "./TopBar";
 import { getUserInfo } from "./getUserInfo";
 import { HomeUser } from "./HomeUser";
 
+import { RoleNav } from "./components/RoleNav";
+import { PlayExample } from "./components/PlayExample";
+
 export async function HomeAnon() {
-  // TODO: Fetch actual stories from database
-  const joinableStories = [
-    {
-      id: '1',
-      title: 'Echoes of Tomorrow',
-      description: 'Time travelers accidentally create a paradox. Now they must fix history before they cease to exist.',
-      playerSlots: { filled: 2, total: 4 },
-      genre: 'Sci-Fi Thriller',
-      currentAct: 1,
-      currentScene: 1,
-      characters: [
-        { name: 'Dr. Chronos', player: 'Alex_Runner' },
-        { name: 'Agent Paradox', player: 'TimeKeeper42' }
-      ],
-      startsIn: '2 hours',
-      requiredCommitment: '5-7 days'
-    },
-    {
-      id: '2',
-      title: 'The Crimson Court',
-      description: 'Political intrigue and deadly secrets in the vampire nobility. Your choices will determine who rules the night.',
-      playerSlots: { filled: 3, total: 5 },
-      genre: 'Gothic Horror',
-      currentAct: 1,
-      currentScene: 2,
-      characters: [
-        { name: 'Lord Draven', player: 'NightWalker' },
-        { name: 'Lady Seraphina', player: 'BloodMoon' },
-        { name: 'The Hunter', player: 'VanHelsing99' }
-      ],
-      startsIn: '6 hours',
-      requiredCommitment: '4-6 days'
-    }
-  ];
-
-  const influencableStories = [
-    {
-      id: '3',
-      title: 'The Siege of Astralgate',
-      description: 'Four heroes defend a mystical portal from an endless demon horde. The fate of two realms hangs in the balance.',
-      playerCount: 4,
-      spectatorCount: 127,
-      currentAct: 2,
-      currentScene: 12,
-      totalScenes: 20,
-      genre: 'Epic Fantasy',
-      characters: [
-        { name: 'Sir Galahad', player: 'KnightErrant' },
-        { name: 'Zara the Wise', player: 'MageSupreme' },
-        { name: 'Throk Ironbeard', player: 'DwarfLord' },
-        { name: 'Silent Arrow', player: 'ElvenRanger' }
-      ],
-      latestSceneTitle: 'The Demon General Arrives',
-      latestScenePreview: 'The ground shakes as a massive figure emerges from the portal...',
-      startedDaysAgo: 3
-    },
-    {
-      id: '4',
-      title: 'Merchants of the Void',
-      description: 'Trade negotiations turn deadly when ancient artifacts reveal their true power. Trust no one.',
-      playerCount: 3,
-      spectatorCount: 89,
-      currentAct: 2,
-      currentScene: 8,
-      totalScenes: 15,
-      genre: 'Space Opera',
-      characters: [
-        { name: 'Captain Vex', player: 'SpaceTrader' },
-        { name: 'Dr. Artifact', player: 'XenoArcheologist' },
-        { name: 'The Broker', player: 'DealMaker' }
-      ],
-      latestSceneTitle: 'The Betrayal',
-      latestScenePreview: 'The artifact begins to glow as the Broker reaches for his weapon...',
-      startedDaysAgo: 2
-    }
-  ];
-
-  const readableStories = [
-    {
-      id: '5',
-      title: 'The Last Dawn',
-      description: 'In a world where magic is dying, six unlikely allies must find the source before darkness consumes all.',
-      playerCount: 6,
-      spectatorCount: 412,
-      totalActs: 3,
-      totalScenes: 25,
-      genre: 'Dark Fantasy',
-      characters: [
-        { name: 'Malachar the Cursed', player: 'DarkMage' },
-        { name: 'Sister Faith', player: 'HolyPaladin' },
-        { name: 'Whisper', player: 'ShadowThief' },
-        { name: 'Grond', player: 'BarbarianKing' },
-        { name: 'Lyra Starweaver', player: 'LastBard' },
-        { name: 'The Nameless One', player: 'MysteryPlayer' }
-      ],
-      firstSceneTitle: 'When Magic Dies',
-      firstScenePreview: 'The last spell fizzled and died in Malachar\'s hands. After a thousand years, the magic was finally leaving the world...',
-      completedDaysAgo: 2,
-      totalInk: 50,
-      firstSceneInk: 0,
-      nextSceneInk: 5
-    }
-  ];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      {/* Hero Section */}
-      <section className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-white mb-4">
-          Where Your Actions Become Legends
-        </h1>
-        <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-          Join collaborative storytelling adventures where AI transforms player interactions 
-          into epic narratives. Play as a hero or watch stories unfold in real-time.
-        </p>
-      </section>
+    <div>
+      <RoleNav 
+        currentPath="/"
+        showHeroContent={true}
+      />
 
-      {/* Three Story Categories */}
-      <div className="space-y-12">
-        {/* Join Stories Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <span>⚔️</span> Join - New Stories Seeking Heroes
-            </h2>
-            <p className="text-sm text-slate-400 mt-1">Stories early in the process - become a hero in these adventures</p>
-          </div>
+      <div className="px-8 pt-8 pb-16 max-w-6xl mx-auto">
+        {/* The Magic Transformation */}
+        <section className="mt-16">
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {joinableStories.map(story => (
-              <a key={story.id} href={`/story/${story.id}`} className="block">
-                <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-purple-700/50 transition-all cursor-pointer group h-full">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">
-                        {story.title}
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-1">{story.genre} • Act {story.currentAct}, Scene {story.currentScene}</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-sm text-slate-400 mb-4">
-                    {story.description}
-                  </p>
-                  
-                  <div className="mt-auto">
-                    <div className="mb-3">
-                      <p className="text-xs text-slate-500 mb-2">Current Heroes:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {story.characters.map((char, i) => (
-                          <span key={i} className="text-xs bg-slate-900 px-2 py-1 rounded">
-                            {char.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-24 bg-slate-700 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full"
-                            style={{ width: `${(story.playerSlots.filled / story.playerSlots.total) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-slate-400">
-                          {story.playerSlots.filled}/{story.playerSlots.total}
-                        </span>
-                      </div>
-                      <button className="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm">
-                        Join →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            ))}
+          {/* Step 1: Players Decide */}
+          <PlayExample />
+
+          {/* Step 2: Guides Decide */}
+          <div className="mb-16">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-cyan-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</div>
+              <h3 className="text-xl font-bold text-cyan-400">Guides decide what they face</h3>
+            </div>
             
-            {/* Start New Story Tile */}
-            <a href="/story/new" className="block">
-              <div className="bg-gradient-to-br from-purple-900/20 to-cyan-900/20 border-2 border-dashed border-purple-700/50 rounded-xl p-6 hover:border-purple-600 transition-all cursor-pointer group h-full flex flex-col items-center justify-center text-center">
-                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">✨</div>
-                <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors mb-2">
-                  Start Your Own Story
-                </h3>
-                <p className="text-sm text-slate-400 mb-4">
-                  Create a new adventure and recruit heroes
-                </p>
-                <button className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 text-sm">
-                  Create Story →
-                </button>
+            <div className="bg-slate-900 rounded-lg p-6 border border-slate-800">
+              <p className="text-xs text-slate-500 mb-3">FATES VOTING ON NEXT CHALLENGE:</p>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-slate-800 rounded hover:bg-slate-700 cursor-pointer">
+                  <span className="text-sm text-white">The demon general offers a dark bargain</span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-xs text-slate-400">42 votes</div>
+                    <div className="w-24 bg-slate-700 rounded-full h-2">
+                      <div className="bg-cyan-500 h-2 rounded-full" style={{width: '35%'}}></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-cyan-900/20 rounded border border-cyan-700/50">
+                  <span className="text-sm text-white">Reinforcements arrive... but from which realm?</span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-xs text-cyan-400 font-semibold">67 votes</div>
+                    <div className="w-24 bg-slate-700 rounded-full h-2">
+                      <div className="bg-cyan-500 h-2 rounded-full" style={{width: '56%'}}></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-slate-800 rounded hover:bg-slate-700 cursor-pointer">
+                  <span className="text-sm text-white">The portal begins to destabilize</span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-xs text-slate-400">11 votes</div>
+                    <div className="w-24 bg-slate-700 rounded-full h-2">
+                      <div className="bg-cyan-500 h-2 rounded-full" style={{width: '9%'}}></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </a>
+              
+              <p className="text-xs text-slate-500 mt-3">120 Ink contributed by 47 Fates</p>
+            </div>
           </div>
-        </section>
 
-        {/* Influence Stories Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <span>🎭</span> Influence - Ongoing Adventures
-            </h2>
-            <p className="text-sm text-slate-400 mt-1">Too late to join, but you can still shape the story</p>
+          {/* Step 3: AI Transforms */}
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">3</div>
+              <h3 className="text-xl font-bold text-blue-400">Anyone can read the saga</h3>
+            </div>
+            
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-8 border border-blue-700/30">
+              <div className="prose prose-invert max-w-none">
+                <h4 className="text-lg font-bold text-white mb-3">Chapter 12: The Demon&apos;s Bargain (Or: How to Lose Friends and Alienate Planes of Existence)</h4>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  The demon general appeared with all the subtlety of a brick through a stained-glass window, which is to say, 
+                  none at all. Its voice had that particular quality that suggested it had gargled with gravel and molten lead 
+                  for breakfast. &ldquo;Your realm falls, mortal champions,&rdquo; it announced, in the tones of someone reading from 
+                  a script they&apos;d clearly used before. &ldquo;But I offer you a choice—serve me, and live to see another dawn.&rdquo;
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  It was the sort of offer that came with invisible fine print, probably written in something unpleasant.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Sir Aldric, whose armor now looked like it had been through a particularly enthusiastic recycling process, 
+                  squared his shoulders. Knights, as a rule, didn&apos;t do nuance. They did Honor, with a capital H that you 
+                  could practically hear clanging. &ldquo;My honor is NOT for sale, demon!&rdquo; he declared, in what he probably 
+                  thought was his inside voice.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  The effect was somewhat spoiled by the fact that he&apos;d accidentally triggered his Rally Cry ability, 
+                  which meant everyone within earshot suddenly felt inexplicably patriotic and slightly deaf.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4 italic">
+                  While Sir Aldric was busy being loudly honorable, Whisper was doing what assassins did best: being somewhere 
+                  else entirely. Specifically, behind the demon general, holding two daggers that glistened with the sort of 
+                  poison that came with a warranty disclaimer. &ldquo;Time to put my assassin training to use,&rdquo; they thought, 
+                  which was a bit like a fish thinking &ldquo;time to try swimming.&rdquo;
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Meanwhile, Zephyra the mage was having what could charitably be called a resource management crisis. 
+                  &ldquo;I&apos;m almost out of mana. Maybe two spells left,&rdquo; she muttered, which in mage terms was rather 
+                  like saying &ldquo;I&apos;ve got two bullets left and there&apos;s a dragon.&rdquo; But when the demon made its 
+                  offer, her response was eloquent in its brevity: &ldquo;Wait, what?&rdquo;
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Still, she channeled everything she had left into a Shield Wall, because that&apos;s what you did when 
+                  demons started making career proposals. The barrier shimmered into existence with the desperate energy 
+                  of a thesis defense deadline.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed">
+                  What followed was what historians would later describe as &ldquo;a right mess,&rdquo; assuming any survived. 
+                  The demon general, who had been expecting either cowering submission or a nice, orderly duel, instead got 
+                  Whisper&apos;s poisoned daggers in several uncomfortable places while simultaneously being charged by a knight 
+                  who was glowing like a holy nightlight. The demon&apos;s roar of outrage had a distinct note of &ldquo;this 
+                  wasn&apos;t in the prophecy&rdquo; about it.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Against all odds, laws of narrative causality, and common sense, victory seemed possible. The demon general 
+                  was definitely having what could be called a bad day at the office. But then came the Choice, because there&apos;s 
+                  always a Choice in these things, usually capitalized and usually involving moral quandaries.
+                </p>
+                
+                <p className="text-slate-300 leading-relaxed">
+                  Sir Aldric, faced with a selection of dramatic options, naturally picked the one marked &ldquo;I Shall Never 
+                  Bargain&rdquo; with all the confidence of someone who definitely meant to do that. The fact that he immediately 
+                  yelled &ldquo;OH SHIT THAT WAS THE WRONG BUTTON&rdquo; rather undermined the heroic moment, while Whisper&apos;s 
+                  contribution of &ldquo;lmao classic knight move&rdquo; didn&apos;t help matters.
+                </p>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-slate-700">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-slate-500">Scene 12 of 24 • The Siege of Astralgate</p>
+                  <a href="/read" className="text-blue-400 hover:text-blue-300 text-sm font-semibold">
+                    Read Full Story →
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-4">
-            {influencableStories.map(story => (
-              <a key={story.id} href={`/story/${story.id}`} className="block">
-                <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-cyan-700/50 transition-all cursor-pointer group">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
-                        {story.title}
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-1">{story.genre} • Act {story.currentAct}, Scene {story.currentScene}/{story.totalScenes}</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-green-500 text-xs">• LIVE</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-sm text-slate-400 mb-3">
-                    {story.description}
-                  </p>
-                  
-                  <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
-                    <p className="text-xs text-cyan-400 font-semibold mb-1">Latest Scene: {story.latestSceneTitle}</p>
-                    <p className="text-xs text-slate-400 italic">"{story.latestScenePreview}"</p>
-                  </div>
-                  
-                  <div className="text-xs text-slate-500">
-                    <div className="flex items-center gap-4 mb-2">
-                      <span>👥 {story.playerCount} heroes</span>
-                      <span>👁️ {story.spectatorCount} watching</span>
-                    </div>
-                    <details>
-                      <summary className="cursor-pointer hover:text-slate-400">View Characters</summary>
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {story.characters.map((char, i) => (
-                          <span key={i} className="text-xs bg-slate-900 px-2 py-1 rounded">
-                            {char.name} ({char.player})
-                          </span>
-                        ))}
-                      </div>
-                    </details>
-                  </div>
-                </div>
+          {/* Call to Action */}
+          <div className="text-center">
+            <p className="text-slate-400 mb-6">
+              Every story is unique. Every choice matters. Every legend was lived.
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <a href="/play" className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200">
+                Play a Hero
               </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Read Stories Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <span>📖</span> Read - Completed Legends
-            </h2>
-            <p className="text-sm text-slate-400 mt-1">Finished stories ready to be discovered</p>
-          </div>
-          
-          <div className="space-y-4">
-            {readableStories.map(story => (
-              <a key={story.id} href={`/story/${story.id}`} className="block">
-                <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-blue-700/50 transition-all cursor-pointer group">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {story.title}
-                          </h3>
-                          <p className="text-xs text-slate-500 mt-1">{story.genre} • {story.totalActs} Acts, {story.totalScenes} Scenes</p>
-                        </div>
-                        <span className="bg-blue-600/20 text-blue-400 px-2 py-1 rounded text-xs">
-                          COMPLETE
-                        </span>
-                      </div>
-                      
-                      <p className="text-sm text-slate-400 mb-3">
-                        {story.description}
-                      </p>
-                      
-                      <div className="bg-slate-900/50 rounded-lg p-3 mb-3">
-                        <p className="text-xs text-blue-400 font-semibold mb-1">First Scene: {story.firstSceneTitle}</p>
-                        <p className="text-xs text-slate-400 italic">"{story.firstScenePreview}"</p>
-                        <p className="text-xs text-green-400 mt-2">✨ First scene is FREE</p>
-                      </div>
-                      
-                      <div className="text-xs text-slate-500">
-                        <span>👥 {story.playerCount} heroes</span>
-                        <span className="mx-2">•</span>
-                        <span>👁️ {story.spectatorCount} readers</span>
-                        <span className="mx-2">•</span>
-                        <span>Completed {story.completedDaysAgo} days ago</span>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-slate-900/50 rounded-lg p-4 text-center">
-                      <p className="text-sm font-semibold text-white mb-2">Unlock Options</p>
-                      <div className="space-y-2">
-                        <button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm">
-                          Next Scene<br/>
-                          <span className="text-xs opacity-80">{story.nextSceneInk} Ink</span>
-                        </button>
-                        <button className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm">
-                          Full Story<br/>
-                          <span className="text-xs opacity-80">{story.totalInk} Ink</span>
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-400 mt-3">Read first scene free!</p>
-                    </div>
-                  </div>
-                </div>
+              <a href="/guide" className="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200">
+                Guide the Fates
               </a>
-            ))}
+              <a href="/read" className="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 border border-slate-600">
+                Read Legends
+              </a>
+            </div>
           </div>
         </section>
       </div>
-
-      {/* How It Works */}
-      <section className="mt-16 text-center">
-        <h2 className="text-2xl font-bold text-white mb-8">How It Works</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-            <div className="text-3xl mb-4">🎭</div>
-            <h3 className="text-lg font-bold text-white mb-2">Create Characters</h3>
-            <p className="text-sm text-slate-400">
-              Design unique heroes with AI-generated portraits and rich backstories
-            </p>
-          </div>
-          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-            <div className="text-3xl mb-4">🎯</div>
-            <h3 className="text-lg font-bold text-white mb-2">Play Together</h3>
-            <p className="text-sm text-slate-400">
-              Make choices and interact with other players in multi-day story runs
-            </p>
-          </div>
-          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-            <div className="text-3xl mb-4">📖</div>
-            <h3 className="text-lg font-bold text-white mb-2">Become Legends</h3>
-            <p className="text-sm text-slate-400">
-              Watch as AI transforms your actions into professionally written narratives
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
@@ -361,10 +184,14 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <TopBar {...{user, account}}/>
-      <div className="max-w-7xl mx-auto">
-        {user ? <HomeUser {...{user, account}}/> : <HomeAnon/> }
-      </div>
+      {user ? (
+        <>
+          <TopBar {...{user, account}}/>
+          <HomeUser {...{user, account}}/>
+        </>
+      ) : (
+        <HomeAnon/>
+      )}
     </div>
   )
 }

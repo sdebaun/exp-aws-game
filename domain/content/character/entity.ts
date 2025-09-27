@@ -83,7 +83,7 @@ export function canTransitionState(
   from: "available" | "recruitable" | "rostered",
   to: "available" | "recruitable" | "rostered"
 ): boolean {
-  const validTransitions = {
+  const validTransitions: Record<string, string[]> = {
     available: ["recruitable"],
     recruitable: ["rostered", "available"], // Can dismiss back to available
     rostered: [], // No transitions from rostered

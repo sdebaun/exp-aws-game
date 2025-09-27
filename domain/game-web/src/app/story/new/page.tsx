@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { TopBar } from '@/app/TopBar';
 import { getUserInfo } from '@/app/getUserInfo';
+import Link from 'next/link';
 
 export default async function NewStoryPage() {
   const { user, account } = await getUserInfo();
@@ -20,7 +21,7 @@ export default async function NewStoryPage() {
           <div className="text-6xl mb-4">🚧</div>
           <h2 className="text-2xl font-bold text-white mb-4">Coming Soon!</h2>
           <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
-            The ability to create your own stories is under construction. Soon you'll be able to:
+            The ability to create your own stories is under construction. Soon you&apos;ll be able to:
           </p>
           <div className="grid md:grid-cols-3 gap-6 text-left max-w-3xl mx-auto mb-8">
             <div className="bg-slate-800/50 rounded-lg p-4">
@@ -36,12 +37,12 @@ export default async function NewStoryPage() {
               <p className="text-sm text-slate-400">Open your story for others to join</p>
             </div>
           </div>
-          <a 
+          <Link 
             href="/"
             className="inline-block bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-200"
           >
             ← Back to Stories
-          </a>
+          </Link>
         </div>
 
         <div className="mt-12 text-center">

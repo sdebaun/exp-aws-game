@@ -14,7 +14,6 @@ export function CurrentUser({ user, account }: {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const displayName = user.name;
-  const hasCustomAvatar = false; // TODO: restore when demense is back
   
   // Close dropdown when clicking outside
   useEffect(() => {

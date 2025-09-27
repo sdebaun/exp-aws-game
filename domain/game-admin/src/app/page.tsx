@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../sst-env.d.ts" />
 
-import { auth0 } from "@integrations/auth0";
+import { getAuth0Client } from "@integrations/auth0";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { Resource } from "sst";
 import type { EntityItem } from "electrodb";
@@ -115,6 +115,7 @@ async function purgeAll() {
 }
 
 export default async function AdminHome() {
+  const auth0 = await getAuth0Client();
   const session = await auth0.getSession();
 
   if (!session) {

@@ -1,6 +1,6 @@
-# exp-aws-game
+# River of Souls
 
-A multiplayer, social, long-term, web-based game.
+A multiplayer, social, long-term, web-based game where players create AI-generated characters and collaborate in multi-day narrative adventures.
 
 - @./design/README.md
 - @./experiment/README.md

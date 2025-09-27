@@ -50,19 +50,21 @@ function logOpenAIResponsesCosts(
   response: ParsedResponse<any>,
   model: AllowedTextModels,
 ) {
-  const inputCost = textGenerationCostPerM[model].input *
-    response.usage.input_tokens /
-    1000000;
-  const outputCost = textGenerationCostPerM[model].output *
-    response.usage.output_tokens /
-    1000000;
+  const inputCost = response.usage
+    ? textGenerationCostPerM[model].input * response.usage.input_tokens /
+      1000000
+    : 0;
+  const outputCost = response.usage
+    ? textGenerationCostPerM[model].output * response.usage.output_tokens /
+      1000000
+    : 0;
   const totalCost = inputCost + outputCost;
   console.log("OpenAI Responses API Call Costs", {
     model,
     inputCost,
     outputCost,
     totalCost,
-    inputTokens: response.usage.input_tokens,
-    outputTokens: response.usage.output_tokens,
+    inputTokens: response.usage?.input_tokens,
+    outputTokens: response.usage?.output_tokens,
   });
 }

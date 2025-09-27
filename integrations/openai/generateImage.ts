@@ -117,10 +117,13 @@ function logOpenAIImagesCosts(
   quality: "low" | "medium" | "high" | "standard" | "hd",
   size: "1024x1024" | "1024x1536" | "1536x1024",
 ) {
+  const modelCosts = imageGenerationCostPerImage[model] as any;
+  const totalCost = modelCosts[quality]?.[size] || 0;
+  
   console.log("OpenAI Images API Call Costs", {
     model,
     quality,
     size,
-    totalCost: imageGenerationCostPerImage[model][quality][size],
+    totalCost,
   });
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function GenerateBatchButton({ generateBatch }: { generateBatch: () => Promise<any> }) {
+export function GenerateBatchButton({ generateBatch }: { generateBatch: () => Promise<void> }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
 

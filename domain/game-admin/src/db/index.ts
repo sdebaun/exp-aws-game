@@ -1,4 +1,4 @@
-import { AccountEntity, CharacterEntity, DemenseEntity } from "./entities";
+import { AccountEntity, CharacterEntity } from "./entities";
 
 export const db = {
   account: {
@@ -18,16 +18,16 @@ export const db = {
   },
   
   character: {
-    async create(accountId: string, character: {
+    async create(playerId: string, character: {
       characterId: string;
       name: string;
-      class: string;
-      background: string;
-      trait: string;
-      portrait?: string;
+      description: string;
+      aspects: string[];
+      portraitUrl?: string;
+      recruitmentState: "available" | "recruitable" | "rostered";
     }) {
       return CharacterEntity.create({
-        accountId,
+        playerId,
         ...character
       }).go();
     }

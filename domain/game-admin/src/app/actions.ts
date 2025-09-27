@@ -2,24 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
-import { DemenseEntity, AccountEntity } from "../db/entities";
-
-export async function destroyDemense() {
-  const { user, demense } = await getUserInfo();
-  
-  if (!user || !demense) {
-    throw new Error("No demense to destroy");
-  }
-  
-  // Delete the demense
-  await DemenseEntity.delete({
-    accountId: user.sub,
-    demenseId: demense.demenseId,
-  }).go();
-  
-  // Redirect to demense selection
-  redirect('/demense/new');
-}
+import { AccountEntity } from "../db/entities";
 
 export async function addInk() {
   const { user, account } = await getUserInfo();
@@ -41,7 +24,7 @@ export async function addInk() {
 }
 
 export async function destroyAccount() {
-  const { user, demense } = await getUserInfo();
+  const { user } = await getUserInfo();
   
   if (!user) {
     throw new Error("Not authenticated");
@@ -49,13 +32,7 @@ export async function destroyAccount() {
   
   const accountId = user.sub;
   
-  // Delete demense if exists
-  if (demense) {
-    await DemenseEntity.delete({
-      accountId,
-      demenseId: demense.demenseId,
-    }).go();
-  }
+  // TODO: Delete demense when functionality is restored
   
   // Delete account
   await AccountEntity.delete({

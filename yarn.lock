@@ -4176,20 +4176,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"exp-aws-game@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "exp-aws-game@workspace:."
-  dependencies:
-    "@types/aws-lambda": "npm:8.10.149"
-    openai: "npm:^5.21.0"
-    prettier: "npm:^3.5.3"
-    sst: "npm:3.17.0"
-    turbo: "npm:^2.5.3"
-    typescript: "npm:5.8.2"
-    zod: "npm:3.25.76"
-  languageName: unknown
-  linkType: soft
-
 "exponential-backoff@npm:^3.1.1":
   version: 3.1.2
   resolution: "exponential-backoff@npm:3.1.2"
@@ -6381,6 +6367,20 @@ __metadata:
   checksum: 10c0/4eff0d4a5f9383566c7d7ec437b671cc51b25963bd61bf127c3f3d3f68e44a026d99b8d2f1ad344afff8d278a8fe70a8ea092650a716d22287e8bef7126bb2fa
   languageName: node
   linkType: hard
+
+"river-of-souls@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "river-of-souls@workspace:."
+  dependencies:
+    "@types/aws-lambda": "npm:8.10.149"
+    openai: "npm:^5.21.0"
+    prettier: "npm:^3.5.3"
+    sst: "npm:3.17.0"
+    turbo: "npm:^2.5.3"
+    typescript: "npm:5.8.2"
+    zod: "npm:3.25.76"
+  languageName: unknown
+  linkType: soft
 
 "router@npm:^2.2.0":
   version: 2.2.0

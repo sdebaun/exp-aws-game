@@ -9,7 +9,7 @@ type Character = EntityItem<typeof CharacterEntity>;
 
 interface CharacterPanelProps {
   characters: Character[];
-  deleteCharacter: (characterId: string) => Promise<any>;
+  deleteCharacter: (characterId: string) => Promise<void>;
 }
 
 export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelProps) {
@@ -22,7 +22,7 @@ export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelPr
         <div className="p-4 space-y-3">
           {characters.length === 0 ? (
             <div className="text-gray-400 text-center py-8">
-              No characters in the pool. Click "Generate Batch" to create some!
+              No characters in the pool. Click &quot;Generate Batch&quot; to create some!
             </div>
           ) : (
             characters.map((char) => (
@@ -38,6 +38,7 @@ export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelPr
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
                   {char.portraitUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img 
                       src={char.portraitUrl} 
                       alt={`${char.name} portrait`}
@@ -75,6 +76,7 @@ export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelPr
               {/* Header with portrait and name */}
               <div className="flex items-start gap-6 mb-8">
                 {selectedCharacter.portraitUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img 
                     src={selectedCharacter.portraitUrl} 
                     alt={`${selectedCharacter.name} portrait`}

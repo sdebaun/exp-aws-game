@@ -3,7 +3,7 @@
 export default $config({
   app(input) {
     return {
-      name: "exp-aws-game",
+      name: "river-of-souls",
       removal: input?.stage === "production" ? "retain" : "remove",
       protect: ["production"].includes(input?.stage),
       home: "aws",

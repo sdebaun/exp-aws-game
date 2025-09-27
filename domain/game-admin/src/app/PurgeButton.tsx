@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function PurgeButton({ purgeAll }: { purgeAll: () => Promise<any> }) {
+interface PurgeResult {
+  purgedCount: number;
+}
+
+export function PurgeButton({ purgeAll }: { purgeAll: () => Promise<PurgeResult> }) {
   const [isPurging, setIsPurging] = useState(false);
   const router = useRouter();
 

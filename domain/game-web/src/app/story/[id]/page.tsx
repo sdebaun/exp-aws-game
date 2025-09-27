@@ -182,7 +182,7 @@ function JoinableStoryDetail({ story }: { story: Story }) {
         >
           Join This Story →
         </a>
-        <p className="text-sm text-slate-500 mt-2">You'll need to log in and select a character</p>
+        <p className="text-sm text-slate-500 mt-2">You&apos;ll need to log in and select a character</p>
       </div>
     </div>
   );
