@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 type ChatMessage = {
   messageId: string;
@@ -20,72 +21,55 @@ export function WebSocketChatClient({
   roomId?: string;
 }) {
   console.log("WebSocketChatClient", { wsUrl })
-  // const tryThis = "wss://epvwtmwlcd.execute-api.us-east-1.amazonaws.com/"
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isConnected, setIsConnected] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
+  const { sendMessage, lastMessage, readyState } = useWebSocket(wsUrl, {
+    onOpen: () => {
+      console.log("WebSocket connected");
+    },
+    onClose: () => {
+      console.log("WebSocket disconnected");
+    },
+    onError: (error) => {
+      console.error("WebSocket connection error", error);
+    },
+    shouldReconnect: () => true,
+    reconnectInterval: 3000,
+  });
+
+  const isConnected = readyState === ReadyState.OPEN;
+
   useEffect(() => {
-    let ws: WebSocket;
-    // Connect with query parameters for user/room info
-    try {
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        console.log("WebSocket connected");
-        setIsConnected(true);
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === "message") {
-            setMessages((prev) => [...prev, data.data]);
-          }
-        } catch (error) {
-          console.error("Failed to parse message:", error);
+    if (lastMessage !== null) {
+      try {
+        const data = JSON.parse(lastMessage.data);
+        if (data.type === "message") {
+          setMessages((prev) => [...prev, data.data]);
         }
-      };
+      } catch (error) {
+        console.error("Failed to parse message:", error);
+      }
+    }
+  }, [lastMessage]);
 
-      ws.onclose = () => {
-        console.log("WebSocket disconnected");
-        setIsConnected(false);
-      };
-
-      ws.onerror = (err) => {
-        console.error("WebSocket connection error", err);
-        setIsConnected(false);
-      };
-
-      return () => {
-        ws.close();
-      };
-    } catch (err) {
-      console.log("new Websocket", JSON.stringify(err, null, 2))
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isConnected) {
+      console.error("WebSocket not connected");
+      return;
     }
 
+    if (!inputValue.trim()) return;
 
+    sendMessage(JSON.stringify({
+      action: "sendMessage",
+      message: inputValue,
+    }));
 
-  }, [wsUrl, username, roomId]);
-
-  // const sendMessage = (e: React.FormEvent) => {
-  //   e.preventDefault();
-    
-  //   if (!ws.current || wsRef.current.readyState !== WebSocket.OPEN) {
-  //     console.error("WebSocket not connected");
-  //     return;
-  //   }
-
-  //   if (!inputValue.trim()) return;
-
-  //   // Send message through WebSocket
-  //   wsRef.current.send(JSON.stringify({
-  //     action: "sendMessage",
-  //     message: inputValue,
-  //   }));
-
-  //   setInputValue("");
-  // };
+    setInputValue("");
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-white">
@@ -123,7 +107,7 @@ export function WebSocketChatClient({
       </div>
 
       {/* Input */}
-      {/* <form onSubmit={sendMessage} className="bg-gray-800 p-4 border-t border-gray-700">
+      <form onSubmit={handleSendMessage} className="bg-gray-800 p-4 border-t border-gray-700">
         <div className="flex gap-2">
           <input
             required
@@ -143,7 +127,7 @@ export function WebSocketChatClient({
             Send
           </button>
         </div>
-      </form> */}
+      </form>
     </div>
   );
 }
