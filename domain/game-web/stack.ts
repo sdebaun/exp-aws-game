@@ -41,25 +41,25 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   });
 
   // Stream processor for broadcasting chat messages
-  // const streamBroadcaster = gameTable.subscribe({
-  //   handler: "domain/game-web/src/chat/websocket/stream-broadcaster.handler",
-  //   link: [gameTable, chatApi],
-  //   filters: [
-  //     {
-  //       dynamodb: {
-  //         Keys: {
-  //           pk: { S: [{ prefix: "CHAT#" }] }
-  //         }
-  //       }
-  //     }
-  //   ],
-  //   permissions: [
-  //     {
-  //       actions: ["execute-api:ManageConnections"],
-  //       resources: ["*"],
-  //     }
-  //   ]
-  // });
+  const streamBroadcaster = gameTable.subscribe({
+    handler: "domain/game-web/src/chat/websocket/stream-broadcaster.handler",
+    link: [gameTable, chatApi],
+    filters: [
+      {
+        dynamodb: {
+          Keys: {
+            pk: { S: [{ prefix: "CHAT#" }] }
+          }
+        }
+      }
+    ],
+    permissions: [
+      {
+        actions: ["execute-api:ManageConnections"],
+        resources: ["*"],
+      }
+    ]
+  });
 
   const web = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
@@ -83,6 +83,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
     gameWeb: web,
     gameTable,
     chatApi,
+    streamBroadcaster,
     url: web.url,
   };
 }

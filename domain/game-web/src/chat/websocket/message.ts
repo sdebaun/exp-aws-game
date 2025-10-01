@@ -5,7 +5,7 @@ import { ulid } from "ulid";
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("========== MESSAGE HANDLER INVOKED ==========");
-  console.log("Event:", JSON.stringify(event, null, 2));
+  // console.log("Event:", JSON.stringify(event, null, 2));
 
   const connectionId = event.requestContext.connectionId!;
 
@@ -29,15 +29,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { action, message } = data;
 
     if (action === "sendMessage" && message) {
+      console.log("Received message:", message);
       // Create and persist the message
       // The DDB stream will handle broadcasting
-      await ChatMessageEntity.create({
+      const newMessage = {
         messageId: ulid(),
         roomId: connection.data.roomId,
         username: connection.data.username,
         message: message,
-        timestamp: Date.now().toString(),
-      }).go();
+        timestamp: new Date().toISOString(),
+      };
+
+      console.log("Creating message:", newMessage);
+
+      const sent = await ChatMessageEntity.create(newMessage).go();
+      console.log("Sent", sent);
 
       return { statusCode: 200, body: "Message sent" };
     }

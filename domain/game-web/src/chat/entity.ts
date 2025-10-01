@@ -44,12 +44,10 @@ export const ChatMessageEntity = new Entity(
         pk: {
           field: "pk",
           composite: ["roomId"],
-          template: "CHAT#${roomId}",
         },
         sk: {
           field: "sk",
           composite: ["timestamp", "messageId"],
-          template: "MSG#${timestamp}#${messageId}",
         },
       },
       byUser: {
@@ -57,18 +55,16 @@ export const ChatMessageEntity = new Entity(
         pk: {
           field: "gsi1pk",
           composite: ["username"],
-          template: "USER#${username}",
         },
         sk: {
           field: "gsi1sk",
           composite: ["timestamp"],
-          template: "MSG#${timestamp}",
         },
       },
     },
   },
-  { 
-    client: dynamoClient, 
+  {
+    client: dynamoClient,
     table: Resource.GameTable.name,
-  }
+  },
 );
