@@ -5247,6 +5247,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fp-ts-std@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fp-ts-std@npm:1.0.0"
+  peerDependencies:
+    fp-ts: ^2.16.0
+    monocle-ts: ^2.3.0
+    newtype-ts: ^0.3.0
+  checksum: 10c0/7e5d990d33d784cf0bcf8d9963b82a5dff13fc586c1fb5064f907f46a353c95e99c9410df669b5ce8c7d81d4785225aa3c98fbce06b3c01196058e41c6a316c7
+  languageName: node
+  linkType: hard
+
+"fp-ts@npm:^2.16.11":
+  version: 2.16.11
+  resolution: "fp-ts@npm:2.16.11"
+  checksum: 10c0/9a263a577964adbb754221c48449a64a6962c91fa6af136e73b043ee70ee41c7b856fe1e6cc21fb4f0264dd9a75c53bd381b1bb486b6caa99a71f33d1bb24c2a
+  languageName: node
+  linkType: hard
+
 "fresh@npm:^2.0.0":
   version: 2.0.0
   resolution: "fresh@npm:2.0.0"
@@ -5349,6 +5367,8 @@ __metadata:
     electrodb: "npm:^3.4.5"
     eslint: "npm:^9"
     eslint-config-next: "npm:15.5.3"
+    fp-ts: "npm:^2.16.11"
+    fp-ts-std: "npm:^1.0.0"
     mqtt: "npm:^5.14.1"
     nanoid: "npm:^5.1.5"
     next: "npm:15.5.3"

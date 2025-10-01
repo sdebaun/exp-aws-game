@@ -13,6 +13,8 @@
     "@aws-sdk/client-apigatewaymanagementapi": "^3.899.0",
     "@aws-sdk/client-dynamodb": "^3.891.0",
     "electrodb": "^3.4.5",
+    "fp-ts": "^2.16.11",
+    "fp-ts-std": "^1.0.0",
     "mqtt": "^5.14.1",
     "nanoid": "^5.1.5",
     "next": "15.5.3",
