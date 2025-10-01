@@ -20,7 +20,7 @@ export function WebSocketChatClient({
   roomId?: string;
 }) {
   console.log("WebSocketChatClient", { wsUrl })
-  const tryThis = "wss://epvwtmwlcd.execute-api.us-east-1.amazonaws.com/"
+  // const tryThis = "wss://epvwtmwlcd.execute-api.us-east-1.amazonaws.com/"
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -29,7 +29,7 @@ export function WebSocketChatClient({
     let ws: WebSocket;
     // Connect with query parameters for user/room info
     try {
-      ws = new WebSocket(tryThis);
+      ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
         console.log("WebSocket connected");
