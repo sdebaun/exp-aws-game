@@ -6,5 +6,6 @@ We are using sst v3.  NEVER run `sst dev` or `sst deploy`, assume the engineer w
 - @./integrations/README.md
 - @./design/README.md
 - @./domain/content/README.md
-- @./CODING_STANDARDS.md
+- @./docs/principles/000-index.md
+- @./docs/standards/101-react-component-props.md
 - @./experiment/README.md
