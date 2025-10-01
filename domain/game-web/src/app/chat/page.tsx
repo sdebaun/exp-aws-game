@@ -1,14 +1,15 @@
-import { ChatClient } from "./chat-client";
+import { WebSocketChatClient } from "./websocket-chat-client";
 import { Resource } from "sst";
 
 export default function ChatPage() {
-  const topic = `${Resource.App.name}/${Resource.App.stage}/chat/public`;
-  
+  // For now, hardcode username. In production, this would come from auth
+  const username = "user-" + Math.random().toString(36).substr(2, 9);
+  console.log("ChatPage", { "Resource.ChatApi.url": Resource.ChatApi.url})
   return (
-    <ChatClient 
-      topic={topic}
-      endpoint={Resource.ChatRealtime.endpoint}
-      authorizer={Resource.ChatRealtime.authorizer}
+    <WebSocketChatClient 
+      wsUrl={Resource.ChatApi.url}
+      username={username}
+      roomId="public"
     />
   );
 }

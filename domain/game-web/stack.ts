@@ -4,16 +4,11 @@
 import { Secrets } from "../secrets/stack";
 
 export default function GameWebStack({ secrets }: { secrets: Secrets }) {
-  // Realtime component for chat
-  const realtime = new sst.aws.Realtime("ChatRealtime", {
-    authorizer: "domain/game-web/src/realtime/authorizer.handler",
-  });
-
   // Main game table - single table design
   const gameTable = new sst.aws.Dynamo("GameTable", {
     fields: {
-      pk: "string",  // partition key
-      sk: "string",  // sort key
+      pk: "string", // partition key
+      sk: "string", // sort key
       gsi1pk: "string", // GSI partition key
       gsi1sk: "string", // GSI sort key
       gsi2pk: "string", // GSI2 partition key for character recruitment
@@ -24,11 +19,56 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
       gsi1: { hashKey: "gsi1pk", rangeKey: "gsi1sk" },
       gsi2: { hashKey: "gsi2pk", rangeKey: "gsi2sk" },
     },
+    stream: "new-and-old-images",
   });
+
+  // WebSocket API for chat
+  const chatApi = new sst.aws.ApiGatewayWebSocket("ChatApi");
+
+  chatApi.route("$connect", {
+    handler: "domain/game-web/src/chat/websocket/connect.handler",
+    link: [gameTable],
+  });
+
+  chatApi.route("$disconnect", {
+    handler: "domain/game-web/src/chat/websocket/disconnect.handler",
+    link: [gameTable],
+  });
+
+  chatApi.route("$default", {
+    handler: "domain/game-web/src/chat/websocket/message.handler",
+    link: [gameTable],
+  });
+
+  // Stream processor for broadcasting chat messages
+  // const streamBroadcaster = gameTable.subscribe({
+  //   handler: "domain/game-web/src/chat/websocket/stream-broadcaster.handler",
+  //   link: [gameTable, chatApi],
+  //   filters: [
+  //     {
+  //       dynamodb: {
+  //         Keys: {
+  //           pk: { S: [{ prefix: "CHAT#" }] }
+  //         }
+  //       }
+  //     }
+  //   ],
+  //   permissions: [
+  //     {
+  //       actions: ["execute-api:ManageConnections"],
+  //       resources: ["*"],
+  //     }
+  //   ]
+  // });
 
   const web = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
-    link: [...Object.values(secrets.auth0), ...Object.values(secrets.openai), gameTable, realtime],
+    link: [
+      ...Object.values(secrets.auth0),
+      ...Object.values(secrets.openai),
+      gameTable,
+      chatApi,
+    ],
     environment: {
       AUTH0_DOMAIN: secrets.auth0.AUTH0_DOMAIN.value,
       AUTH0_CLIENT_ID: secrets.auth0.AUTH0_CLIENT_ID.value,
@@ -42,7 +82,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   return {
     gameWeb: web,
     gameTable,
-    realtime,
+    chatApi,
     url: web.url,
   };
 }

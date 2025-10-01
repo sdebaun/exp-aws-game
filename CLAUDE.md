@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+We are using sst v3.  NEVER run `sst dev` or `sst deploy`, assume the engineer will handle this.
+
 - @./README.md
 - @./integrations/README.md
 - @./design/README.md

@@ -9,10 +9,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Function"
     }
-    "ChatRealtime": {
-      "authorizer": string
-      "endpoint": string
-      "type": "sst.aws.Realtime"
+    "ChatApi": {
+      "managementEndpoint": string
+      "type": "sst.aws.ApiGatewayWebSocket"
+      "url": string
     }
     "ContentTable": {
       "name": string
