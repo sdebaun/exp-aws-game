@@ -3,8 +3,8 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { Resource } from "sst";
-import { ConnectionEntity } from "./entities";
-import { ChatMessageEntity } from "../entity";
+import { ChatConnectionEntity } from "../ChatConnectionEntity";
+import { ChatMessageEntity } from "../ChatMessageEntity";
 
 const api = new ApiGatewayManagementApi({
   endpoint: Resource.ChatApi.managementEndpoint,
@@ -68,7 +68,7 @@ export const handler: DynamoDBStreamHandler = async (event) => {
 
     try {
       // Get all connections in the room
-      const roomConnections = await ConnectionEntity.query
+      const roomConnections = await ChatConnectionEntity.query
         .byRoom({ roomId: chatMessage.roomId })
         .go();
 
@@ -86,7 +86,7 @@ export const handler: DynamoDBStreamHandler = async (event) => {
             error.statusCode === 410
           ) {
             console.log(`Removing stale connection: ${conn.connectionId}`);
-            await ConnectionEntity.delete({
+            await ChatConnectionEntity.delete({
               connectionId: conn.connectionId,
             }).go();
           } else {

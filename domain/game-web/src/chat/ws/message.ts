@@ -3,10 +3,16 @@ import { pipe } from "fp-ts/function";
 import * as O from "fp-ts/Option";
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
+import * as T from "fp-ts/Task";
 import { z } from "zod";
 import { ulid } from "ulid";
-import { ConnectionEntity } from "./entities";
-import { ChatMessageEntity } from "../entity";
+import { ChatConnectionEntity } from "../ChatConnectionEntity";
+import { ChatMessageEntity } from "../ChatMessageEntity";
+
+const tapLog = <A>(label: string, pick: (a: A) => unknown = (a) => a) =>
+(
+  a: A,
+) => (console.log(label, pick(a)), a);
 
 // Domain errors -----------------------------------------------------------
 class BadRequest extends Error {}
@@ -32,10 +38,10 @@ const SendMessage = z.object({
 type SendMessage = z.infer<typeof SendMessage>;
 
 // Steps -------------------------------------------------------------------
-const getConnection = (connectionId: string) =>
+const getConnection = (connectionId: string, connectedAt: number) =>
   pipe(
     TE.tryCatch(
-      () => ConnectionEntity.get({ connectionId }).go(),
+      () => ChatConnectionEntity.get({ connectionId, connectedAt }).go(),
       () => new Internal("Failed to load connection"),
     ),
     TE.chain((res) =>
@@ -75,13 +81,19 @@ const persistMessage = (
 export const handler: APIGatewayProxyHandler = async (event) =>
   pipe(
     TE.right(event),
+    TE.map(tapLog("event")),
+    TE.map(
+      tapLog("connectionId", (event) => event.requestContext.connectionId),
+    ),
     TE.bindTo("event"),
     TE.bind("conn", ({ event }) =>
       pipe(
         O.fromNullable(event.requestContext.connectionId),
         E.fromOption(() => new BadRequest("Missing connectionId")),
         TE.fromEither,
-        TE.chain(getConnection),
+        TE.chain((connectionId) =>
+          getConnection(connectionId, event.requestContext.connectedAt || 0)
+        ),
       )),
     TE.bind("cmd", ({ event }) =>
       pipe(
@@ -98,4 +110,5 @@ export const handler: APIGatewayProxyHandler = async (event) =>
       })
     ),
     TE.match(toHttp, () => ({ statusCode: 200, body: "Message sent" })),
+    T.map(tapLog("response")),
   )();

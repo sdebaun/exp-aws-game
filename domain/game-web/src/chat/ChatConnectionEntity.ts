@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../../../../sst-env.d.ts" />
+/// <reference path="../../../../sst-env.d.ts" />
 
 import { Entity, EntityItem } from "electrodb";
 import { Resource } from "sst";
@@ -9,10 +9,10 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 const dynamoClient = new DynamoDBClient({});
 
 // Connection tracking entity
-export const ConnectionEntity = new Entity(
+export const ChatConnectionEntity = new Entity(
   {
     model: {
-      entity: "Connection",
+      entity: "ChatConnection",
       version: "1",
       service: "chat",
     },
@@ -39,12 +39,12 @@ export const ConnectionEntity = new Entity(
         pk: {
           field: "pk",
           composite: ["connectionId"],
-          template: "CONN#${connectionId}",
         },
         sk: {
           field: "sk",
+          // composite: ["connectedAt"],
           composite: [],
-          template: "METADATA",
+          template: "LOOKUP",
         },
       },
       byRoom: {
@@ -52,12 +52,10 @@ export const ConnectionEntity = new Entity(
         pk: {
           field: "gsi1pk",
           composite: ["roomId"],
-          template: "ROOM#${roomId}",
         },
         sk: {
           field: "gsi1sk",
           composite: ["connectionId"],
-          template: "CONN#${connectionId}",
         },
       },
     },
@@ -68,4 +66,4 @@ export const ConnectionEntity = new Entity(
   },
 );
 
-export type ConnectionEntityItem = EntityItem<typeof ConnectionEntity>;
+export type ConnectionEntityItem = EntityItem<typeof ChatConnectionEntity>;

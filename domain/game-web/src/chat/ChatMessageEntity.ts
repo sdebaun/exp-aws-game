@@ -12,7 +12,7 @@ export const ChatMessageEntity = new Entity(
   {
     model: {
       entity: "ChatMessage",
-      service: "game",
+      service: "chat",
       version: "1",
     },
     attributes: {

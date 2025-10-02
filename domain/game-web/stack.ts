@@ -26,39 +26,75 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   const chatApi = new sst.aws.ApiGatewayWebSocket("ChatApi");
 
   chatApi.route("$connect", {
-    handler: "domain/game-web/src/chat/websocket/connect.handler",
+    handler: "domain/game-web/src/chat/ws/connect.handler",
     link: [gameTable],
   });
 
   chatApi.route("$disconnect", {
-    handler: "domain/game-web/src/chat/websocket/disconnect.handler",
+    handler: "domain/game-web/src/chat/ws/disconnect.handler",
     link: [gameTable],
   });
 
   chatApi.route("$default", {
-    handler: "domain/game-web/src/chat/websocket/message.handler",
+    handler: "domain/game-web/src/chat/ws/message.handler",
     link: [gameTable],
   });
 
   // Stream processor for broadcasting chat messages
-  const streamBroadcaster = gameTable.subscribe({
-    handler: "domain/game-web/src/chat/websocket/stream-broadcaster.handler",
+  const streamBroadcaster = gameTable.subscribe("StreamBroadcaster", {
+    handler: "domain/game-web/src/chat/ddb/onInsertBroadcast.handler",
     link: [gameTable, chatApi],
+    // this shit aint workin
     filters: [
       {
         dynamodb: {
-          Keys: {
-            pk: { S: [{ prefix: "CHAT#" }] }
-          }
-        }
-      }
+          NewImage: {
+            "__edb_e__": {
+              S: "ChatMessage",
+            },
+          },
+        },
+      },
     ],
+    // filterCriteria: {
+    //   filters: [
+    //     {
+    //       pattern: JSON.stringify({
+    //         eventName: ["INSERT"],
+    //         dynamodb: {
+    //           NewImage: {
+    //             "__edb_e__": { S: ["ChatMessage"] },
+    //           },
+    //         },
+    //       }),
+    //     },
+    //   ],
+    // },
     permissions: [
       {
         actions: ["execute-api:ManageConnections"],
         resources: ["*"],
-      }
-    ]
+      },
+    ],
+    // filters: [
+    //   {
+    //     eventName: ["INSERT"],
+    //     dynamodb: {
+    //       NewImage: {
+    //         "__edb_e__": { S: ["ChatMessage"] },
+    //       },
+    //     },
+    //   },
+    // ],
+    // filters: [
+    //   {
+    //     dynamodb: {
+    //       Keys: {
+    //         pk: { S: [{ prefix: "$chat#roomid_" }] },
+    //       },
+    //     },
+    //   },
+    // ],
   });
 
   const web = new sst.aws.Nextjs("GameWeb", {
