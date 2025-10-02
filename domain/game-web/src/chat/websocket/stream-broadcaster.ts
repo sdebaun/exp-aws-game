@@ -10,12 +10,12 @@ const api = new ApiGatewayManagementApi({
   endpoint: Resource.ChatApi.managementEndpoint,
 });
 
+/**
+ * Listens to the ddb stream for new chat messages
+ * and then fans the change out to all the connections in the originating room
+ */
 export const handler: DynamoDBStreamHandler = async (event) => {
-  console.log(
-    "Stream broadcaster invoked with",
-    event.Records.length,
-    "records",
-  );
+  console.log("stream-broadcaster", { recordCount: event.Records.length });
 
   for (const record of event.Records) {
     // Only process INSERT events for new messages

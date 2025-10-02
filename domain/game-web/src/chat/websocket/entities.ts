@@ -65,7 +65,7 @@ export const ConnectionEntity = new Entity(
   {
     client: dynamoClient,
     table: Resource.GameTable.name,
-  }
+  },
 );
 
-export type Connection = EntityItem<typeof ConnectionEntity>;
+export type ConnectionEntityItem = EntityItem<typeof ConnectionEntity>;

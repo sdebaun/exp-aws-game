@@ -19,6 +19,7 @@ export default function ContentStack({ secrets }: { secrets: Secrets }) {
       gsi1: { hashKey: "gsi1pk", rangeKey: "gsi1sk" },
       gsi2: { hashKey: "gsi2pk", rangeKey: "gsi2sk" },
     },
+    stream: "new-and-old-images",
   });
 
   // Character batch generator Lambda
