@@ -38,10 +38,10 @@ const SendMessage = z.object({
 type SendMessage = z.infer<typeof SendMessage>;
 
 // Steps -------------------------------------------------------------------
-const getConnection = (connectionId: string, connectedAt: number) =>
+const getConnection = (connectionId: string) =>
   pipe(
     TE.tryCatch(
-      () => ChatConnectionEntity.get({ connectionId, connectedAt }).go(),
+      () => ChatConnectionEntity.get({ connectionId }).go(),
       () => new Internal("Failed to load connection"),
     ),
     TE.chain((res) =>
@@ -91,9 +91,7 @@ export const handler: APIGatewayProxyHandler = async (event) =>
         O.fromNullable(event.requestContext.connectionId),
         E.fromOption(() => new BadRequest("Missing connectionId")),
         TE.fromEither,
-        TE.chain((connectionId) =>
-          getConnection(connectionId, event.requestContext.connectedAt || 0)
-        ),
+        TE.chain((connectionId) => getConnection(connectionId)),
       )),
     TE.bind("cmd", ({ event }) =>
       pipe(
