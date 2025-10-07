@@ -4,9 +4,6 @@ import { ChatConnectionEntity } from "../ChatConnectionEntity";
 console.log("===== CONNECT.TS LOADED =====");
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  console.log("========== CONNECT HANDLER INVOKED ==========");
-  // console.log("Event:", JSON.stringify(event, null, 2));
-
   const connectionId = event.requestContext.connectionId!;
 
   // For now, we'll extract user info from query parameters

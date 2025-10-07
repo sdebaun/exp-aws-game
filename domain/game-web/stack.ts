@@ -61,7 +61,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
     },
   );
 
-  const web = new sst.aws.Nextjs("GameWeb", {
+  const gameWeb = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
     link: [
       ...Object.values(secrets.auth0),
@@ -80,10 +80,10 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
   });
 
   return {
-    gameWeb: web,
+    gameWeb,
     gameTable,
     chatApi,
     streamBroadcaster,
-    url: web.url,
+    url: gameWeb.url,
   };
 }
