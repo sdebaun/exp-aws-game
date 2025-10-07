@@ -6,9 +6,8 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { Resource } from "sst";
 import type { EntityItem } from "electrodb";
 import { CharacterEntity } from "../../../content/character/entity";
-import { GenerateBatchButton } from "./GenerateBatchButton";
+import { AdminActions } from "./AdminActions";
 import { CharacterPanel } from "./CharacterPanel";
-import { PurgeButton } from "./PurgeButton";
 
 type Character = EntityItem<typeof CharacterEntity>;
 
@@ -38,27 +37,29 @@ async function getCharacters(): Promise<{ characters: Character[], count: number
   return body;
 }
 
-async function generateBatch() {
+async function generateBatch(batchSize: number) {
   "use server";
-  
+
   console.log("[generateBatch] Starting batch generation...");
   console.log("[generateBatch] Function name:", Resource.CharacterBatchGenerator.name);
-  
+  console.log("[generateBatch] Batch size:", batchSize);
+
   const lambda = new LambdaClient({});
   const response = await lambda.send(new InvokeCommand({
     FunctionName: Resource.CharacterBatchGenerator.name,
+    Payload: JSON.stringify({ batchSize }),
   }));
-  
+
   console.log("[generateBatch] Lambda response:", response.$metadata.httpStatusCode);
-  
+
   if (!response.Payload) {
     console.error("[generateBatch] No payload in response");
     throw new Error("Failed to generate batch");
   }
-  
+
   const result = JSON.parse(new TextDecoder().decode(response.Payload));
   console.log("[generateBatch] Batch generation result:", result);
-  
+
   return result;
 }
 
@@ -142,18 +143,12 @@ export default async function AdminHome() {
             <h1 className="text-2xl font-bold">Game Admin Panel</h1>
             <p className="text-gray-400 text-sm mt-1">Welcome, {session.user.name || session.user.email}</p>
           </div>
-          <div className="flex items-center gap-4">
-            <GenerateBatchButton generateBatch={generateBatch} />
-            <PurgeButton purgeAll={purgeAll} />
-            <a href="/auth/logout" className="text-red-500 hover:text-red-400 transition text-sm">
-              Logout
-            </a>
-          </div>
+          <AdminActions generateBatchAction={generateBatch} purgeAllAction={purgeAll} />
         </div>
       </div>
 
       {/* Character Panel */}
-      <CharacterPanel characters={characters} deleteCharacter={deleteCharacter} />
+      <CharacterPanel characters={characters} deleteCharacterAction={deleteCharacter} />
 
       <pre>
         {JSON.stringify(session.user, null, 2)}

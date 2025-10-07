@@ -1,12 +1,16 @@
 import { CharacterEntity } from "./entity";
 import { generateCharacter } from "./generator";
 
+interface BatchGeneratorEvent {
+  batchSize?: number;
+}
+
 /**
  * Generates a batch of characters and saves them to the database.
  * Can be triggered manually or via EventBridge schedule.
  */
-export async function handler() {
-  const BATCH_SIZE = 3;
+export async function handler(event?: BatchGeneratorEvent) {
+  const BATCH_SIZE = event?.batchSize ?? 1;
 
   console.log(
     `[CharacterBatchGenerator] Starting generation of ${BATCH_SIZE} characters...`,

@@ -3,16 +3,16 @@
 import { useState } from "react";
 import type { EntityItem } from "electrodb";
 import { CharacterEntity } from "../../../content/character/entity";
-import { DeleteButton } from "./DeleteButton";
+import { AsyncButton } from "../components/AsyncButton";
 
 type Character = EntityItem<typeof CharacterEntity>;
 
 interface CharacterPanelProps {
   characters: Character[];
-  deleteCharacter: (characterId: string) => Promise<void>;
+  deleteCharacterAction: (characterId: string) => Promise<void>;
 }
 
-export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelProps) {
+export function CharacterPanel({ characters, deleteCharacterAction }: CharacterPanelProps) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
 
   return (
@@ -99,11 +99,18 @@ export function CharacterPanel({ characters, deleteCharacter }: CharacterPanelPr
                     }`}>
                       {selectedCharacter.recruitmentState}
                     </span>
-                    <DeleteButton 
-                      characterId={selectedCharacter.characterId}
-                      characterName={selectedCharacter.name}
-                      deleteCharacter={deleteCharacter}
-                    />
+                    <AsyncButton
+                      action={() => deleteCharacterAction(selectedCharacter.characterId)}
+                      variant="danger"
+                      confirm={{
+                        type: "single",
+                        message: `Are you sure you want to delete ${selectedCharacter.name}?`,
+                      }}
+                      className="px-3 py-1 text-xs"
+                      loadingContent="Deleting..."
+                    >
+                      Delete
+                    </AsyncButton>
                   </div>
                   <p className="text-xs text-gray-500">ID: {selectedCharacter.characterId}</p>
                 </div>
