@@ -52,7 +52,7 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
           dynamodb: {
             NewImage: {
               "__edb_e__": {
-                S: "ChatMessage",
+                S: ["ChatMessage"],
               },
             },
           },
