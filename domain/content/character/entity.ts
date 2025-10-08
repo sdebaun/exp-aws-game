@@ -17,29 +17,47 @@ export const CharacterEntity = new Entity({
   },
   attributes: {
     characterId: { type: "string", required: true },
+
+    // generated properties from CharacterGenerationSchema
     name: { type: "string", required: true },
-    origin: { type: "string", required: true },
-    description: { type: "string", required: true },
+
+    // Origin as nested map matching CharacterGenerationSchema
+    origin: {
+      type: "map",
+      properties: {
+        type: { type: ["historical", "fictional"] as const, required: true },
+        place: { type: "string", required: true },
+        era: { type: "string", required: true },
+        culture: { type: "string", required: true },
+        canon: { type: "string" },
+        canon_scale: { type: ["expansive"] as const },
+        crossover: { type: "string", required: true },
+      },
+      required: true,
+    },
+
+    background: { type: "string", required: true },
+    appearance_and_manner: { type: "string", required: true },
+    primary_aspect: { type: "string", required: true },
     aspects: { type: "list", items: { type: "string" }, required: true },
+    motivations: { type: "list", items: { type: "string" }, required: true },
+    fears: { type: "list", items: { type: "string" }, required: true },
+
     portraitUrl: { type: "string" },
-    
-    // Recruitment state tracking
+
+    // non-generated state tracking
     recruitmentState: {
       type: ["available", "recruitable", "rostered"] as const,
       required: true,
     },
-    
-    // Player association (null for available characters)
+
     playerId: { type: "string" },
-    
-    // Ink tracking
+
     reservationInkSpent: { type: "number", default: 0 },
     totalInkSpent: { type: "number", default: 0 },
-    
-    // Metadata
+
     generationBatch: { type: "string" },
-    
-    // Timestamps
+
     createdAt: {
       type: "string",
       default: () => new Date().toISOString(),
@@ -81,27 +99,27 @@ export const CharacterEntity = new Entity({
 // State transition validation
 export function canTransitionState(
   from: "available" | "recruitable" | "rostered",
-  to: "available" | "recruitable" | "rostered"
+  to: "available" | "recruitable" | "rostered",
 ): boolean {
   const validTransitions: Record<string, string[]> = {
     available: ["recruitable"],
     recruitable: ["rostered", "available"], // Can dismiss back to available
     rostered: [], // No transitions from rostered
   };
-  
+
   return validTransitions[from]?.includes(to) ?? false;
 }
 
 // Ink costs configuration
 export const CharacterInkCosts = {
-  RESERVATION: 10,    // Cost to move from available to recruitable
-  ROSTER: 50,         // Cost to move from recruitable to rostered
+  RESERVATION: 10, // Cost to move from available to recruitable
+  ROSTER: 50, // Cost to move from recruitable to rostered
   DISMISSAL_REFUND_RATE: 0.5, // 50% refund on dismissal
 } as const;
 
 // Pool management configuration
 export const PoolConfig = {
-  MINIMUM_AVAILABLE: 50,     // Target minimum for available pool
-  GENERATION_BATCH_SIZE: 5,  // Characters to generate per batch
+  MINIMUM_AVAILABLE: 50, // Target minimum for available pool
+  GENERATION_BATCH_SIZE: 5, // Characters to generate per batch
   CHECK_INTERVAL_MINUTES: 1, // Check every minute
 } as const;

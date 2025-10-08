@@ -6,20 +6,117 @@ import { v4 as uuidv4 } from "uuid";
 import z from "zod";
 import { zodTextFormat } from "openai/helpers/zod.mjs";
 
-const CharacterParser = z.object({
-  name: z.string(),
-  origin: z.string().describe(
-    "Cultural or ethnic background - can be real (Yoruba, Bengali, Sámi, etc.) or fictional but specific",
+/**
+ * Origin must be either:
+ * - historical: explicit place, era, culture
+ * - fictional: explicit CANON name from an expansive, multi-work universe
+ *   (standalone works are disallowed) with no crossovers
+ * Both share display properties for consistent rendering.
+ */
+const Origin = z.object({
+  type: z.enum(["historical", "fictional"]),
+  place: z
+    .string()
+    .min(2)
+    .describe(
+      "Specific geography — historical or fictional (e.g., 'Mali Empire, Niger River valley' [historical]; 'Arrakeen, Arrakis' [fictional]).",
+    ),
+  era: z
+    .string()
+    .min(2)
+    .describe(
+      "Specific time period — historical or fictional (e.g., '14th century CE' [historical]; 'Federation 24th century' or 'Reign of Muad’Dib' [fictional]).",
+    ),
+  culture: z
+    .string()
+    .min(2)
+    .describe(
+      "Cultural, ethnic, or canonical identity — historical or fictional (e.g., 'Mande traders' [historical]; 'Federation officer' or 'Ankh-Morpork guild clerk' [fictional]).",
+    ),
+  canon: z
+    .string()
+    .optional()
+    .nullable()
+    .describe(
+      "For fictional origins only: named, published canon from a large multi-work universe (e.g., 'Star Trek', 'Discworld', 'The Culture').",
+    ),
+  canon_scale: z
+    .enum(["expansive"])
+    .optional()
+    .nullable()
+    .describe(
+      "Fictional canons must be expansive (multi-work). Single-work or standalone stories are not allowed.",
+    ),
+  crossover: z
+    .literal("none")
+    .describe(
+      "Must always be 'none'. Crossovers or blended origins are not permitted.",
+    ),
+});
+
+export const CharacterGenerationSchema = z.object({
+  name: z.string().min(2).describe(
+    "Character name. Must fit the historical or fictional culture as well as the primary aspect.",
   ),
-  description: z.string().describe(
-    "A vivid description in MARKDOWN format with paragraphs, **bold** for emphasis, and *italics* for flavor. Use line breaks between paragraphs.",
+
+  origin: Origin.describe(
+    "Origin details. Must specify place, era, and culture. If fictional, must name a large multi-work canon; no crossovers or invented universes.",
   ),
-  aspects: z.array(z.string()).min(1).max(3).describe(
-    "1-3 short phrases describing key traits, skills, or defining characteristics",
-  ),
-  appearance: z.string().describe(
-    "Physical appearance including skin tone, features, and style influenced by their origin",
-  ),
+
+  background: z
+    .string()
+    .min(40)
+    .describe(
+      "A concise summary of the character’s life and circumstances *before awakening in the River of Souls*. Describe who they were, what they did, and what defined their existence in their original world. Evoke their worldview, struggles, and tone of life as it was then.",
+    ),
+
+  appearance_and_manner: z
+    .string()
+    .min(20)
+    .describe(
+      "Physical traits + behavior true to origin. Include one memorable sensory or behavioral detail (smell, sound, gesture, habit).",
+    ),
+
+  primary_aspect: z
+    .string()
+    .min(5)
+    .describe(
+      "A single FATE-style High Concept summarizing the character’s essence (e.g., 'Desert Prophet of Arrakis' [fictional]; 'Sámi Shaman Turned Soviet Soldier' [historical]; 'Cleric of the Omnissiah, Questioning the Machine God' [fictional]; 'Disillusioned Knight of the Fourth Crusade' [historical]).",
+    ),
+
+  aspects: z
+    .array(
+      z
+        .string()
+        .min(3)
+        .describe(
+          "Double-edged FATE-style aspect (strength that also causes trouble).",
+        ),
+    )
+    .length(3)
+    .describe(
+      "Exactly 3 supporting aspects, specific and memorable (avoid generic tropes).",
+    ),
+
+  motivations: z
+    .array(z.string().min(3))
+    .length(3)
+    .describe(
+      "Exactly 3 intimate, human-scale desires (love, belonging, curiosity, redemption, safety).",
+    ),
+
+  fears: z
+    .array(z.string().min(3))
+    .length(3)
+    .describe("Exactly 3 meaningful fears that would shake their identity."),
+
+  constraints_ack: z
+    .literal("no_crossovers;no_single_work_canons;no_invented_universes")
+    .optional()
+    .nullable()
+    .describe(
+      "Echo back constraints to self-check generation (optional, for model guidance).",
+    ),
 });
 
 /**
@@ -30,83 +127,59 @@ export async function generateCharacter() {
   const characterId = uuidv4();
 
   const instructions = `
-**Prompt Draft v5: River of Souls Character Generator**
 
-Write in the style of **Terry Pratchett**, **Iain M. Banks**, and **Douglas Adams** — dry wit, philosophical absurdity, and painfully accurate observations about the human condition. Tone should balance humor with melancholy: a sense that existence is both ridiculous and sacred.
+Generate a **unique character** for *The River of Souls* — a world where every being who ever lived, real or fictional, awakens beside an endless river at the end of time. They are confused, naked, and very much alive. Write with the dry, humane wit of **Pratchett**, **Banks**, and **Adams**, where absurdity meets melancholy and the human condition is both tragic and hilarious.
 
----
+### What to Include
 
-### Task
+**Background** — A concise summary of the character’s life and circumstances *before awakening in the River of Souls*. Describe who they were, what they did, and what defined their existence in their original world. Write in a way that evokes their worldview, struggles, and tone of life as it was then.
 
-Generate a **unique character** for the role-playing game *The River of Souls*, set in a world where every being who ever existed — historical, fictional, and otherwise — awakens along an endless river of valleys at the end of time.
+**Origin** — Create a coherent and internally consistent origin with the following properties:
 
-This is not a parody or caricature. Treat the character as a *real person*, one who wakes up cold and confused beside a riverbank in a strange world, surrounded by impossible cultures.
+* **Type:** Historical or fictional.
+* **Place:** Specific geography — historical or fictional (including but not limited to: *Mali Empire, Niger River valley*; *Arrakeen, Arrakis*). Ensure that the place aligns logically with the chosen era and culture.
+* **Era:** Specific time period — historical or fictional (including but not limited to: *14th century CE*; *Federation 24th century*). Use recognizable human time frames such as centuries, dynasties, or cultural eras rather than vague descriptors.
+* **Culture:** Cultural, ethnic, or canonical identity (including but not limited to: *Mande traders*; *Federation officer*; *Ankh-Morpork guild clerk*). The culture should plausibly exist within the selected place and era, with consistent values, language, and worldview.
+* **Canon (if fictional):** Must come from a **large, published canon** with many works or adaptations (including but not limited to: *Star Trek*, *Discworld*, *The Culture*, *Dune*, *Doctor Who*, *Warhammer 40K*). Ensure the canon’s tone and metaphysics are consistent throughout the character.
+* **Do not** use single stories, myths, or standalone novels.
+* **Do not** invent new universes or species.
+* **Variety directive:** Ensure diversity across eras and regions. Do not cluster characters in the same century, continent, or cultural context — draw broadly across human history and major fictional worlds.
 
----
+**Appearance & Manner** — Describe physical traits and behavior true to origin. Include one vivid sensory or behavioral detail (e.g., smell, sound, or habitual gesture). These details should feel grounded in their place, era, and culture.
 
-### Content Requirements
+**Primary Aspect** — A single FATE-style High Concept summarizing the character’s essence (e.g., *Desert Prophet of Arrakis*; *Sámi Shaman Turned Soviet Soldier*; *Cleric of the Omnissiah, Questioning the Machine God*; *Disillusioned Knight of the Fourth Crusade*). This should reflect their origin’s worldview and personal contradictions.
 
-Each character description must include:
+**Aspects** — Three double-edged descriptors that expand on the Primary Aspect, each being both strength and flaw (*e.g.*, “Knows the Right Thing to Do — and Does It Loudly”). These should all align with their background and internal logic.
 
-**1. Origin**
-Specify time period, geography, and cultural or fictional source.
+**Motivations** — Three intimate, human-scale desires (*love, belonging, curiosity, redemption, safety*). Keep them personal, not epic.
 
-* If historical, name a specific place, time, and culture.
-* If fictional, it **must come from a named, published, human-created canon that is expansive enough to sustain internal variation.**
-
-  * Acceptable canons are those with **multiple works, entries, or adaptations**, such as extended book series, television franchises, or large-scale fictional universes.
-  * Examples: *Star Trek*, *Discworld*, *The Culture*, *The Witcher*, *Babylon 5*, *Doctor Who*, *The Wandering Inn*, *Dune*, *The Expanse*, *Foundation*, *A Song of Ice and Fire*, *The Stormlight Archive*, *Mass Effect*, *The Legend of Zelda*, *Final Fantasy*, or *Warhammer 40K*.
-  * **Single-work or isolated stories (e.g. The Odyssey, Les Misérables, Beowulf, individual myths, or standalone novels)** are **not permitted** under any circumstances.
-* **Do not invent new fictional universes or species.** The UniverseAI treats all human fiction as real, but only those with a robust internal ecosystem of stories are stable enough to persist.
-
-*(Examples: 12th-century Mongol scout; Martian linguist from Le Guin’s Hainish Cycle; Aztec priest; French anarchist from 1871 Paris Commune; a goblin accountant from Pratchett’s Ankh-Morpork.)*
-
-**2. Appearance and Manner**
-Describe physical traits, clothing, and demeanor consistent with their origin. Include one memorable sensory detail or gesture — something human.
-
-**3. Aspects**
-Three double-edged descriptors in the FATE style: strengths that also cause trouble.
-*(e.g. “Knows the Right Thing to Do, and Does It Loudly,” or “Too Clever by Three-Quarters.”)*
-
-**4. Motivations**
-Three human-scale desires — love, belonging, curiosity, redemption, safety, understanding, etc. These should be *intimate*, not grandiose.
-
-**5. Fears**
-Three meaningful fears — things that would shake their sense of self.
-
----
+**Fears** — Three things that would shake their sense of self.
 
 ### Style & Constraints
 
-* Write as if a dryly amused anthropologist were describing them.
-* Favor **specificity over archetype**.
-* Avoid obvious fantasy tropes unless they arise naturally from the origin canon.
-* Make them feel **alive, funny, and tragic** in equal measure.
-* NEVER mention the words *simulation* or *River of Souls* directly. The character has no meta-awareness.
-* **Fictional origins must remain internally consistent** with their original canon’s tone, logic, and metaphysics.
-* **If uncertain, err on the side of reality, not invention.**
-
----
+* Write as if a dryly amused anthropologist were observing them.
+* Be **specific and grounded**; favor cultural authenticity over archetype or trope.
+* Ensure **internal consistency** — all parts of the character (origin, manner, aspects, motivations, and fears) should feel like they emerge naturally from the same person and worldview.
+* Reflect the **mindset of their origin** — a 10th-century Viking should not think in modern metaphors; a Culture citizen should not sound medieval.
+* Characters should feel **alive, funny, and tragic**.
+* Never mention *simulation* or *River of Souls* — they have no meta-awareness.
+* Stay consistent with their canon’s tone and logic.
+* **No crossovers.** Each belongs wholly to their world.
+* When uncertain, **err toward realism**, not invention.
 
 ### Formatting
 
-* Use **Markdown**.
-* Bold for key traits or turns of phrase.
-* Italics for interior thoughts or small ironies.
-* Paragraph spacing for readability.
+Use **Markdown** with bold and italics for clarity.
 
----
-
-**Example tone cue:**
+**Tone example:**
 
 > He had the eyes of a man who’d seen too much bureaucracy to believe in gods, but still prayed before opening a form.
-> The desert wind had bleached his robes and optimism in equal measure.
 
 `;
 
   const input = "Generate a character according to the instructions";
 
-  const format = zodTextFormat(CharacterParser, "character_parser");
+  const format = zodTextFormat(CharacterGenerationSchema, "character_parser");
 
   const response = await generateStructuredResponse({
     format,
@@ -123,8 +196,12 @@ Three meaningful fears — things that would shake their sense of self.
   // Generate portrait
   let portraitUrl: string | undefined;
   try {
-    const portraitPrompt =
-      `Realistic portrait photograph of ${character.name}, a person of ${character.origin} origin: ${character.appearance}. Style: candid documentary photography, natural lighting, unposed. This is a REAL PERSON of ${character.origin} heritage - show authentic ethnic features and skin tone. Could be ugly, beautiful, plain, or interesting-looking. Show genuine human diversity, real faces with imperfections and character. Natural skin texture, real body types. IMPORTANT: Absolutely NO text, NO writing, NO letters, NO words anywhere in the image. Pure photographic portrait only.`;
+    const portraitPrompt = `
+Realistic portrait photograph of ${character.name},
+a person of ${character.origin} origin.
+${character.appearance_and_manner}.
+Style: candid documentary photography, natural lighting, unposed.
+This is a REAL PERSON of ${character.origin} heritage - show authentic ethnic features and skin tone. Could be ugly, beautiful, plain, or interesting-looking. Show genuine human diversity, real faces with imperfections and character. Natural skin texture, real body types. IMPORTANT: Absolutely NO text, NO writing, NO letters, NO words anywhere in the image. Pure photographic portrait only.`;
 
     const imageResult = await generateImage({
       prompt: portraitPrompt,
@@ -141,8 +218,12 @@ Three meaningful fears — things that would shake their sense of self.
     characterId,
     name: character.name,
     origin: character.origin,
-    description: character.description,
+    background: character.background,
+    appearance_and_manner: character.appearance_and_manner,
+    primary_aspect: character.primary_aspect,
     aspects: character.aspects,
+    motivations: character.motivations,
+    fears: character.fears,
     portraitUrl,
     recruitmentState: "available" as const,
     generationBatch: new Date().toISOString(),

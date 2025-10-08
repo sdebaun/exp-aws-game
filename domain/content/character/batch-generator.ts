@@ -54,8 +54,23 @@ export async function handler(event?: BatchGeneratorEvent) {
             index + 1
           }: ${char.name}`,
         );
+
+        // Clean optional fields from origin (ElectroDB strict validation)
+        const cleanOrigin = {
+          type: char.origin.type,
+          place: char.origin.place,
+          era: char.origin.era,
+          culture: char.origin.culture,
+          crossover: char.origin.crossover,
+          ...(char.origin.canon ? { canon: char.origin.canon } : {}),
+          ...(char.origin.canon_scale
+            ? { canon_scale: char.origin.canon_scale }
+            : {}),
+        };
+
         return CharacterEntity.create({
           ...char,
+          origin: cleanOrigin,
           playerId: "", // Empty string for available characters
           reservationInkSpent: 0,
           totalInkSpent: 0,

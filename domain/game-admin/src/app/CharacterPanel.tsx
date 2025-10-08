@@ -52,9 +52,13 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
                   )}
                   
                   {/* Info */}
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{char.name}</h3>
-                    <span className={`text-xs px-2 py-1 rounded ${
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{char.name}</h3>
+                    <p className="text-xs text-gray-400 truncate">
+                      {char.origin.type === "historical" ? "📜" : "📚"} {char.origin.place}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">{char.origin.era}</p>
+                    <span className={`text-xs px-2 py-1 rounded inline-block mt-1 ${
                       char.recruitmentState === 'available' ? 'bg-green-900 text-green-200' :
                       char.recruitmentState === 'recruitable' ? 'bg-yellow-900 text-yellow-200' :
                       'bg-blue-900 text-blue-200'
@@ -91,7 +95,13 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
                 
                 <div className="flex-1">
                   <h2 className="text-3xl font-bold mb-2">{selectedCharacter.name}</h2>
-                  <p className="text-lg text-gray-300 mb-3">of {selectedCharacter.origin} origin</p>
+                  <p className="text-lg text-gray-300 mb-1">
+                    {selectedCharacter.origin.type === "historical" ? "Historical" : "Fictional"} • {selectedCharacter.origin.place}
+                  </p>
+                  <p className="text-sm text-gray-400 mb-3">
+                    {selectedCharacter.origin.era} • {selectedCharacter.origin.culture}
+                    {selectedCharacter.origin.canon && ` • ${selectedCharacter.origin.canon}`}
+                  </p>
                   <div className="flex items-center gap-4 mb-4">
                     <span className={`px-3 py-1 rounded ${
                       selectedCharacter.recruitmentState === 'available' ? 'bg-green-900 text-green-200' :
@@ -117,12 +127,24 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
                 </div>
               </div>
 
+              {/* Primary Aspect */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-gray-300">Primary Aspect</h3>
+                <p className="text-xl text-cyan-400 font-semibold italic">&ldquo;{selectedCharacter.primary_aspect}&rdquo;</p>
+              </div>
+
               {/* Description */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-gray-300">Description</h3>
                 <div className="text-gray-400 leading-relaxed prose prose-invert max-w-none">
-                  <ReactMarkdown>{selectedCharacter.description}</ReactMarkdown>
+                  <ReactMarkdown>{selectedCharacter.background}</ReactMarkdown>
                 </div>
+              </div>
+
+              {/* Appearance and Manner */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-gray-300">Appearance & Manner</h3>
+                <p className="text-gray-400 leading-relaxed">{selectedCharacter.appearance_and_manner}</p>
               </div>
 
               {/* Aspects */}
@@ -130,7 +152,7 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
                 <h3 className="text-lg font-semibold mb-3 text-gray-300">Aspects</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedCharacter.aspects?.map((aspect, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-3 py-1 bg-slate-700 rounded-full text-sm"
                     >
@@ -138,6 +160,26 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
                     </span>
                   ))}
                 </div>
+              </div>
+
+              {/* Motivations */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-gray-300">Motivations</h3>
+                <ul className="list-disc list-inside text-gray-400 space-y-1">
+                  {selectedCharacter.motivations?.map((motivation, index) => (
+                    <li key={index}>{motivation}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Fears */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-gray-300">Fears</h3>
+                <ul className="list-disc list-inside text-gray-400 space-y-1">
+                  {selectedCharacter.fears?.map((fear, index) => (
+                    <li key={index}>{fear}</li>
+                  ))}
+                </ul>
               </div>
 
               {/* Metadata */}
