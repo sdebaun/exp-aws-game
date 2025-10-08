@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { EntityItem } from "electrodb";
 import { CharacterEntity } from "../../../content/character/entity";
 import { AsyncButton } from "../components/AsyncButton";
+import ReactMarkdown from "react-markdown";
 
 type Character = EntityItem<typeof CharacterEntity>;
 
@@ -119,17 +120,9 @@ export function CharacterPanel({ characters, deleteCharacterAction }: CharacterP
               {/* Description */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-gray-300">Description</h3>
-                <div 
-                  className="text-gray-400 leading-relaxed prose prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ 
-                    __html: selectedCharacter.description
-                      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-200">$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p class="mb-4">')
-                      .replace(/^/, '<p class="mb-4">')
-                      .replace(/$/, '</p>')
-                  }}
-                />
+                <div className="text-gray-400 leading-relaxed prose prose-invert max-w-none">
+                  <ReactMarkdown>{selectedCharacter.description}</ReactMarkdown>
+                </div>
               </div>
 
               {/* Aspects */}

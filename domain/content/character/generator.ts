@@ -30,42 +30,81 @@ export async function generateCharacter() {
   const characterId = uuidv4();
 
   const instructions = `
-Write all content in the style of Terry Pratchett meets China Mieville.
+**Prompt Draft v5: River of Souls Character Generator**
 
-Generate a character for the role playing game The River of Souls.  Apart from basic identifying information, generate three of each of the following properties:
-* A variety of multi-dimensional Aspects, like from the FATE roleplaying game; they can be double-edged swords that describe the characters background and capabilities
-* A variety of meaningful human Motivations; things that will satisfy the character internally
-* A variety of meaningful human Fears; the things that the character will avoid
+Write in the style of **Terry Pratchett**, **Iain M. Banks**, and **Douglas Adams** — dry wit, philosophical absurdity, and painfully accurate observations about the human condition. Tone should balance humor with melancholy: a sense that existence is both ridiculous and sacred.
 
-Select origins from a broad global pool, including both overrepresented and underrepresented cultures. For fictional sources, use named, specific lore outside of Tolkien/D&D unless randomly selected from at least five alternatives. Always diversify your selections across time, geography, and genre.
+---
 
-IMPORTANT -- ALWAYS FOLLOW THESE RULES:
-* This character should NOT be any specific famous historical or fictional character.
-* This character should have NO AWARENESS of the label "River of Souls"
-* This character should be complex and human -- NOT a two-dimensional parody
+### Task
 
-Generate a unique character following these STRICT rules:
-- DIVERSITY IS MANDATORY: Generate characters from varied time periods, cultural backgrounds, and established sci-fi and fantasy canon.
-- Origin must be from either some real historical time, place, and culture...
-- ...OR, from a specific sci fi or fantasy canon.
-- Origin must be specific, including at least a time period, geographical location, and social position
-- Write with dry wit, subtle absurdity, and keen observation of human nature
-- Create characters who are fundamentally human despite any fantastical elements
-- Their flaws should be amusing, relatable, or poignant - not just "dark and brooding"
-- Include 1-3 defining aspects that are specific and memorable (not generic fantasy tropes)
-- Appearance must reflect their origin authentically - skin tone, features, traditional elements
-- NEVER mention the setting name or world name in the description
-- Make them feel like real people with real problems, just in extraordinary circumstances
+Generate a **unique character** for the role-playing game *The River of Souls*, set in a world where every being who ever existed — historical, fictional, and otherwise — awakens along an endless river of valleys at the end of time.
 
-IMPORTANT FORMATTING:
-- The description MUST use Markdown formatting
-- Use multiple paragraphs with blank lines between them
-- Use **bold** for important character traits or key moments
-- Use *italics* for internal thoughts or subtle observations
-- Make it visually easy to scan and read`;
+This is not a parody or caricature. Treat the character as a *real person*, one who wakes up cold and confused beside a riverbank in a strange world, surrounded by impossible cultures.
 
-  const input =
-    "Generate a character who could have walked out of a Terry Pratchett novel into a weirder universe";
+---
+
+### Content Requirements
+
+Each character description must include:
+
+**1. Origin**
+Specify time period, geography, and cultural or fictional source.
+
+* If historical, name a specific place, time, and culture.
+* If fictional, it **must come from a named, published, human-created canon that is expansive enough to sustain internal variation.**
+
+  * Acceptable canons are those with **multiple works, entries, or adaptations**, such as extended book series, television franchises, or large-scale fictional universes.
+  * Examples: *Star Trek*, *Discworld*, *The Culture*, *The Witcher*, *Babylon 5*, *Doctor Who*, *The Wandering Inn*, *Dune*, *The Expanse*, *Foundation*, *A Song of Ice and Fire*, *The Stormlight Archive*, *Mass Effect*, *The Legend of Zelda*, *Final Fantasy*, or *Warhammer 40K*.
+  * **Single-work or isolated stories (e.g. The Odyssey, Les Misérables, Beowulf, individual myths, or standalone novels)** are **not permitted** under any circumstances.
+* **Do not invent new fictional universes or species.** The UniverseAI treats all human fiction as real, but only those with a robust internal ecosystem of stories are stable enough to persist.
+
+*(Examples: 12th-century Mongol scout; Martian linguist from Le Guin’s Hainish Cycle; Aztec priest; French anarchist from 1871 Paris Commune; a goblin accountant from Pratchett’s Ankh-Morpork.)*
+
+**2. Appearance and Manner**
+Describe physical traits, clothing, and demeanor consistent with their origin. Include one memorable sensory detail or gesture — something human.
+
+**3. Aspects**
+Three double-edged descriptors in the FATE style: strengths that also cause trouble.
+*(e.g. “Knows the Right Thing to Do, and Does It Loudly,” or “Too Clever by Three-Quarters.”)*
+
+**4. Motivations**
+Three human-scale desires — love, belonging, curiosity, redemption, safety, understanding, etc. These should be *intimate*, not grandiose.
+
+**5. Fears**
+Three meaningful fears — things that would shake their sense of self.
+
+---
+
+### Style & Constraints
+
+* Write as if a dryly amused anthropologist were describing them.
+* Favor **specificity over archetype**.
+* Avoid obvious fantasy tropes unless they arise naturally from the origin canon.
+* Make them feel **alive, funny, and tragic** in equal measure.
+* NEVER mention the words *simulation* or *River of Souls* directly. The character has no meta-awareness.
+* **Fictional origins must remain internally consistent** with their original canon’s tone, logic, and metaphysics.
+* **If uncertain, err on the side of reality, not invention.**
+
+---
+
+### Formatting
+
+* Use **Markdown**.
+* Bold for key traits or turns of phrase.
+* Italics for interior thoughts or small ironies.
+* Paragraph spacing for readability.
+
+---
+
+**Example tone cue:**
+
+> He had the eyes of a man who’d seen too much bureaucracy to believe in gods, but still prayed before opening a form.
+> The desert wind had bleached his robes and optimism in equal measure.
+
+`;
+
+  const input = "Generate a character according to the instructions";
 
   const format = zodTextFormat(CharacterParser, "character_parser");
 
