@@ -4,6 +4,7 @@
 - @./USERS.md
 - @./USER_JOURNEYS.md
 - @./CHARACTER_RECRUITMENT.md
+- @./SCENE_EVENTS.md
 
 # Design Pillars
 - unique and engaging (not generic) game world

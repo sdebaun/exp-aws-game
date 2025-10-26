@@ -23,6 +23,11 @@ if (!CHAT_WS_URL) {
   );
 }
 
+// Test timeouts
+const DEFAULT_MESSAGE_TIMEOUT = 5000;
+const SHORT_TIMEOUT = 2000;
+const DDB_STREAM_TIMEOUT = 3000; // Allow extra time for DDB stream processing
+
 /**
  * Helper to create a WebSocket connection with username and roomId
  */
@@ -51,7 +56,7 @@ function createChatConnection(
 function waitForMessage(
   ws: WebSocket,
   predicate: (data: WsMessageEnvelope) => boolean,
-  timeoutMs: number = 5000,
+  timeoutMs: number = DEFAULT_MESSAGE_TIMEOUT,
 ): Promise<WsMessageEnvelope> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
@@ -97,8 +102,30 @@ function sendMessage(ws: WebSocket, message: string): void {
   );
 }
 
+/**
+ * Predicate builders for common message matching patterns
+ */
+const hasMessage = (content: string) => (msg: WsMessageEnvelope) =>
+  msg.data.message === content;
+
+const fromUser = (username: string, content: string) => (msg: WsMessageEnvelope) =>
+  msg.data.username === username && msg.data.message === content;
+
+/**
+ * Generate a unique message for testing (avoids cross-test pollution)
+ */
+const uniqueMessage = (prefix: string) => `${prefix} ${Date.now()}`;
+
 describe("Chat WebSocket API", () => {
   let connections: WebSocket[] = [];
+
+  /**
+   * Helper to track a connection for cleanup
+   */
+  const track = (...ws: WebSocket[]) => {
+    connections.push(...ws);
+    return ws.length === 1 ? ws[0] : ws;
+  };
 
   // Clean up all connections after each test
   afterEach(() => {
@@ -111,80 +138,55 @@ describe("Chat WebSocket API", () => {
   });
 
   it("should connect and disconnect successfully", async () => {
-    const ws = await createChatConnection("test-user");
-    connections.push(ws);
+    const ws = track(await createChatConnection("test-user")) as WebSocket;
 
     expect(ws.readyState).toBe(WebSocket.OPEN);
 
-    // Close connection
     ws.close();
-
-    // Wait for close
     await new Promise((resolve) => ws.on("close", resolve));
+
     expect(ws.readyState).toBe(WebSocket.CLOSED);
   });
 
   it("should broadcast messages to all users in the same room", async () => {
-    // Create two connections in the same room
-    const alice = await createChatConnection("alice", "test-room");
-    const bob = await createChatConnection("bob", "test-room");
-    connections.push(alice, bob);
+    const [alice, bob] = track(
+      await createChatConnection("alice", "test-room"),
+      await createChatConnection("bob", "test-room"),
+    ) as WebSocket[];
 
-    // Alice sends a message
-    const testMessage = `Test message ${Date.now()}`;
+    const testMessage = uniqueMessage("Test");
 
-    // Bob waits for the message
-    const bobReceived = waitForMessage(
-      bob,
-      (data) => data.data.username === "alice" && data.data.message === testMessage,
-    );
+    // Both wait for alice's message
+    const bobReceived = waitForMessage(bob, fromUser("alice", testMessage));
+    const aliceReceived = waitForMessage(alice, fromUser("alice", testMessage));
 
-    // Alice also waits (to verify broadcast includes sender)
-    const aliceReceived = waitForMessage(
-      alice,
-      (data) => data.data.username === "alice" && data.data.message === testMessage,
-    );
-
-    // Send the message
     sendMessage(alice, testMessage);
 
-    // Both should receive it (predicate already verified username/message match)
+    // Both should receive it
     const [bobMsg, aliceMsg] = await Promise.all([bobReceived, aliceReceived]);
 
-    // Verify the rest of the message structure
+    // Verify room and messageId are the same (broadcast, not separate messages)
     expect(bobMsg.data.roomId).toBe("test-room");
     expect(aliceMsg.data.roomId).toBe("test-room");
-
-    // MessageId should be unique for each
     expect(bobMsg.data.messageId).toBe(aliceMsg.data.messageId);
   });
 
   it("should NOT broadcast messages across different rooms", async () => {
-    // Create connections in different rooms
-    const alice = await createChatConnection("alice", "room-1");
-    const bob = await createChatConnection("bob", "room-2");
-    connections.push(alice, bob);
-
-    const testMessage = `Cross-room test ${Date.now()}`;
+    const [alice, bob] = track(
+      await createChatConnection("alice", "room-1"),
+      await createChatConnection("bob", "room-2"),
+    ) as WebSocket[];
 
     // Bob waits for ANY message (should timeout)
-    // Predicate always returns true - we're testing that NO message arrives
-    const bobReceived = waitForMessage(
-      bob,
-      () => true,
-      2000, // Short timeout
-    );
+    const bobReceived = waitForMessage(bob, () => true, SHORT_TIMEOUT);
 
-    // Alice sends message in room-1
-    sendMessage(alice, testMessage);
+    sendMessage(alice, uniqueMessage("Cross-room test"));
 
-    // Bob should NOT receive it
     await expect(bobReceived).rejects.toThrow("Message timeout");
   });
 
   it("should handle multiple messages in order", async () => {
-    const alice = await createChatConnection("alice", "order-test");
-    connections.push(alice);
+    const alice = track(await createChatConnection("alice", "order-test")) as WebSocket;
 
     const messages = ["First", "Second", "Third"];
 
@@ -192,24 +194,19 @@ describe("Chat WebSocket API", () => {
     // This avoids race conditions with DDB streams
     for (const msg of messages) {
       sendMessage(alice, msg);
-      await waitForMessage(alice, (data) => data.data.message === msg, 3000);
+      await waitForMessage(alice, hasMessage(msg), DDB_STREAM_TIMEOUT);
     }
 
     // If we got here, all messages arrived in the order we expected
-    expect(messages).toHaveLength(3); // Simple assertion to mark test success
+    expect(messages).toHaveLength(3);
   });
 
   it("should handle special characters and unicode in messages", async () => {
-    const alice = await createChatConnection("alice", "unicode-test");
-    connections.push(alice);
+    const alice = track(await createChatConnection("alice", "unicode-test")) as WebSocket;
 
     const specialMessage = "Hello 🎉 <script>alert('xss')</script> 日本語";
 
-    const received = waitForMessage(
-      alice,
-      (data) => data.data.message === specialMessage,
-    );
-
+    const received = waitForMessage(alice, hasMessage(specialMessage));
     sendMessage(alice, specialMessage);
 
     const msg = await received;
