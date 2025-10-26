@@ -1,6 +1,6 @@
-import { TopBar } from "../TopBar";
-import { getUserInfo } from "../getUserInfo";
-import { RoleNav } from "../components/RoleNav";
+import { TopBar } from "../../TopBar";
+import { getUserInfo } from "../../getUserInfo";
+import { RoleNav } from "../../components/RoleNav";
 import Link from "next/link";
 
 // TODO: Replace with real data

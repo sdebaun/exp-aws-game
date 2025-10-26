@@ -5,7 +5,7 @@ import Image from "next/image";
  * Uses Lorem Picsum with seed to ensure same image for same character
  */
 export function getCharacterPortraitUrl(
-  characterId: string, 
+  characterId: string,
   size: number = 400
 ): string {
   return `https://picsum.photos/seed/${characterId}/${size}/${size}`;
@@ -21,11 +21,11 @@ interface CharacterPortraitProps {
 /**
  * Character portrait component with Lorem Picsum placeholder
  */
-export function CharacterPortrait({ 
-  characterId, 
-  name, 
-  size = 400, 
-  className 
+export function CharacterPortrait({
+  characterId,
+  name,
+  size = 400,
+  className
 }: CharacterPortraitProps) {
   return (
     <Image

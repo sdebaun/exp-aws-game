@@ -1,9 +1,8 @@
-import { TopBar } from "./TopBar";
 import { getUserInfo } from "./getUserInfo";
-import { HomeUser } from "./HomeUser";
+import { redirect } from "next/navigation";
 
 import { RoleNav } from "./components/RoleNav";
-import { PlayExample } from "./components/PlayExample";
+import { PlayExample } from "./(landing)/_components/PlayExample";
 
 export async function HomeAnon() {
 
@@ -178,20 +177,16 @@ export async function HomeAnon() {
 }
 
 export default async function Home() {
-  const { user, account } = await getUserInfo();
+  const { user } = await getUserInfo();
 
-  // No longer auto-redirect - let user choose when to claim a demense
+  // Authenticated users get their dashboard; everyone else sees the pitch
+  if (user) {
+    redirect("/dash");
+  }
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {user ? (
-        <>
-          <TopBar {...{user, account}}/>
-          <HomeUser {...{user, account}}/>
-        </>
-      ) : (
-        <HomeAnon/>
-      )}
+      <HomeAnon/>
     </div>
   )
 }

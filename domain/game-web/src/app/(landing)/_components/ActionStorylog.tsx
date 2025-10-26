@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getCharacterPortraitUrl } from "../utils/portrait";
+import { getCharacterPortraitUrl } from "./CharacterPortrait";
 
 interface ActionStorylogProps {
   playerId: string;
@@ -13,15 +13,15 @@ interface ActionStorylogProps {
   color: string;
 }
 
-export function ActionStorylog({ 
-  playerName, 
-  characterId, 
-  characterName, 
+export function ActionStorylog({
+  playerName,
+  characterId,
+  characterName,
   aspectName,
   aspectId,
-  advantage, 
+  advantage,
   complication,
-  color 
+  color
 }: ActionStorylogProps) {
   return (
     <div className="flex gap-3 items-start bg-purple-900/20 p-3 rounded-lg border-l-4 border-purple-600">

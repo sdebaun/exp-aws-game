@@ -1,6 +1,6 @@
-import { TopBar } from "../TopBar";
-import { getUserInfo } from "../getUserInfo";
-import { RoleNav } from "../components/RoleNav";
+import { TopBar } from "../../TopBar";
+import { getUserInfo } from "../../getUserInfo";
+import { RoleNav } from "../../components/RoleNav";
 
 // TODO: Replace with real data
 const readableStories = [

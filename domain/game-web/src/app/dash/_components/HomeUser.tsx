@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { User } from "@auth0/nextjs-auth0/types";
-import { AccountEntity } from "../db/entities";
+import { AccountEntity } from "../../../db/entities";
 import { EntityItem } from "electrodb";
 
 export async function HomeUser({account}: {user: User, account: EntityItem<typeof AccountEntity>}) {
@@ -9,7 +9,7 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
   const userStories = [];
   const hasInk = (account.ink ?? 0) > 0;
   const isNewUser = userCharacters.length === 0;
-  
+
   return (<div className="p-8 max-w-7xl mx-auto">
     {/* Welcome Banner for New Users */}
     {isNewUser && (
@@ -17,10 +17,10 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
         <div className="bg-gradient-to-r from-cyan-900/30 to-purple-900/30 border border-cyan-700/50 rounded-xl p-8">
           <h1 className="text-3xl font-bold text-white mb-4">Welcome to the Game!</h1>
           <p className="text-lg text-slate-300 mb-6">
-            A unique multiplayer experience where your actions and conversations with other players 
+            A unique multiplayer experience where your actions and conversations with other players
             are transformed into AI-generated narratives. Choose your path:
           </p>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             {/* Player Path */}
             <div className="bg-slate-800/70 border border-slate-700 rounded-lg p-6">
@@ -42,14 +42,14 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
                   <span>Watch your actions become epic narratives</span>
                 </li>
               </ul>
-              <Link 
-                href="/character/new" 
+              <Link
+                href="/character/new"
                 className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200"
               >
                 Create Your First Character →
               </Link>
             </div>
-            
+
             {/* Spectator Path */}
             <div className="bg-slate-800/70 border border-slate-700 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
@@ -70,15 +70,15 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
                   <span>Support your favorite players with Ink</span>
                 </li>
               </ul>
-              <Link 
-                href="/stories" 
+              <Link
+                href="/stories"
                 className="inline-block bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200"
               >
                 Browse Stories →
               </Link>
             </div>
           </div>
-          
+
           <div className="mt-6 p-4 bg-slate-900/50 rounded-lg">
             <p className="text-sm text-slate-400">
               <span className="text-cyan-400 font-semibold">Your Ink Balance: {account.ink ?? 0} 💧</span>
@@ -103,15 +103,15 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
               <p className="text-sm text-slate-400 mt-1">Jump back into the game or explore stories</p>
             </div>
             <div className="flex gap-3">
-              <Link 
-                href="/stories" 
+              <Link
+                href="/stories"
                 className="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
               >
                 📖 Browse Stories
               </Link>
               {userCharacters.length > 0 && (
-                <Link 
-                  href="/stories/join" 
+                <Link
+                  href="/stories/join"
                   className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
                 >
                   ⚔️ Join Story
@@ -122,26 +122,26 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
         </div>
       </section>
     )}
-    
+
     {/* Characters Section */}
     <section className="mb-12">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">My Characters</h2>
-        <Link 
-          href="/character/new" 
+        <Link
+          href="/character/new"
           className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 hover:shadow-lg text-sm"
         >
           + Create Character
         </Link>
       </div>
-      
+
       {userCharacters.length === 0 ? (
         <div className="bg-slate-800 border-2 border-dashed border-slate-700 rounded-xl p-12 text-center">
           <div className="text-6xl mb-4">🎭</div>
           <p className="text-slate-400 mb-4">You don&apos;t have any characters yet!</p>
           <p className="text-slate-500 text-sm mb-6">Characters are your avatars in the game world. Create your first character to begin.</p>
-          <Link 
-            href="/character/new" 
+          <Link
+            href="/character/new"
             className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg"
           >
             Create Your First Character
@@ -153,7 +153,7 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
         </div>
       )}
     </section>
-    
+
     {/* Featured Stories Section - Always visible */}
     <section className="mb-12">
       <div className="flex justify-between items-center mb-6">
@@ -161,14 +161,14 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
           <h2 className="text-2xl font-bold text-white">Featured Stories</h2>
           <p className="text-sm text-slate-400 mt-1">Ongoing narratives you can read and influence</p>
         </div>
-        <Link 
-          href="/stories" 
+        <Link
+          href="/stories"
           className="text-cyan-400 hover:text-cyan-300 font-semibold text-sm"
         >
           View All Stories →
         </Link>
       </div>
-      
+
       <div className="grid md:grid-cols-3 gap-4">
         {/* Mock Featured Story Cards */}
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-cyan-700/50 transition-all cursor-pointer">
@@ -185,7 +185,7 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
             <span className="text-cyan-400">Free to watch</span>
           </div>
         </div>
-        
+
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-purple-700/50 transition-all cursor-pointer">
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
             <span className="text-yellow-500">•</span>
@@ -200,7 +200,7 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
             <span className="text-purple-400">5 Ink to vote</span>
           </div>
         </div>
-        
+
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-slate-600 transition-all cursor-pointer">
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
             <span className="text-blue-500">•</span>
@@ -217,27 +217,27 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
         </div>
       </div>
     </section>
-    
+
     {/* Stories Section */}
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">My Stories</h2>
         <div className="flex gap-4">
-          <button 
+          <button
             disabled={userCharacters.length === 0}
             className={`font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm ${
-              userCharacters.length === 0 
-                ? 'bg-slate-700 text-slate-500 cursor-not-allowed' 
+              userCharacters.length === 0
+                ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
                 : 'bg-cyan-600 hover:bg-cyan-500 text-white hover:shadow-lg'
             }`}
           >
             + Create Story
           </button>
-          <button 
+          <button
             disabled={userCharacters.length === 0}
             className={`font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm ${
-              userCharacters.length === 0 
-                ? 'bg-slate-700 text-slate-500 cursor-not-allowed' 
+              userCharacters.length === 0
+                ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
                 : 'bg-slate-700 hover:bg-slate-600 text-white'
             }`}
           >
@@ -245,12 +245,12 @@ export async function HomeUser({account}: {user: User, account: EntityItem<typeo
           </button>
         </div>
       </div>
-      
+
       {userStories.length === 0 ? (
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center">
           <p className="text-slate-400">
-            {userCharacters.length === 0 
-              ? "Create a character first to start playing stories!" 
+            {userCharacters.length === 0
+              ? "Create a character first to start playing stories!"
               : "No active stories. Create a new story or join an existing one!"}
           </p>
         </div>
