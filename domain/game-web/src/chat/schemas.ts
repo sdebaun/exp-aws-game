@@ -58,3 +58,22 @@ export const ChatConnectionSchema = ChatConnectionBase.extend({
 
 export type ChatConnection = z.infer<typeof ChatConnectionBase>;
 export type ChatConnectionRecord = z.infer<typeof ChatConnectionSchema>;
+
+/**
+ * WebSocket message envelope sent to clients
+ *
+ * This is the actual message shape sent over the WebSocket connection.
+ * Note: timestamp is converted from ISO string (DB) to unix timestamp (wire)
+ */
+export const WsMessageEnvelope = z.object({
+  type: z.literal("message"),
+  data: z.object({
+    messageId: z.string(),
+    username: z.string(),
+    message: z.string(),
+    timestamp: z.number(), // Unix timestamp in milliseconds
+    roomId: z.string(),
+  }),
+});
+
+export type WsMessageEnvelope = z.infer<typeof WsMessageEnvelope>;
