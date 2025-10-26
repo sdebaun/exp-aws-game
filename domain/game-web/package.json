@@ -11,7 +11,9 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.10.0",
     "@aws-sdk/client-apigatewaymanagementapi": "^3.899.0",
-    "@aws-sdk/client-dynamodb": "^3.891.0",
+    "@aws-sdk/client-dynamodb": "^3.917.0",
+    "@aws-sdk/lib-dynamodb": "^3.917.0",
+    "dynamodb-onetable": "^2.7.7",
     "electrodb": "^3.4.5",
     "fp-ts": "^2.16.11",
     "fp-ts-std": "^1.0.0",
@@ -21,7 +23,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-use-websocket": "^4.13.0",
-    "ulid": "^3.0.1"
+    "ulid": "^3.0.1",
+    "zod": "^3.23.8",
+    "zod-to-dynamodb-onetable-schema": "https://codeload.github.com/onelesd/zod-to-dynamodb-onetable-schema/tar.gz/main"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

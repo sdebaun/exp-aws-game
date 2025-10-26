@@ -51,7 +51,8 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
         {
           dynamodb: {
             NewImage: {
-              "__edb_e__": {
+              // OneTable uses _type field to distinguish entities
+              "_type": {
                 S: ["ChatMessage"],
               },
             },

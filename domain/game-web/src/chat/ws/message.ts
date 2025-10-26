@@ -6,8 +6,7 @@ import * as TE from "fp-ts/TaskEither";
 import * as T from "fp-ts/Task";
 import { z } from "zod";
 import { ulid } from "ulid";
-import { ChatConnectionEntity } from "../ChatConnectionEntity";
-import { ChatMessageEntity } from "../ChatMessageEntity";
+import { ChatConnectionModel, ChatMessageModel } from "../table";
 
 const tapLog = <A>(label: string, pick: (a: A) => unknown = (a) => a) =>
 (
@@ -38,15 +37,16 @@ const SendMessage = z.object({
 type SendMessage = z.infer<typeof SendMessage>;
 
 // Steps -------------------------------------------------------------------
+// OneTable's get() returns the item directly or undefined if not found
 const getConnection = (connectionId: string) =>
   pipe(
     TE.tryCatch(
-      () => ChatConnectionEntity.get({ connectionId }).go(),
+      () => ChatConnectionModel.get({ connectionId }),
       () => new Internal("Failed to load connection"),
     ),
-    TE.chain((res) =>
-      res?.data
-        ? TE.right(res.data)
+    TE.chain((conn) =>
+      conn
+        ? TE.right(conn)
         : TE.left(new Forbidden("Connection not found"))
     ),
   );
@@ -62,18 +62,19 @@ const parseSendMessage = (raw: string) =>
     }),
   );
 
+// OneTable's create() returns the created item directly
 const persistMessage = (
   args: { roomId: string; username: string; message: string },
 ) =>
   TE.tryCatch(
     () =>
-      ChatMessageEntity.create({
+      ChatMessageModel.create({
         messageId: ulid(),
         roomId: args.roomId,
         username: args.username,
         message: args.message,
         timestamp: new Date().toISOString(),
-      }).go(),
+      }),
     () => new Internal("Failed to persist message"),
   );
 

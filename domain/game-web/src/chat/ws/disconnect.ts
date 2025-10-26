@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { ChatConnectionEntity } from "../ChatConnectionEntity";
+import { ChatConnectionModel } from "../table";
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("========== DISCONNECT HANDLER INVOKED ==========");
@@ -11,9 +11,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Remove the connection from DynamoDB
-    await ChatConnectionEntity.delete({
-      connectionId,
-    }).go();
+    await ChatConnectionModel.remove({ connectionId });
 
     return { statusCode: 200, body: "Disconnected" };
   } catch (error) {

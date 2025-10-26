@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { ChatConnectionEntity } from "../ChatConnectionEntity";
+import { ChatConnectionModel } from "../table";
 
 console.log("===== CONNECT.TS LOADED =====");
 
@@ -17,12 +17,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Store the connection info in DynamoDB
-    await ChatConnectionEntity.create({
+    await ChatConnectionModel.create({
       connectionId,
       username,
       roomId,
       connectedAt: Date.now(),
-    }).go();
+    });
 
     return { statusCode: 200, body: "Connected" };
   } catch (error) {

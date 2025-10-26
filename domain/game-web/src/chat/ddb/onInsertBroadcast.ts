@@ -3,8 +3,8 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { Resource } from "sst";
-import { ChatConnectionEntity } from "../ChatConnectionEntity";
-import { ChatMessageEntity } from "../ChatMessageEntity";
+import { ChatConnectionModel } from "../table";
+import { ChatMessageBase } from "../schemas";
 
 const api = new ApiGatewayManagementApi({
   endpoint: Resource.ChatApi.managementEndpoint,
@@ -34,25 +34,23 @@ export const handler: DynamoDBStreamHandler = async (event) => {
     const item = unmarshall(newImage as Record<string, AttributeValue>);
     console.log("Unmarshalled item:", JSON.stringify(item, null, 2));
 
-    // Use ElectroDB to parse and validate if this is a ChatMessage
-    let chatMessage;
-    try {
-      const parsedMessage = ChatMessageEntity.parse({ Item: item });
-      console.log("Parse result:", JSON.stringify(parsedMessage, null, 2));
-
-      if (!parsedMessage?.data) {
-        console.log(
-          "Not a valid ChatMessage entity, parsedMessage:",
-          parsedMessage,
-        );
-        continue;
-      }
-      chatMessage = parsedMessage.data;
-      console.log("Parsed ChatMessage:", chatMessage);
-    } catch (error) {
-      console.log("Failed to parse as ChatMessage:", error);
+    // Use Zod to parse and validate if this is a ChatMessage
+    // OneTable stores the entity type in _type field
+    if (item._type !== "ChatMessage") {
+      console.log("Not a ChatMessage entity, skipping:", item._type);
       continue;
     }
+
+    // Validate using the Base schema (without pk/sk template fields)
+    // The actual pk/sk values are resolved by OneTable and won't match the literals
+    const parseResult = ChatMessageBase.safeParse(item);
+    if (!parseResult.success) {
+      console.log("Failed to parse as ChatMessage:", parseResult.error);
+      continue;
+    }
+
+    const chatMessage = parseResult.data;
+    console.log("Parsed ChatMessage:", chatMessage);
 
     // Build message payload from parsed data
     const messagePayload = JSON.stringify({
@@ -67,13 +65,15 @@ export const handler: DynamoDBStreamHandler = async (event) => {
     });
 
     try {
-      // Get all connections in the room
-      const roomConnections = await ChatConnectionEntity.query
-        .byRoom({ roomId: chatMessage.roomId })
-        .go();
+      // Get all connections in the room using GSI1
+      // OneTable's find() returns an array directly
+      const roomConnections = await ChatConnectionModel.find(
+        { roomId: chatMessage.roomId },
+        { index: "gsi1" }
+      );
 
       // Broadcast to all connections
-      const sendPromises = roomConnections.data.map(async (conn) => {
+      const sendPromises = roomConnections.map(async (conn) => {
         try {
           await api.postToConnection({
             ConnectionId: conn.connectionId,
@@ -86,9 +86,9 @@ export const handler: DynamoDBStreamHandler = async (event) => {
             error.statusCode === 410
           ) {
             console.log(`Removing stale connection: ${conn.connectionId}`);
-            await ChatConnectionEntity.delete({
+            await ChatConnectionModel.remove({
               connectionId: conn.connectionId,
-            }).go();
+            });
           } else {
             console.error(`Failed to send to ${conn.connectionId}:`, error);
           }
@@ -97,7 +97,7 @@ export const handler: DynamoDBStreamHandler = async (event) => {
 
       await Promise.all(sendPromises);
       console.log(
-        `Broadcasted message to ${roomConnections.data.length} connections in room ${chatMessage.roomId}`,
+        `Broadcasted message to ${roomConnections.length} connections in room ${chatMessage.roomId}`,
       );
     } catch (error) {
       console.error(
