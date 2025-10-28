@@ -3,7 +3,13 @@
 
 import { Secrets } from "../secrets/stack";
 
-export default function GameWebStack({ secrets }: { secrets: Secrets }) {
+export default function GameWebStack({
+  secrets,
+  dns,
+}: {
+  secrets: Secrets;
+  dns: { domain: string; cert: string };
+}) {
   // Main game table - single table design
   const gameTable = new sst.aws.Dynamo("GameTable", {
     fields: {
@@ -64,6 +70,10 @@ export default function GameWebStack({ secrets }: { secrets: Secrets }) {
 
   const gameWeb = new sst.aws.Nextjs("GameWeb", {
     path: "domain/game-web",
+    domain: {
+      name: dns.domain,
+      cert: dns.cert,
+    },
     link: [
       ...Object.values(secrets.auth0),
       ...Object.values(secrets.openai),

@@ -13,6 +13,10 @@ export default $config({
     const secrets = (await import("./domain/secrets/stack"))
       .default();
 
+    // DNS configuration for custom domains
+    const dns = (await import("./domain/dns/stack"))
+      .default();
+
     // Content domain owns the content table
     const {
       contentTable,
@@ -23,9 +27,9 @@ export default $config({
     } = (await import("./domain/content/stack"))
       .default({ secrets });
 
-    // Game-web depends on content domain
+    // Game-web depends on content domain and DNS
     const { url, chatApi } = (await import("./domain/game-web/stack"))
-      .default({ secrets });
+      .default({ secrets, dns });
 
     // Game-admin for managing content
     const gameAdmin = (await import("./domain/game-admin/stack"))
