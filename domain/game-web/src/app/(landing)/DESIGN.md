@@ -111,10 +111,31 @@ A vertical journey that feels more like ritual than marketing. Visitors descend 
 ## Copy & Tone
 
 - This is a **game**. Say so.
-- Write like someone who’s lived a bit: dry humor, a scar or two, no bullshit.
+- Write like someone who's lived a bit: dry humor, a scar or two, no bullshit.
 - Clarity first; poetry earned, not sprayed.
-- Voice reference: _Pratchett’s bite, Banks’s clarity, Adams’s timing._
+- Voice reference: _Pratchett's bite, Banks's clarity, Adams's timing._
 - CTAs are invitations, not slogans.
+
+### Narrative Arc Across Sections
+
+Each section should **escalate commitment** and make the visitor more complicit:
+
+**DISCOVER (Observation)**
+- Stakes: "Stories aren't written—they're witnessed."
+- Hook: Characters might win, or the River takes them. You're watching someone's gamble.
+- Tone: Grounded wonder, mortality visible, no safety net.
+
+**GUIDE (Agency)**
+- Stakes: "Watching isn't enough anymore, is it?"
+- Hook: You throw wrenches. Your Ink pays for their chaos. Everyone remembers who bent the current.
+- Tone: Complicity, power with consequence, dry humor about control.
+
+**CREATE (Authorship)**
+- Stakes: "Ready to risk it?"
+- Hook: This isn't a game you win—it's one you survive or go down swinging. Either way, you were here.
+- Tone: Purposeful, existential weight, earned legacy.
+
+The visitor should feel: **curious → implicated → committed**. By the time they reach CREATE, clicking the CTA shouldn't be a decision—it should feel inevitable.
 
 ---
 

@@ -26,7 +26,7 @@ export function LandingScroll() {
       title: 'See the River',
       quote: 'Every story starts as a ripple. Watch how far it goes.',
       cta: {
-        text: 'Read the Sagas',
+        text: 'Discover the Sagas',
         href: '/discover',
       },
       gradientFrom: '#0a0f12', // ink black
@@ -50,7 +50,7 @@ export function LandingScroll() {
       title: 'Start Your Story',
       quote: 'Make your mark. Build something worth remembering.',
       cta: {
-        text: 'Start Your Story',
+        text: 'Create Your Story',
         href: '/create',
       },
       gradientFrom: '#9a4d2e',   // rust red
@@ -69,7 +69,7 @@ export function LandingScroll() {
         <div className="max-w-6xl mx-auto px-6 py-6">
           {/* Product name - largest, Cormorant Garamond */}
           <div className="text-center mb-4">
-            <h1 className="font-serif font-bold text-4xl text-slate-200 tracking-wider">
+            <h1 className="font-serif font-bold text-4xl text-slate-200" style={{ letterSpacing: '0.15em' }}>
               River of Souls
             </h1>
           </div>
@@ -81,7 +81,7 @@ export function LandingScroll() {
               className={`transition-all duration-300 ${
                 activeSection === 'discover'
                   ? sections.discover.activeColor
-                  : 'text-slate-500 hover:text-slate-300'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Discover
@@ -92,7 +92,7 @@ export function LandingScroll() {
               className={`transition-all duration-300 ${
                 activeSection === 'guide'
                   ? sections.guide.activeColor
-                  : 'text-slate-500 hover:text-slate-300'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Guide
@@ -103,7 +103,7 @@ export function LandingScroll() {
               className={`transition-all duration-300 ${
                 activeSection === 'create'
                   ? sections.create.activeColor
-                  : 'text-slate-500 hover:text-slate-300'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Create
@@ -130,10 +130,14 @@ export function LandingScroll() {
             <p className="font-serif italic text-2xl mb-8" style={{ color: '#d6a85b' }}>
               {sections.discover.quote}
             </p>
-            <p className="font-sans text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto">
-              Observation and awe. You arrive at the edge of something vast. Stories unfold in real-time,
-              written by players and shaped by choices. Watch the River flow.
+            <p className="font-sans text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+              Stories here aren&apos;t written—they&apos;re <em className="not-italic text-slate-300 font-medium">witnessed</em>.
+              Players make choices. You watch consequences unfold, chapter by chapter, until the story ends—or the characters do.
             </p>
+            {/* <p className="font-sans text-slate-500 text-base leading-relaxed max-w-2xl mx-auto">
+              You&apos;re not reading a book—you&apos;re watching someone else&apos;s bet play out.
+              Sometimes they win. Sometimes the River wins.
+            </p> */}
           </div>
 
           {/* Sample Narrative */}
@@ -147,7 +151,11 @@ export function LandingScroll() {
                 <p className="font-sans text-slate-300 leading-relaxed mb-4">
                   The demon general appeared with all the subtlety of a brick through a stained-glass window, which is to say,
                   none at all. Its voice had that particular quality that suggested it had gargled with gravel and molten lead
-                  for breakfast. &ldquo;Your realm falls, mortal champions,&rdquo; it announced, in the tones of someone reading from
+                  for breakfast.
+                </p>
+
+                <p className="font-sans text-slate-300 leading-relaxed mb-4">
+                  &ldquo;Your realm falls, mortal champions,&rdquo; it announced, in the tones of someone reading from
                   a script they&apos;d clearly used before. &ldquo;But I offer you a choice—serve me, and live to see another dawn.&rdquo;
                 </p>
 
@@ -158,8 +166,11 @@ export function LandingScroll() {
                 <p className="font-sans text-slate-300 leading-relaxed mb-4">
                   Sir Aldric, whose armor now looked like it had been through a particularly enthusiastic recycling process,
                   squared his shoulders. Knights, as a rule, didn&apos;t do nuance. They did Honor, with a capital H that you
-                  could practically hear clanging. &ldquo;My honor is NOT for sale, demon!&rdquo; he declared, in what he probably
-                  thought was his inside voice.
+                  could practically hear clanging.
+                </p>
+
+                <p className="font-sans text-slate-300 leading-relaxed mb-4">
+                  &ldquo;My honor is NOT for sale, demon!&rdquo; he declared, in what he probably thought was his inside voice.
                 </p>
 
                 <p className="font-sans text-slate-300 leading-relaxed mb-4">
@@ -194,13 +205,18 @@ export function LandingScroll() {
             <h2 className="font-serif font-semibold text-5xl text-slate-200 uppercase tracking-wide mb-6">
               {sections.guide.title}
             </h2>
-            <p className="font-serif italic text-2xl mb-8" style={{ color: '#d6a85b' }}>
+            <p className="font-serif italic text-2xl mb-8 text-amber-200">
               {sections.guide.quote}
             </p>
-            <p className="font-sans text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto">
-              Influence and consequence. You become complicit. Vote on challenges, highlight the best characters,
-              and watch your decisions ripple through the narrative.
+            <p className="font-sans text-slate-200 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+              Watching isn&apos;t enough anymore, is it? Every scene, you vote on what breaks next.
+              Your Ink. Their chaos.
             </p>
+            {/* <p className="font-sans text-slate-300 text-base leading-relaxed max-w-2xl mx-auto">
+              Will the demon offer a bargain? Will reinforcements arrive from the wrong realm?
+              You don&apos;t write the story—but you get to break it.
+              Everyone remembers who bent the current.
+            </p> */}
           </div>
 
           {/* Voting UI */}
@@ -322,13 +338,17 @@ export function LandingScroll() {
             <h2 className="font-serif font-semibold text-5xl text-slate-200 uppercase tracking-wide mb-6">
               {sections.create.title}
             </h2>
-            <p className="font-serif italic text-2xl mb-8" style={{ color: '#d6a85b' }}>
+            <p className="font-serif italic text-2xl mb-8 text-slate-200">
               {sections.create.quote}
             </p>
-            <p className="font-sans text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto">
-              Commitment and authorship. You step fully into the current. Build your roster of characters,
-              join stories with other players, and create legends worth remembering.
+            <p className="font-sans text-slate-200 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+              Ready to risk it? Build a roster of AI-generated characters—each one broken, brilliant, and yours.
+              Enter the River with other players&apos; creations. The story won&apos;t wait.
             </p>
+            {/* <p className="font-sans text-slate-300 text-base leading-relaxed max-w-2xl mx-auto">
+              This isn&apos;t a game you <em className="not-italic text-white font-semibold">win</em>. It&apos;s a game you <em className="not-italic text-white font-semibold">survive</em>,
+              or go down swinging. Either way, you were here.
+            </p> */}
           </div>
 
           {/* Chat Log Example */}
@@ -358,7 +378,7 @@ export function LandingScroll() {
           >
             <a
               href={active.cta.href}
-              className="inline-block bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-serif font-bold py-4 px-10 rounded-lg transition-all duration-300 text-lg uppercase tracking-wider"
+              className="inline-block bg-gradient-to-r from-amber-800/90 to-amber-700/90 hover:from-amber-700/90 hover:to-amber-600/90 text-white font-serif font-bold py-4 px-10 rounded-lg transition-all duration-300 text-lg uppercase tracking-wider"
             >
               {active.cta.text} →
             </a>
