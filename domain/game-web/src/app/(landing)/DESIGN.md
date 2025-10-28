@@ -1,104 +1,125 @@
-## RIVER OF SOULS — LANDING PAGE REDESIGN SPEC
+# RIVER OF SOULS — LANDING PAGE REDESIGN SPEC
 
-### Concept: “The River Scroll”
+## Concept: “The River Scroll”
 
----
-
-### **Goal**
-
-Transform the current landing experience from a feature selector (PLAY / GUIDE / READ) into a narrative journey (DISCOVER / GUIDE / CREATE) that mirrors the metaphysics of the River of Souls world.
-
-The page should expose new visitors to the different user experiences from the most casual (discover) to the highest commitment (create), and guide them naturally toward interaction and eventual participation.
+A vertical journey that feels more like ritual than marketing. Visitors descend through three stages — **DISCOVER**, **GUIDE**, **CREATE** — each demanding more investment. The scroll isn’t a gimmick; it’s a ceremony of curiosity turning into participation.
 
 ---
 
-### **Experience Flow**
+## Goals
 
-The landing page is a **vertical scroll**, divided into three distinct sections representing escalating levels of involvement:
-
-1. **DISCOVER** → observe stories (lowest friction)
-2. **GUIDE** → interact with ongoing stories (moderate friction)
-3. **CREATE** → start your own quest (highest friction)
-
-A fixed top nav mirrors these three verbs for returning users:
-`DISCOVER    GUIDE    CREATE`
-
-As the player scrolls down the page, or uses the top nav to jump around, the top nav visually changes to identify which part of the pitch they're looking at.
+- Present the River as both myth **and game** — something beautiful, broken, and alive.
+- Introduce roles in order of commitment: watch, influence, create.
+- Evoke history, wear, and consequence through texture and tone.
+- Keep it emotionally heavy, technically efficient, and humanly clear.
 
 ---
 
-### **Section 1: DISCOVER the River of Souls**
+## Framework & Behavior
 
-**Theme:** Observation and awe. The visitor enters the world.
-**Visuals:** Wide, slow-moving panorama of a vast river winding into fog. Subtle parallax gives the illusion of drifting forward.
-
-**Copy tone:** Ethereal, invitational.
-
-> “Every story begins as a whisper. Watch it take form.”
-
-**Content**
-
-Reuse the sample narrative text from the existing root landing page.
-
-**Primary CTA:** `Read the Sagas →`
+- **Framework:** React + Framer Motion
+- **Structure:** Hero → Discover → Guide → Create → Footer
+- **Navigation:** Persistent top bar (`DISCOVER | GUIDE | CREATE`) highlights the active section.
+- **CTA:** Fixed bottom bar that updates per section using Framer Motion scroll triggers.
+- **Scroll Behavior:** Vertical, cinematic pacing; subtle parallax and opacity fades.
+- **Performance Target:** **Hard cap at 2.5MB.** Optimize visuals to fit the budget.
 
 ---
 
-### **Section 2: GUIDE the River of Souls**
+## Experience Flow
 
-**Theme:** Influence and choice. The visitor becomes a Fate.
-**Visuals:** The river narrows, glowing threads fork and merge. Subtle tendrils of light connect scenes or cards — metaphor for guiding fates.
+### DISCOVER — See the River
 
-**Copy tone:** Confident, conspiratorial.
+**Theme:** Observation and awe. The player arrives at the edge of something vast.
+**Visuals:** A slow pan across a wide, dark river fading into mist. Sparse movement, heavy atmosphere.
+**Tone:** Grounded wonder, no incense.
 
-> “Cast your will among the currents. Shape what will be remembered.”
-
-**Content:**
-
-Reuse the content from the existing landing page showing how guides vote for challenges.
-
-**Primary CTA:** `Guide the Stories →` (light sign-in gate)
+> “Every story starts as a ripple. Watch how far it goes.”
+> **CTA:** `Read the Sagas →` (/discover)
 
 ---
 
-### **Section 3: CREATE the River of Souls**
+### GUIDE — Bend the Current
 
-**Theme:** Commitment and transformation. The visitor becomes a hero/creator.
-**Visuals:** The camera dives beneath the river’s surface. Bioluminescent souls drift toward a radiant monolith. The scroll ends at a riverbank view with misted horizon.
+**Theme:** Influence and consequence. The visitor becomes complicit.
+**Visuals:** The river narrows; glowing threads twist together and apart. Subtle motion implies choice and causality.
+**Tone:** Quiet confidence, pragmatic power.
 
-**Copy tone:** Purposeful, mythic.
-
-> “Birth a new current. Gather heroes. Begin the next legend.”
-
-**Content:**
-
-The chat log from the existing page.
-
-**Primary CTA:** `Forge Your Quest →` (creates or logs in).
+> “Your vote changes the tide. Choose what the River remembers.”
+> **CTA:** `Guide the Stories →` (/guide)
 
 ---
 
-### **Navigation & Behavior**
+### CREATE — Start Your Story
 
-- **Persistent top bar**: `DISCOVER | GUIDE | CREATE` (smooth-scroll anchors).
-- **Scroll transitions**: Each section blends via parallax; river acts as unifying visual motif.
-- **Color progression:** cool blues → teals → warm golds (discovery → agency → creation).
-- **Motion rhythm:** slow, cinematic; no abrupt jumps. The scroll feels like drifting downriver.
+**Theme:** Commitment and authorship. The visitor steps fully into the current.
+**Visuals:** Light through deep water, fragments of story drifting past. End on a horizon of dim firelight and mist.
+**Tone:** Purposeful and human.
 
----
-
-### **Copy & Tone Guidelines**
-
-- Avoid “play / game / app” terminology. Use mythic verbs.
-- Address the user in second person (“you”).
-- Mix wonder and agency — _Terry Pratchett meets Neil Gaiman meets Iain Banks._
-- Every CTA should sound like an act of myth-making, not a signup.
+> “Make your mark. Build something worth remembering.”
+> **CTA:** `Start Your Story →` (/create)
 
 ---
 
-### **Success Criteria**
+## Visual & Motion Language
 
-- Visitors instantly understand the three roles.
-- New users engage first by reading; conversion path flows upward (READ → GUIDE → PLAY).
-- Returning users can jump directly to their preferred mode via top nav.
-- The experience feels like entering a living world, not a software platform.
+| Stage    | Palette                    | Motion             | Emotional Arc          |
+| -------- | -------------------------- | ------------------ | ---------------------- |
+| Discover | Ink black → blue-grey      | Slow drift         | Curiosity → Reflection |
+| Guide    | Rust red → amber           | Controlled flicker | Agency → Weight        |
+| Create   | Burnt gold → dim firelight | Subtle upward flow | Resolve → Legacy       |
+
+### Key Colors
+
+- **#0a0f12** – ink black (base)
+- **#27323a** – blue-grey (transition)
+- **#9a4d2e** – rust red (energy)
+- **#d6a85b** – aged gold (accent)
+
+---
+
+## Typography
+
+### Font Pairing
+
+- **Header:** Cormorant Garamond — classic with grit.
+- **Body/UI:** Space Grotesk — clean but imperfect.
+
+### Usage Hierarchy
+
+| Element              | Font                      | Weight   | Style                       | Role                     |
+| -------------------- | ------------------------- | -------- | --------------------------- | ------------------------ |
+| Product Name         | Cormorant Garamond        | Bold     | Title Case, +10–20 tracking | Monumental identity      |
+| Top Nav              | Space Grotesk             | SemiBold | Uppercase                   | Functional clarity       |
+| Hero CTA             | Cormorant Garamond        | Bold     | All caps, +20 tracking      | Clear action             |
+| Section Headers      | Cormorant Garamond        | SemiBold | Uppercase                   | Chapter markers          |
+| Body Copy            | Space Grotesk             | Regular  | Mixed case                  | Readable, conversational |
+| Buttons / Small CTAs | Space Grotesk             | Medium   | Uppercase                   | Simple interaction       |
+| Quotes / Epigraphs   | Cormorant Garamond Italic | Regular  | Desaturated gold            | Reflective tone          |
+
+---
+
+## Technical Notes
+
+- **Framer Motion:** use `useScroll` + `useTransform` for smooth parallax and CTA updates.
+- **CTA transitions:** fade and ripple distortion (0.6–0.8s easeInOut).
+- **Avoid:** heavy video or particle effects that break mobile performance.
+- **Accessibility:** readable contrast, no auto-play audio, keyboard navigable.
+
+---
+
+## Copy & Tone
+
+- This is a **game**. Say so.
+- Write like someone who’s lived a bit: dry humor, a scar or two, no bullshit.
+- Clarity first; poetry earned, not sprayed.
+- Voice reference: _Pratchett’s bite, Banks’s clarity, Adams’s timing._
+- CTAs are invitations, not slogans.
+
+---
+
+## Core Identity
+
+> _Worn hands. Old myths. New code. Scroll as ceremony._
+>
+> _We’re all just trying to make sense of the chaos._
