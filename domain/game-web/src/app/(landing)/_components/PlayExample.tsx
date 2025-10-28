@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { getCharacterPortraitUrl } from "./CharacterPortrait";
+import { CharacterPortrait } from "./CharacterPortrait";
 import { ActionStorylog } from "./ActionStorylog";
 
 interface ChatMessage {
@@ -58,11 +57,10 @@ export function PlayExample() {
         <div className="space-y-3">
           {mockMessages.map((msg, i) => (
             <div key={i} className="flex gap-3 items-start">
-              <Image
-                src={getCharacterPortraitUrl(msg.characterId, 40)}
-                alt={msg.characterName}
-                width={40}
-                height={40}
+              <CharacterPortrait
+                characterId={msg.characterId}
+                name={msg.characterName}
+                size={40}
                 className="rounded-full border-2 border-slate-700"
               />
               <div className="flex-1">
@@ -76,11 +74,10 @@ export function PlayExample() {
           ))}
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-3", 40)}
-              alt="Whisper"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-3"
+              name="Whisper"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -104,11 +101,10 @@ export function PlayExample() {
           />
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-1", 40)}
-              alt="Sir Aldric"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-1"
+              name="Sir Aldric"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -137,11 +133,10 @@ export function PlayExample() {
           </div>
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-2", 40)}
-              alt="Zephyra"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-2"
+              name="Zephyra"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -154,11 +149,10 @@ export function PlayExample() {
           </div>
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-2", 40)}
-              alt="Zephyra"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-2"
+              name="Zephyra"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -187,11 +181,10 @@ export function PlayExample() {
           </div>
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-1", 40)}
-              alt="Sir Aldric"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-1"
+              name="Sir Aldric"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -215,11 +208,10 @@ export function PlayExample() {
           />
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-1", 40)}
-              alt="Sir Aldric"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-1"
+              name="Sir Aldric"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">
@@ -232,11 +224,10 @@ export function PlayExample() {
           </div>
 
           <div className="flex gap-3 items-start">
-            <Image
-              src={getCharacterPortraitUrl("char-3", 40)}
-              alt="Whisper"
-              width={40}
-              height={40}
+            <CharacterPortrait
+              characterId="char-3"
+              name="Whisper"
+              size={40}
               className="rounded-full border-2 border-slate-700"
             />
             <div className="flex-1">

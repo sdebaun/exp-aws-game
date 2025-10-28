@@ -1,82 +1,125 @@
 'use client';
 
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { PlayExample } from './PlayExample';
+import { CharacterPortrait } from './CharacterPortrait';
 
 export function LandingScroll() {
-  const containerRef = useRef(null);
-
-  // Scroll-based background color transition
-  const { scrollYProgress } = useScroll({ target: containerRef });
-  const backgroundColor = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [
-      'rgb(15, 23, 42)',  // slate-950 (discover - blue)
-      'rgb(8, 51, 68)',   // slate-950 with cyan tint (guide)
-      'rgb(46, 16, 101)'  // slate-950 with purple tint (create)
-    ]
-  );
-
   // Track which sections are in view
   const discoverRef = useRef(null);
   const guideRef = useRef(null);
   const createRef = useRef(null);
 
-  const discoverInView = useInView(discoverRef, { amount: 0.5 });
-  const guideInView = useInView(guideRef, { amount: 0.5 });
-  const createInView = useInView(createRef, { amount: 0.5 });
+  const discoverInView = useInView(discoverRef, { amount: 0.3 });
+  const guideInView = useInView(guideRef, { amount: 0.3 });
+  const createInView = useInView(createRef, { amount: 0.3 });
+
+  // Determine active section - prioritize by scroll position (top to bottom)
+  // When scrolling down, switch to the next section as soon as it appears
+  const activeSection = guideInView && !createInView ? 'guide'
+    : createInView ? 'create'
+    : 'discover';
+
+  // Section metadata
+  const sections = {
+    discover: {
+      tagline: 'Read the stories of every game played on the River of Souls.',
+      color: 'text-blue-400',
+      cta: {
+        text: 'Read the Sagas',
+        href: '/stories',
+        gradient: 'from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400'
+      }
+    },
+    guide: {
+      tagline: 'Choose the challenges that players face and highlight the most impactful characters.',
+      color: 'text-cyan-400',
+      cta: {
+        text: 'Guide the Stories',
+        href: '/stories',
+        gradient: 'from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400'
+      }
+    },
+    create: {
+      tagline: 'Start your own adventures that will be immortalized in the sagas of the river.',
+      color: 'text-purple-400',
+      cta: {
+        text: 'Forge Your Quest',
+        href: '/dash',
+        gradient: 'from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400'
+      }
+    }
+  };
+
+  const active = sections[activeSection];
 
   return (
-    <motion.div ref={containerRef} style={{ backgroundColor }} className="min-h-screen">
+    <div className="min-h-screen">
       {/* Fixed Top Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-sm border-b border-slate-800">
-        <div className="max-w-6xl mx-auto px-8 py-4 flex justify-center gap-12">
-          <a
-            href="#discover"
-            className={`font-semibold transition-all duration-300 ${
-              discoverInView
-                ? 'text-blue-400 scale-110 underline decoration-2 underline-offset-4'
-                : 'text-slate-400 hover:text-blue-300'
-            }`}
-          >
-            DISCOVER
-          </a>
-          <a
-            href="#guide"
-            className={`font-semibold transition-all duration-300 ${
-              guideInView
-                ? 'text-cyan-400 scale-110 underline decoration-2 underline-offset-4'
-                : 'text-slate-400 hover:text-cyan-300'
-            }`}
-          >
-            GUIDE
-          </a>
-          <a
-            href="#create"
-            className={`font-semibold transition-all duration-300 ${
-              createInView
-                ? 'text-purple-400 scale-110 underline decoration-2 underline-offset-4'
-                : 'text-slate-400 hover:text-purple-300'
-            }`}
-          >
-            CREATE
-          </a>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+        <div className="max-w-6xl mx-auto px-8 py-6">
+          {/* Section links - second largest */}
+          <div className="flex justify-center gap-8 mb-3">
+            <a
+              href="#discover"
+              className={`text-xl font-semibold transition-all duration-300 ${
+                activeSection === 'discover'
+                  ? 'text-blue-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              DISCOVER
+            </a>
+            <span className="text-slate-700 text-xl">|</span>
+            <a
+              href="#guide"
+              className={`text-xl font-semibold transition-all duration-300 ${
+                activeSection === 'guide'
+                  ? 'text-cyan-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              GUIDE
+            </a>
+            <span className="text-slate-700 text-xl">|</span>
+            <a
+              href="#create"
+              className={`text-xl font-semibold transition-all duration-300 ${
+                activeSection === 'create'
+                  ? 'text-purple-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              CREATE
+            </a>
+          </div>
+
+          {/* Static title - largest */}
+          <div className="text-center mb-2">
+            <h1 className="text-3xl font-semibold text-slate-300">
+              the River of Souls
+            </h1>
+          </div>
+
+          {/* Animated tagline - third largest */}
+          <div className="text-center">
+            <motion.p
+              key={activeSection}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`text-base italic ${active.color}`}
+            >
+              {active.tagline}
+            </motion.p>
+          </div>
         </div>
       </nav>
 
       {/* Section 1: DISCOVER */}
-      <section ref={discoverRef} id="discover" className="min-h-screen pt-24 pb-16">
+      <section ref={discoverRef} id="discover" className="min-h-screen pt-48 pb-16 bg-[rgb(15,23,42)]">
         <div className="max-w-4xl mx-auto px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-blue-400 mb-6">
-              Discover the River of Souls
-            </h1>
-            <p className="text-2xl text-slate-300 italic">
-              Every story begins as a whisper. Watch it take form.
-            </p>
-          </div>
 
           {/* Sample Narrative */}
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-8 border border-blue-700/30 mb-12">
@@ -154,31 +197,12 @@ export function LandingScroll() {
               <p className="text-xs text-slate-500 mb-2">Scene 12 of 24 • The Siege of Astralgate</p>
             </div>
           </div>
-
-          {/* CTA */}
-          <div className="text-center">
-            <a
-              href="/stories"
-              className="inline-block bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 text-lg"
-            >
-              Read the Sagas →
-            </a>
-          </div>
         </div>
       </section>
 
       {/* Section 2: GUIDE */}
-      <section ref={guideRef} id="guide" className="min-h-screen py-24">
+      <section ref={guideRef} id="guide" className="min-h-screen pt-48 pb-16 bg-[rgb(8,51,68)]">
         <div className="max-w-4xl mx-auto px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-cyan-400 mb-6">
-              Guide the River of Souls
-            </h1>
-            <p className="text-2xl text-slate-300 italic">
-              Cast your will among the currents. Shape what will be remembered.
-            </p>
-          </div>
-
           {/* Voting UI */}
           <div className="bg-slate-900 rounded-lg p-6 border border-cyan-800 mb-12">
             <p className="text-xs text-cyan-500 mb-3 uppercase tracking-wide">Fates Voting on Next Challenge:</p>
@@ -218,53 +242,107 @@ export function LandingScroll() {
             <p className="text-xs text-slate-500 mt-3">120 Ink contributed by 47 Fates</p>
           </div>
 
-          {/* CTA */}
-          <div className="text-center">
-            <a
-              href="/stories"
-              className="inline-block bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 text-lg"
-            >
-              Guide the Stories →
-            </a>
+          {/* MVP Voting */}
+          <div className="bg-slate-900 rounded-lg p-6 border border-cyan-800">
+            <p className="text-xs text-cyan-500 mb-3 uppercase tracking-wide">Fates Voting on MVP of Chapter 12:</p>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-slate-800 rounded hover:bg-slate-700 cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <CharacterPortrait
+                    characterId="char-1"
+                    name="Sir Aldric"
+                    size={48}
+                    className="rounded-full border-2 border-slate-600"
+                  />
+                  <span className="text-sm text-white">Sir Aldric</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-slate-400">28 votes</div>
+                  <div className="w-24 bg-slate-700 rounded-full h-2">
+                    <div className="bg-cyan-500 h-2 rounded-full" style={{width: '31%'}}></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-cyan-900/20 rounded border border-cyan-700/50">
+                <div className="flex items-center gap-3">
+                  <CharacterPortrait
+                    characterId="char-3"
+                    name="Whisper"
+                    size={48}
+                    className="rounded-full border-2 border-cyan-600"
+                  />
+                  <span className="text-sm text-white">Whisper</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-cyan-400 font-semibold">51 votes</div>
+                  <div className="w-24 bg-slate-700 rounded-full h-2">
+                    <div className="bg-cyan-500 h-2 rounded-full" style={{width: '57%'}}></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-slate-800 rounded hover:bg-slate-700 cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <CharacterPortrait
+                    characterId="char-2"
+                    name="Zephyra"
+                    size={48}
+                    className="rounded-full border-2 border-slate-600"
+                  />
+                  <span className="text-sm text-white">Zephyra</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-slate-400">11 votes</div>
+                  <div className="w-24 bg-slate-700 rounded-full h-2">
+                    <div className="bg-cyan-500 h-2 rounded-full" style={{width: '12%'}}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500 mt-3">90 Ink contributed by 35 Fates</p>
           </div>
         </div>
       </section>
 
       {/* Section 3: CREATE */}
-      <section ref={createRef} id="create" className="min-h-screen py-24">
+      <section ref={createRef} id="create" className="min-h-screen pt-48 pb-16 bg-[rgb(46,16,101)]">
         <div className="max-w-4xl mx-auto px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-purple-400 mb-6">
-              Create the River of Souls
-            </h1>
-            <p className="text-2xl text-slate-300 italic">
-              Birth a new current. Gather heroes. Begin the next legend.
-            </p>
-          </div>
-
           {/* Chat Log */}
           <div className="mb-12">
             <PlayExample />
-          </div>
-
-          {/* CTA */}
-          <div className="text-center">
-            <a
-              href="/dash"
-              className="inline-block bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 text-lg"
-            >
-              Forge Your Quest →
-            </a>
           </div>
         </div>
       </section>
 
       {/* Footer tagline */}
-      <div className="pb-16 text-center">
+      <div className="pb-32 text-center bg-[rgb(46,16,101)]">
         <p className="text-slate-500 italic">
           Every story is unique. Every choice matters. Every legend was lived.
         </p>
       </div>
-    </motion.div>
+
+      {/* Fixed Bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-t border-slate-800">
+        <div className="max-w-6xl mx-auto px-8 py-4">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="text-center"
+          >
+            <a
+              href={active.cta.href}
+              className={`inline-block bg-gradient-to-r ${active.cta.gradient} text-white font-bold py-3 px-8 rounded-lg transition-all duration-200 text-lg`}
+            >
+              {active.cta.text} →
+            </a>
+          </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }

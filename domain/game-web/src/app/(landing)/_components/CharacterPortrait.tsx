@@ -2,13 +2,14 @@ import Image from "next/image";
 
 /**
  * Generates a consistent placeholder portrait URL for a character
- * Uses Lorem Picsum with seed to ensure same image for same character
+ * Uses DiceBear API with "avataaars" style for character portraits
+ * The seed ensures same character always gets same portrait
  */
 export function getCharacterPortraitUrl(
   characterId: string,
   size: number = 400
 ): string {
-  return `https://picsum.photos/seed/${characterId}/${size}/${size}`;
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${characterId}&size=${size}`;
 }
 
 interface CharacterPortraitProps {
@@ -19,7 +20,8 @@ interface CharacterPortraitProps {
 }
 
 /**
- * Character portrait component with Lorem Picsum placeholder
+ * Character portrait component with DiceBear avatars
+ * unoptimized=true because Next.js Image optimization doesn't handle external SVGs well
  */
 export function CharacterPortrait({
   characterId,
@@ -34,6 +36,7 @@ export function CharacterPortrait({
       width={size}
       height={size}
       className={className}
+      unoptimized
     />
   );
 }

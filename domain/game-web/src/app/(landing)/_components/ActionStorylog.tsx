@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getCharacterPortraitUrl } from "./CharacterPortrait";
+import { getCharacterPortraitUrl, CharacterPortrait } from "./CharacterPortrait";
 
 interface ActionStorylogProps {
   playerId: string;
@@ -25,11 +25,10 @@ export function ActionStorylog({
 }: ActionStorylogProps) {
   return (
     <div className="flex gap-3 items-start bg-purple-900/20 p-3 rounded-lg border-l-4 border-purple-600">
-      <Image
-        src={getCharacterPortraitUrl(characterId, 40)}
-        alt={characterName}
-        width={40}
-        height={40}
+      <CharacterPortrait
+        characterId={characterId}
+        name={characterName}
+        size={40}
         className="rounded-full border-2 border-purple-700"
       />
       <div className="flex-1">
@@ -44,6 +43,7 @@ export function ActionStorylog({
             width={20}
             height={20}
             className="rounded-full border border-purple-700"
+            unoptimized
           />
           <p className="text-purple-300">[{aspectName}]</p>
         </div>
