@@ -50,7 +50,7 @@ function NavTab({
   return (
     <Link
       href={href}
-      className={`py-4 px-2 text-slate-400 border-b-2 border-transparent transition ${colorClasses[color]}`}
+      className={`font-sans py-4 px-2 text-slate-400 border-b-2 border-transparent transition uppercase tracking-wide text-sm font-medium ${colorClasses[color]}`}
     >
       {label}
     </Link>

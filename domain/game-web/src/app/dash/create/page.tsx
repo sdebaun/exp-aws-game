@@ -36,46 +36,27 @@ export default async function CreatePage() {
     <div className="p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="font-serif text-4xl font-bold text-white mb-2">
           Create Your Story
         </h1>
-        <p className="text-slate-400">
+        <p className="font-sans text-slate-400">
           Join expeditions or start your own adventure
         </p>
       </div>
 
-      {/* Quick Info for Anonymous */}
-      {!user && (
-        <div className="bg-cyan-900/30 border border-cyan-700/50 rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-bold text-white mb-2">
-            Ready to Play?
-          </h2>
-          <p className="text-slate-300 mb-4">
-            Sign in to join expeditions with your characters and participate in
-            collaborative storytelling.
-          </p>
-          <Link
-            href="/api/auth/login?returnTo=/dash/create"
-            className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
-          >
-            Sign In to Join
-          </Link>
-        </div>
-      )}
-
-      {/* Authenticated User Quick Actions */}
+      {/* Authenticated User Status */}
       {user && account && (
         <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-white">Your Status</h2>
-              <p className="text-sm text-slate-400 mt-1">
+              <h2 className="font-sans text-lg font-semibold text-white">Your Status</h2>
+              <p className="font-sans text-sm text-slate-400 mt-1">
                 Ink Balance: {account.ink ?? 0} 💧
               </p>
             </div>
             <Link
               href="/character/new"
-              className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
+              className="font-sans bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
             >
               + Create Character
             </Link>
@@ -92,23 +73,23 @@ export default async function CreatePage() {
               href={`/dash/create/${exp.id}`}
               className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:border-cyan-700/50 transition-all cursor-pointer group"
             >
-              <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
+              <div className="flex items-center gap-2 font-sans text-xs text-slate-500 mb-3 uppercase tracking-wide">
                 <span className="text-green-500">•</span>
                 <span>
-                  RECRUITING • {exp.playerCount}/{exp.maxPlayers} Players
+                  Recruiting • {exp.playerCount}/{exp.maxPlayers} Players
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition">
+              <h3 className="font-serif text-2xl font-semibold text-white mb-3 group-hover:text-cyan-400 transition">
                 {exp.title}
               </h3>
-              <p className="text-sm text-slate-400 mb-4 line-clamp-3">
+              <p className="font-sans text-sm text-slate-400 mb-4 line-clamp-3 leading-relaxed">
                 {exp.description}
               </p>
-              <div className="flex items-center justify-between text-sm pt-4 border-t border-slate-700">
+              <div className="flex items-center justify-between font-sans text-sm pt-4 border-t border-slate-700">
                 <span className="text-slate-500">
                   {exp.spectatorCount} watching
                 </span>
-                <span className="text-cyan-400 group-hover:text-cyan-300 transition">
+                <span className="text-cyan-400 group-hover:text-cyan-300 transition font-medium">
                   Join Now →
                 </span>
               </div>
@@ -118,10 +99,10 @@ export default async function CreatePage() {
       ) : (
         <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 text-center">
           <div className="text-6xl mb-4">🎭</div>
-          <h2 className="text-xl font-bold text-white mb-2">
+          <h2 className="font-serif text-2xl font-semibold text-white mb-2">
             No Expeditions Recruiting
           </h2>
-          <p className="text-slate-400">
+          <p className="font-sans text-slate-400">
             Check back soon, or start your own expedition!
           </p>
         </div>
