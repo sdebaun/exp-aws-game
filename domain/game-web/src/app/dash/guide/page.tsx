@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getUserInfo } from "@/app/getUserInfo";
-import { FeaturedLiveCarousel } from "./_components/FeaturedLiveCarousel";
+import { GuideFeaturedCarousel } from "./_components/GuideFeaturedCarousel";
 
 export default async function GuidePage() {
   const { user, account } = await getUserInfo();
@@ -206,7 +206,10 @@ export default async function GuidePage() {
 
       {/* Featured Live Carousel */}
       <div className="mb-12">
-        <FeaturedLiveCarousel stories={featuredLiveStories} />
+        <GuideFeaturedCarousel
+          stories={featuredLiveStories}
+          autoPlayInterval={14000}
+        />
       </div>
 
       {/* More Live Stories Section */}

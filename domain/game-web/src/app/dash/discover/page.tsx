@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getUserInfo } from "@/app/getUserInfo";
-import { FeaturedCarousel } from "./_components/FeaturedCarousel";
+import { DiscoverFeaturedCarousel } from "./_components/DiscoverFeaturedCarousel";
 
 export default async function DiscoverPage() {
   const { user, account } = await getUserInfo();
@@ -191,7 +191,7 @@ export default async function DiscoverPage() {
 
       {/* Featured Carousel */}
       <div className="mb-12">
-        <FeaturedCarousel stories={featuredStories} />
+        <DiscoverFeaturedCarousel stories={featuredStories} />
       </div>
 
       {/* More Stories Section */}
