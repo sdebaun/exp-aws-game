@@ -27,7 +27,7 @@ export function LandingScroll() {
       quote: 'Every story starts as a ripple. Watch how far it goes.',
       cta: {
         text: 'Discover the Sagas',
-        href: '/discover',
+        href: '/dash/discover',
       },
       gradientFrom: '#0a0f12', // ink black
       gradientTo: '#27323a',   // blue-grey
@@ -39,7 +39,7 @@ export function LandingScroll() {
       quote: 'Your vote changes the tide. Choose what the River remembers.',
       cta: {
         text: 'Guide the Stories',
-        href: '/guide',
+        href: '/dash/guide',
       },
       gradientFrom: '#27323a', // blue-grey
       gradientTo: '#9a4d2e',   // rust red
@@ -51,7 +51,7 @@ export function LandingScroll() {
       quote: 'Make your mark. Build something worth remembering.',
       cta: {
         text: 'Create Your Story',
-        href: '/create',
+        href: '/dash/create',
       },
       gradientFrom: '#9a4d2e',   // rust red
       gradientTo: '#d6a85b',     // aged gold
