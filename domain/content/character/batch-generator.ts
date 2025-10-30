@@ -1,4 +1,5 @@
-import { CharacterEntity } from "./entity";
+import { CharacterModel } from "../table";
+import { UNASSIGNED_PLAYER_ID } from "../schemas";
 import { generateCharacter } from "./generator";
 
 interface BatchGeneratorEvent {
@@ -55,26 +56,13 @@ export async function handler(event?: BatchGeneratorEvent) {
           }: ${char.name}`,
         );
 
-        // Clean optional fields from origin (ElectroDB strict validation)
-        const cleanOrigin = {
-          type: char.origin.type,
-          place: char.origin.place,
-          era: char.origin.era,
-          culture: char.origin.culture,
-          crossover: char.origin.crossover,
-          ...(char.origin.canon ? { canon: char.origin.canon } : {}),
-          ...(char.origin.canon_scale
-            ? { canon_scale: char.origin.canon_scale }
-            : {}),
-        };
-
-        return CharacterEntity.create({
+        // Set sentinel playerId for available characters
+        return CharacterModel.create({
           ...char,
-          origin: cleanOrigin,
-          playerId: "", // Empty string for available characters
-          reservationInkSpent: 0,
-          totalInkSpent: 0,
-        }).go();
+          playerId: UNASSIGNED_PLAYER_ID, // Sentinel for available characters
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
       }),
     );
 

@@ -1,4 +1,4 @@
-import { CharacterEntity } from "./entity";
+import { CharacterModel } from "../table";
 
 /**
  * Lambda handler to delete a character from the content table.
@@ -6,19 +6,19 @@ import { CharacterEntity } from "./entity";
  */
 export async function handler(event: { characterId: string }) {
   console.log("[DeleteCharacter] Deleting character:", event.characterId);
-  
+
   try {
     if (!event.characterId) {
       throw new Error("characterId is required");
     }
 
-    // Delete the character using ElectroDB
-    const result = await CharacterEntity.delete({
+    // Delete the character using OneTable
+    await CharacterModel.remove({
       characterId: event.characterId
-    }).go();
-    
+    });
+
     console.log("[DeleteCharacter] Character deleted successfully");
-    
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -30,9 +30,9 @@ export async function handler(event: { characterId: string }) {
     console.error("[DeleteCharacter] Error deleting character:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: false,
-        error: "Failed to delete character" 
+        error: "Failed to delete character"
       })
     };
   }

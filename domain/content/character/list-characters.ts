@@ -1,4 +1,4 @@
-import { CharacterEntity } from "./entity";
+import { CharacterModel } from "../table";
 
 /**
  * Lambda handler that returns all characters from the content table.
@@ -6,14 +6,14 @@ import { CharacterEntity } from "./entity";
  */
 export async function handler() {
   try {
-    // Query all characters using ElectroDB
-    const result = await CharacterEntity.scan.go();
-    
+    // Scan all characters using OneTable
+    const characters = await CharacterModel.scan({});
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        characters: result.data,
-        count: result.data.length
+        characters,
+        count: characters.length
       })
     };
   } catch (error) {
