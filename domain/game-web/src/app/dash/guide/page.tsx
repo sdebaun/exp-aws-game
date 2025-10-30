@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { getUserInfo } from "@/app/getUserInfo";
 import { GuideFeaturedCarousel } from "./_components/GuideFeaturedCarousel";
+import { StoryCard } from "../_components/StoryCard";
 
 export default async function GuidePage() {
-  const { user, account } = await getUserInfo();
 
   // Mock featured live stories - big hero carousel
   const featuredLiveStories = [
@@ -146,8 +144,10 @@ export default async function GuidePage() {
     {
       id: "exp-7",
       title: "Salt & Sorcery",
-      description:
-        "Pirate wizards. Enchanted cannons. A sea serpent that's definitely judging everyone's life choices.",
+      excerpt:
+        "Captain Reave eyed the enchanted cannons with the expression of someone who'd made a series of questionable hiring decisions. 'When I said we needed firepower,' she muttered, watching one cannon argue philosophy with the mast, 'I meant the metaphorical kind.'",
+      attribution: "Captain Reave, Scene 5",
+      image: "https://picsum.photos/seed/live-salt/800/600",
       scene: 5,
       totalScenes: 16,
       status: "live" as const,
@@ -158,8 +158,10 @@ export default async function GuidePage() {
     {
       id: "exp-8",
       title: "The Garden of Iron Roses",
-      description:
-        "The royal botanist vanished. Her garden didn't. Now the roses have teeth and opinions.",
+      excerpt:
+        "The rose addressed the intruders in perfectly clipped diction and what Thorne was fairly certain were threats. He'd spent fifteen years as a royal guard. None of his training covered negotiating with topiary that had developed strong opinions about trespassing.",
+      attribution: "Thorne, Scene 9",
+      image: "https://picsum.photos/seed/live-garden/800/600",
       scene: 9,
       totalScenes: 20,
       status: "live" as const,
@@ -170,8 +172,10 @@ export default async function GuidePage() {
     {
       id: "exp-9",
       title: "Echoes of the Fallen Star",
-      description:
-        "Meteor impact. Terrible powers. Every use rewrites history. Nobody's sure who they were yesterday.",
+      excerpt:
+        "Lyra checked her journal. According to yesterday's entry, she was an accountant named Marcus. Marcus's entry claimed he'd been a soldier called Orin. Orin's notes insisted reality was stable and everyone was overreacting. Orin, Lyra decided, was an optimist.",
+      attribution: "Lyra (probably), Scene 3",
+      image: "https://picsum.photos/seed/live-echo/800/600",
       scene: 3,
       totalScenes: 18,
       status: "live" as const,
@@ -183,27 +187,6 @@ export default async function GuidePage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      {/* Authenticated User Status */}
-      {user && account && (
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-sans text-sm font-semibold text-white">
-                Your Ink Balance
-              </h2>
-              <p className="font-sans text-xl text-slate-300 mt-1 font-bold">
-                {account.ink ?? 0} 💧
-              </p>
-            </div>
-            {(account.ink ?? 0) < 5 && (
-              <div className="font-sans text-sm text-yellow-400">
-                Need more Ink to vote
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Featured Live Carousel */}
       <div className="mb-12">
         <GuideFeaturedCarousel
@@ -226,32 +209,18 @@ export default async function GuidePage() {
       {liveExpeditions.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {liveExpeditions.map((exp) => (
-            <Link
+            <StoryCard
               key={exp.id}
+              id={exp.id}
+              title={exp.title}
+              excerpt={exp.excerpt}
+              attribution={exp.attribution}
+              image={exp.image}
               href={`/dash/guide/${exp.id}`}
-              className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-amber-700/50 hover:bg-slate-800 transition-all cursor-pointer group"
-            >
-              <div className="flex items-center gap-2 font-sans text-xs text-slate-500 mb-3 uppercase tracking-wide">
-                <span className="text-red-500">•</span>
-                <span>
-                  Live • Scene {exp.scene} of {exp.totalScenes}
-                </span>
-              </div>
-              <h3 className="font-serif text-2xl font-semibold text-white mb-3 group-hover:text-amber-400 transition">
-                {exp.title}
-              </h3>
-              <p className="font-sans text-sm text-slate-400 mb-4 line-clamp-3 leading-relaxed">
-                {exp.description}
-              </p>
-              <div className="flex items-center justify-between font-sans text-sm pt-4 border-t border-slate-700/50">
-                <span className="text-slate-500">
-                  {exp.playerCount} players • {exp.spectatorCount} watching
-                </span>
-                <span className="text-slate-400 group-hover:text-amber-400 transition font-medium">
-                  Watch →
-                </span>
-              </div>
-            </Link>
+              footer={{
+                left: `${exp.playerCount} players • ${exp.spectatorCount} watching`,
+              }}
+            />
           ))}
         </div>
       ) : (

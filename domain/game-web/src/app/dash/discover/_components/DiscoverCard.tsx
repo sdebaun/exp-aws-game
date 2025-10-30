@@ -80,7 +80,7 @@ export function DiscoverCard({ story }: Props) {
               href={`/dash/discover/${story.id}`}
               className="inline-flex items-center gap-2 border-2 border-slate-600 hover:border-amber-500 hover:bg-slate-800/50 text-white font-sans font-semibold px-8 py-3 rounded-lg transition-all"
             >
-              View Story
+              Start Reading
               <span className="text-slate-400">→</span>
             </Link>
           </div>

@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { getUserInfo } from "@/app/getUserInfo";
 import { DiscoverFeaturedCarousel } from "./_components/DiscoverFeaturedCarousel";
+import { StoryCard } from "../_components/StoryCard";
 
 export default async function DiscoverPage() {
-  const { user, account } = await getUserInfo();
 
   // Mock featured stories - big hero carousel
   const featuredStories = [
@@ -134,8 +132,10 @@ export default async function DiscoverPage() {
     {
       id: "exp-7",
       title: "The Hollow Crown",
-      description:
-        "The king is dead. The throne is empty. And something wearing his face sits in the council chambers...",
+      excerpt:
+        "The king's face smiled at us from across the table. Perfectly. Too perfectly. 'Your Majesty,' I said carefully, 'when did you learn to blink in unison with the candles?'",
+      attribution: "Lord Ashford, Scene 18",
+      image: "https://picsum.photos/seed/hollowcrown/800/600",
       totalScenes: 22,
       status: "complete" as const,
       playerCount: 5,
@@ -145,8 +145,10 @@ export default async function DiscoverPage() {
     {
       id: "exp-8",
       title: "Salt & Sorcery",
-      description:
-        "Pirate crews don't usually hire wizards. There's a reason for that. Several reasons, actually, most involving fire...",
+      excerpt:
+        "The ship was on fire. Again. Captain Reave glared at me with the kind of disappointment usually reserved for discovering your parrot's been embezzling. 'I specifically said no fireballs below deck.'",
+      attribution: "Pyra the Mostly-Sorry, Scene 9",
+      image: "https://picsum.photos/seed/saltsorcery/800/600",
       totalScenes: 16,
       status: "complete" as const,
       playerCount: 4,
@@ -156,8 +158,10 @@ export default async function DiscoverPage() {
     {
       id: "exp-9",
       title: "The Garden of Iron Roses",
-      description:
-        "In a city where plants are weapons and flowers can kill, the royal botanist goes missing. Her garden, however, continues to grow...",
+      excerpt:
+        "The rose bush had grown teeth. Not metaphorical teeth—actual, gleaming incisors arranged in what could only be described as a smile. 'I think,' whispered Moss, 'the botanist knew exactly what she was doing.'",
+      attribution: "Moss the Gardener's Apprentice, Scene 14",
+      image: "https://picsum.photos/seed/ironroses/800/600",
       totalScenes: 20,
       status: "complete" as const,
       playerCount: 4,
@@ -168,27 +172,6 @@ export default async function DiscoverPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      {/* Authenticated User Status */}
-      {user && account && (
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-sans text-sm font-semibold text-white">
-                Your Ink Balance
-              </h2>
-              <p className="font-sans text-xl text-slate-300 mt-1 font-bold">
-                {account.ink ?? 0} 💧
-              </p>
-            </div>
-            {(account.ink ?? 0) < 10 && (
-              <div className="font-sans text-sm text-yellow-400">
-                Need more Ink to unlock stories
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Featured Carousel */}
       <div className="mb-12">
         <DiscoverFeaturedCarousel stories={featuredStories} />
@@ -208,30 +191,19 @@ export default async function DiscoverPage() {
       {completedExpeditions.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {completedExpeditions.map((exp) => (
-            <Link
+            <StoryCard
               key={exp.id}
+              id={exp.id}
+              title={exp.title}
+              excerpt={exp.excerpt}
+              attribution={exp.attribution}
+              image={exp.image}
               href={`/dash/discover/${exp.id}`}
-              className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-amber-700/50 hover:bg-slate-800 transition-all cursor-pointer group"
-            >
-              <div className="flex items-center gap-2 font-sans text-xs text-slate-500 mb-3 uppercase tracking-wide">
-                <span className="text-amber-600">•</span>
-                <span>Complete • {exp.totalScenes} scenes</span>
-              </div>
-              <h3 className="font-serif text-2xl font-semibold text-white mb-3 group-hover:text-amber-400 transition">
-                {exp.title}
-              </h3>
-              <p className="font-sans text-sm text-slate-400 mb-4 line-clamp-3 leading-relaxed">
-                {exp.description}
-              </p>
-              <div className="flex items-center justify-between font-sans text-sm pt-4 border-t border-slate-700/50">
-                <span className="text-slate-500">
-                  {exp.playerCount} players • {exp.readerCount} readers
-                </span>
-                <span className="text-slate-400 group-hover:text-amber-400 transition font-medium">
-                  {exp.unlockPrice} Ink 💧
-                </span>
-              </div>
-            </Link>
+              footer={{
+                left: `${exp.playerCount} players • ${exp.readerCount} readers`,
+                right: `${exp.unlockPrice} Ink`,
+              }}
+            />
           ))}
         </div>
       ) : (

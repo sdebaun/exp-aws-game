@@ -1,36 +1,21 @@
 import Link from "next/link";
-import { getUserInfo } from "@/app/getUserInfo";
+
+type ExpeditionCard = {
+  id: string,
+  title: string,
+  description: string,
+  scene: number,
+  totalScenes: number,
+  status: "recruiting",
+  playerCount: number,
+  maxPlayers: number,
+  spectatorCount: number,
+}
 
 export default async function CreatePage() {
-  const { user, account } = await getUserInfo();
 
   // Mock data - will eventually come from database
-  const recruitingExpeditions = [
-    {
-      id: "exp-1",
-      title: "The Siege of Astralgate",
-      description:
-        "Four heroes defend a mystical portal from an endless demon horde. Time is running out...",
-      scene: 0,
-      totalScenes: 20,
-      status: "recruiting" as const,
-      playerCount: 2,
-      maxPlayers: 4,
-      spectatorCount: 127,
-    },
-    {
-      id: "exp-4",
-      title: "Shadows Over Grimwatch",
-      description:
-        "A coastal town plagued by mysterious disappearances needs investigators brave enough to face the truth...",
-      scene: 0,
-      totalScenes: 16,
-      status: "recruiting" as const,
-      playerCount: 1,
-      maxPlayers: 3,
-      spectatorCount: 54,
-    },
-  ];
+  const recruitingExpeditions: ExpeditionCard[] = [];
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -43,26 +28,6 @@ export default async function CreatePage() {
           Join expeditions or start your own adventure
         </p>
       </div>
-
-      {/* Authenticated User Status */}
-      {user && account && (
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-sans text-lg font-semibold text-white">Your Status</h2>
-              <p className="font-sans text-sm text-slate-400 mt-1">
-                Ink Balance: {account.ink ?? 0} 💧
-              </p>
-            </div>
-            <Link
-              href="/character/new"
-              className="font-sans bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
-            >
-              + Create Character
-            </Link>
-          </div>
-        </div>
-      )}
 
       {/* Expeditions Grid */}
       {recruitingExpeditions.length > 0 ? (
