@@ -3,17 +3,17 @@
 
 import { Secrets } from "../secrets/stack";
 
-export default function GameAdminStack({ 
+export default function GameAdminStack({
   secrets,
   contentTable,
-  characterBatchGenerator,
+  characterGenerator,
   listCharacters,
   deleteCharacter,
   purgeAllCharacters
-}: { 
+}: {
   secrets: Secrets;
   contentTable: sst.aws.Dynamo;
-  characterBatchGenerator: sst.aws.Function;
+  characterGenerator: sst.aws.Function;
   listCharacters: sst.aws.Function;
   deleteCharacter: sst.aws.Function;
   purgeAllCharacters: sst.aws.Function;
@@ -21,10 +21,10 @@ export default function GameAdminStack({
   const admin = new sst.aws.Nextjs("GameAdmin", {
     path: "domain/game-admin",
     link: [
-      ...Object.values(secrets.auth0), 
-      ...Object.values(secrets.openai), 
+      ...Object.values(secrets.auth0),
+      ...Object.values(secrets.openai),
       contentTable,
-      characterBatchGenerator,
+      characterGenerator,
       listCharacters,
       deleteCharacter,
       purgeAllCharacters

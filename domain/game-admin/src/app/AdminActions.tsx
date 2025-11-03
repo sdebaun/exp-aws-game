@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AsyncButton } from "../components/AsyncButton";
 
 interface AdminActionsProps {
-  generateBatchAction: (batchSize: number) => Promise<void>;
+  generateBatchAction: (batchSize: number) => Promise<{ requested: number; successful: number; failed: number }>;
   purgeAllAction: () => Promise<{ purgedCount: number }>;
 }
 
@@ -26,6 +26,11 @@ export function AdminActions({ generateBatchAction, purgeAllAction }: AdminActio
           action={() => generateBatchAction(batchSize)}
           variant="success"
           loadingContent="Generating..."
+          onSuccess={(result) => {
+            const { requested, successful, failed } = result as { requested: number; successful: number; failed: number };
+            alert(`Generation complete!\nRequested: ${requested}\nSuccessful: ${successful}\nFailed: ${failed}`);
+            window.location.reload(); // Refresh to show new characters
+          }}
         >
           Generate
         </AsyncButton>

@@ -5,7 +5,7 @@
 
 declare module "sst" {
   export interface Resource {
-    "CharacterBatchGenerator": {
+    "CharacterGenerator": {
       "name": string
       "type": "sst.aws.Function"
     }

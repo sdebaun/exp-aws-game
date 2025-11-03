@@ -22,16 +22,17 @@ export default function ContentStack({ secrets }: { secrets: Secrets }) {
     stream: "new-and-old-images",
   });
 
-  // Character batch generator Lambda
-  const characterBatchGenerator = new sst.aws.Function(
-    "CharacterBatchGenerator",
+  // Character generator Lambda - generates one character per invocation
+  // Invoke N times in parallel for batch generation (admin UI handles this)
+  const characterGenerator = new sst.aws.Function(
+    "CharacterGenerator",
     {
-      handler: "domain/content/character/batch-generator.handler",
+      handler: "domain/content/character/generate-one.handler",
       link: [...Object.values(secrets.openai), contentTable],
       environment: {
         OPENAI_API_KEY: secrets.openai.OPENAI_API_KEY.value,
       },
-      timeout: "5 minutes", // Characters can take 30s each
+      timeout: "5 minutes", // OpenAI calls can be slow
       memory: "1024 MB",
     },
   );
@@ -66,19 +67,13 @@ export default function ContentStack({ secrets }: { secrets: Secrets }) {
     },
   );
 
-  // EventBridge rule to run batch generator every minute
-  // const characterGeneratorSchedule = new sst.aws.Cron("CharacterGeneratorSchedule", {
-  //   schedule: "rate(1 minute)",
-  //   job: characterBatchGenerator.arn,
-  //   enabled: false, // Start disabled, enable when ready
-  // });
+  // EventBridge schedule removed - admin UI invokes characterGenerator N times instead
 
   return {
     contentTable,
-    characterBatchGenerator,
+    characterGenerator,
     listCharacters,
     deleteCharacter,
     purgeAllCharacters,
-    // characterGeneratorSchedule,
   };
 }

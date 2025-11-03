@@ -20,7 +20,7 @@ export default $config({
     // Content domain owns the content table
     const {
       contentTable,
-      characterBatchGenerator,
+      characterGenerator,
       listCharacters,
       deleteCharacter,
       purgeAllCharacters,
@@ -36,7 +36,7 @@ export default $config({
       .default({
         secrets,
         contentTable,
-        characterBatchGenerator,
+        characterGenerator,
         listCharacters,
         deleteCharacter,
         purgeAllCharacters,

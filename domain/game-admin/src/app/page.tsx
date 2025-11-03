@@ -4,12 +4,9 @@
 import { getAuth0Client } from "@integrations/auth0";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { Resource } from "sst";
-import type { EntityItem } from "electrodb";
-import { CharacterEntity } from "../../../content/character/entity";
+import type { Character } from "../../../content/schemas";
 import { AdminActions } from "./AdminActions";
 import { CharacterPanel } from "./CharacterPanel";
-
-type Character = EntityItem<typeof CharacterEntity>;
 
 async function getCharacters(): Promise<{ characters: Character[], count: number }> {
   "use server";
@@ -40,27 +37,42 @@ async function getCharacters(): Promise<{ characters: Character[], count: number
 async function generateBatch(batchSize: number) {
   "use server";
 
-  console.log("[generateBatch] Starting batch generation...");
-  console.log("[generateBatch] Function name:", Resource.CharacterBatchGenerator.name);
-  console.log("[generateBatch] Batch size:", batchSize);
+  console.log(`[generateBatch] Invoking CharacterGenerator ${batchSize} times in parallel...`);
 
   const lambda = new LambdaClient({});
-  const response = await lambda.send(new InvokeCommand({
-    FunctionName: Resource.CharacterBatchGenerator.name,
-    Payload: JSON.stringify({ batchSize }),
-  }));
 
-  console.log("[generateBatch] Lambda response:", response.$metadata.httpStatusCode);
+  // Invoke the single-character generator N times in parallel
+  // Using RequestResponse to wait for all completions before returning
+  const promises = Array(batchSize).fill(0).map((_, i) => {
+    console.log(`[generateBatch] Triggering invocation ${i + 1}/${batchSize}`);
+    return lambda.send(new InvokeCommand({
+      FunctionName: Resource.CharacterGenerator.name,
+      InvocationType: "RequestResponse", // Block and wait for completion
+    }));
+  });
 
-  if (!response.Payload) {
-    console.error("[generateBatch] No payload in response");
-    throw new Error("Failed to generate batch");
+  const results = await Promise.all(promises);
+
+  // Parse results to count successes/failures
+  let successful = 0;
+  let failed = 0;
+
+  for (const result of results) {
+    if (result.Payload) {
+      const payload = JSON.parse(new TextDecoder().decode(result.Payload));
+      if (payload.statusCode === 200) {
+        successful++;
+      } else {
+        failed++;
+      }
+    } else {
+      failed++;
+    }
   }
 
-  const result = JSON.parse(new TextDecoder().decode(response.Payload));
-  console.log("[generateBatch] Batch generation result:", result);
+  console.log(`[generateBatch] Completed: ${successful} successful, ${failed} failed`);
 
-  return result;
+  return { requested: batchSize, successful, failed };
 }
 
 async function deleteCharacter(characterId: string) {
