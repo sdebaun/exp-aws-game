@@ -21,8 +21,9 @@ export async function generateStructuredResponse<T>({
   input,
 }: {
   format: AutoParseableTextFormat<T>;
+  // format: Parameters<typeof client.responses.create>[0]["text"]["format"];
   instructions: string;
-  input: string;
+  input: Parameters<typeof client.responses.create>[0]["input"];
 }) {
   const model = TEXT_MODEL;
   const response = await client.responses.parse<any, T>({
@@ -41,12 +42,18 @@ export async function generateStructuredResponse<T>({
   });
 
   // Log costs
-  logOpenAIResponsesCosts(response, model);
+  const costs = extractOpenAICosts(response, model)
+  console.log(costs)
 
-  return response;
+  if (!response.output_parsed) {
+    throw new Error("Failed to generate character");
+  }
+
+  return { output_parsed: response.output_parsed, costs };
+  // return response;
 }
 
-function logOpenAIResponsesCosts(
+function extractOpenAICosts(
   response: ParsedResponse<any>,
   model: AllowedTextModels,
 ) {
@@ -59,12 +66,12 @@ function logOpenAIResponsesCosts(
       1000000
     : 0;
   const totalCost = inputCost + outputCost;
-  console.log("OpenAI Responses API Call Costs", {
+  return {
     model,
     inputCost,
     outputCost,
     totalCost,
     inputTokens: response.usage?.input_tokens,
     outputTokens: response.usage?.output_tokens,
-  });
+  };
 }

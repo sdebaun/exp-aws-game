@@ -5,61 +5,36 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import z from "zod";
 import { zodTextFormat } from "openai/helpers/zod.mjs";
+import { generateOrigin, OriginSchema } from "./generateOrigin";
+import { Provenance } from "./instructions";
+import { generatePersonhood } from "./generatePersonhood";
+import { generateTraits } from "./generateTraits";
 
-/**
- * Origin must be either:
- * - historical: explicit place, era, culture
- * - fictional: explicit CANON name from an expansive, multi-work universe
- *   (standalone works are disallowed) with no crossovers
- * Both share display properties for consistent rendering.
- */
-const Origin = z.object({
-  type: z.enum(["historical", "fictional"]),
-  place: z
-    .string()
-    .min(2)
-    .describe(
-      "Specific geography — historical or fictional (e.g., 'Mali Empire, Niger River valley' [historical]; 'Arrakeen, Arrakis' [fictional]).",
-    ),
-  era: z
-    .string()
-    .min(2)
-    .describe(
-      "Specific time period — historical or fictional (e.g., '14th century CE' [historical]; 'Federation 24th century' or 'Reign of Muad’Dib' [fictional]).",
-    ),
-  culture: z
-    .string()
-    .min(2)
-    .describe(
-      "Cultural, ethnic, or canonical identity — historical or fictional (e.g., 'Mande traders' [historical]; 'Federation officer' or 'Ankh-Morpork guild clerk' [fictional]).",
-    ),
-  canon: z
-    .string()
-    .optional()
-    .nullable()
-    .describe(
-      "For fictional origins only: named, published canon from a large multi-work universe (e.g., 'Star Trek', 'Discworld', 'The Culture').",
-    ),
-  canon_scale: z
-    .enum(["expansive"])
-    .optional()
-    .nullable()
-    .describe(
-      "Fictional canons must be expansive (multi-work). Single-work or standalone stories are not allowed.",
-    ),
-  crossover: z
-    .literal("none")
-    .describe(
-      "Must always be 'none'. Crossovers or blended origins are not permitted.",
-    ),
-});
+export const generateCharacter = async () => {
+  const provenance: Provenance = Math.random() < -0.6 ? "historical" : "fictional";
+  console.log({provenance})
+
+  const { origin, costs: origin_costs } = await generateOrigin({provenance})
+  console.log({origin, origin_costs})
+
+  const { personhood, costs: personhood_costs } = await generatePersonhood({origin})
+  console.log({personhood, personhood_costs})
+
+  const { traits, costs: traits_costs } = await generateTraits({origin, personhood})
+  console.log({traits, traits_costs})
+
+  console.log({provenance, ...origin, ...personhood, ...traits})
+  console.log('newGeneration Costs', {
+    totalCost: origin_costs.totalCost + personhood_costs.totalCost + traits_costs.totalCost,
+  })
+}
 
 export const CharacterGenerationSchema = z.object({
   name: z.string().min(2).describe(
     "Character name. Must fit the historical or fictional culture as well as the primary aspect.",
   ),
 
-  origin: Origin.describe(
+  origin: OriginSchema.describe(
     "Origin details. Must specify place, era, and culture. If fictional, must name a large multi-work canon; no crossovers or invented universes.",
   ),
 
@@ -123,7 +98,7 @@ export const CharacterGenerationSchema = z.object({
  * Generates a new character for the available pool.
  * Based on the existing character generation in game-web but adapted for pool characters.
  */
-export async function generateCharacter() {
+export async function oldGenerateCharacter() {
   const characterId = uuidv4();
 
   const instructions = `
